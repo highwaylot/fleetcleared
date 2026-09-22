@@ -236,12 +236,20 @@
     });
   }
 
-  // Admin tabs
-  $$('.tabs [role=tab]').forEach(tab => tab.addEventListener('click', () => {
-    $$('.tabs [role=tab]').forEach(t => {
-      const on = t === tab;
-      t.setAttribute('aria-selected', String(on));
-      $('#' + t.getAttribute('aria-controls')).hidden = !on;
+  // Lead prices on the consultant page come straight from the pricing rules.
+  const priceRows = $('#price-rows');
+  if (priceRows && window.FCRules) {
+    priceRows.replaceChildren(...window.FCRules.PRICING.tiers.map(t =>
+      el('tr', {}, [el('td', { textContent: t.label }), el('td', { textContent: `$${t.price}` })])));
+  }
+
+  // Second-look request on the application status page
+  const appealForm = $('#appeal-form');
+  if (appealForm) {
+    appealForm.addEventListener('submit', e => {
+      e.preventDefault();
+      appealForm.hidden = true;
+      $('#appeal-done').hidden = false;
     });
-  }));
+  }
 })();

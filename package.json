@@ -1,0 +1,8 @@
+{
+  "name": "fleetcleared",
+  "private": true,
+  "description": "FleetCleared static site preview and business rules",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}

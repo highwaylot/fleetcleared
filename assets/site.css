@@ -297,6 +297,22 @@ tr:last-child td{ border-bottom:none; }
 .card-actions{ display:flex; gap:10px; }
 .card-actions .btn{ flex:1; white-space:nowrap; padding-inline:12px; }
 
+/* Pricing, application status, admin screening */
+.pricing{ max-width:640px; margin-bottom:40px; display:grid; gap:12px; }
+.pricing h2{ font-size:28px; }
+.pricing > p:not(.hint){ color:var(--ink-soft); }
+.pricing td:last-child{ font-weight:700; font-variant-numeric:tabular-nums; }
+.status-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; padding-bottom:64px; align-items:start; }
+.check-list{ list-style:none; margin:0 0 12px; padding:0; display:grid; gap:10px; }
+.check-list li{ display:flex; gap:10px; align-items:flex-start; }
+.dot{ width:12px; height:12px; border-radius:999px; margin-top:7px; flex:none; }
+.dot.warn{ background:var(--trial); }
+.dot.ok{ background:var(--brand); }
+.reasons{ margin:0; padding-left:18px; font-size:13px; color:var(--ink-soft); display:grid; gap:2px; min-width:260px; }
+.appeal-list{ display:grid; gap:14px; }
+.appeal{ display:grid; gap:10px; }
+.appeal-head{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+
 /* Segmented choice in contact form */
 .choice{ border:0; padding:0; margin:0 0 16px; min-width:0; }
 .choice legend{ font-weight:600; font-size:15px; padding:0; margin-bottom:6px; }
@@ -311,6 +327,7 @@ tr:last-child td{ border-bottom:none; }
 
 @media (prefers-reduced-motion: reduce){ .org-logo.placeholder{ animation:none; } }
 @media (max-width: 860px){
+  .status-grid{ grid-template-columns:1fr; }
   .profile-body{ grid-template-columns:1fr; }
   .facts{ grid-template-columns:repeat(2,1fr); }
   .trust-strip li{ white-space:normal; }
@@ -334,3 +351,4 @@ tr:last-child td{ border-bottom:none; }
   .site-footer .wrap{ grid-template-columns:1fr; }
   .facts{ grid-template-columns:1fr; }
 }
+#pending-rows .row-actions{ flex-direction:column; }

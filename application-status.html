@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>FleetCleared — Find a DOT Compliance Consultant</title>
-<meta name="description" content="Find an independent DOT compliance consultant for your trucking company. Free to search and connect.">
+<title>Application Status | FleetCleared</title>
+<meta name="description" content="Check the status of your FleetCleared listing application.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="canonical" href="https://fleetcleared.com/">
+<link rel="canonical" href="https://fleetcleared.com/application-status.html">
 <meta name="theme-color" content="#0f4c3a">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -14,9 +14,9 @@
 <link rel="manifest" href="site.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FleetCleared">
-<meta property="og:title" content="FleetCleared — Find a DOT Compliance Consultant">
-<meta property="og:description" content="Find an independent DOT compliance consultant for your trucking company. Free to search and connect.">
-<meta property="og:url" content="https://fleetcleared.com/">
+<meta property="og:title" content="Application Status | FleetCleared">
+<meta property="og:description" content="Check the status of your FleetCleared listing application.">
+<meta property="og:url" content="https://fleetcleared.com/application-status.html">
 <meta property="og:image" content="https://fleetcleared.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -25,7 +25,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="assets/site.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://fleetcleared.com/#org", "name": "FleetCleared", "url": "https://fleetcleared.com/", "logo": "https://fleetcleared.com/assets/icons/icon-512.png"}, {"@type": "WebSite", "@id": "https://fleetcleared.com/#site", "name": "FleetCleared", "url": "https://fleetcleared.com/", "publisher": {"@id": "https://fleetcleared.com/#org"}}]}</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -51,21 +50,32 @@
     </nav>
   </div>
 </header>
-<main>
-  <section class="hero wrap">
-    <span class="eyebrow">Free to search &amp; connect</span>
-    <h1>Find a DOT compliance consultant before a bad inspection finds you.</h1>
-    <p class="lede">Hours of service, driver files, drug and alcohol testing, maintenance records. One missed requirement can cost you your operating authority. FleetCleared connects you with independent compliance consultants near you, at no cost to you. Consultants set their own rates.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="browse.html">Find a consultant</a>
-      <a class="btn btn-ghost btn-lg" href="for-consultants.html">List your practice</a>
-    </div>
-  </section>
-  <ul class="trust-strip">
-    <li><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></span><span><strong>Directory only</strong> — we don't perform compliance work</span></li>
-    <li><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><line x1="6" y1="18" x2="18" y2="6"/></svg></span><span><strong>No guarantees</strong> — we don't certify or verify outcomes</span></li>
-    <li><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16" y2="16"/></svg></span><span><strong>Your call</strong> — always do your own due diligence</span></li>
-  </ul>
+<main class="wrap">
+  <div class="page-head">
+    <span class="eyebrow">Listing application</span>
+    <h1>Your listing needs a closer look</h1>
+    <p class="lede">Thanks for applying, Commercial Truck Consulting. Before we approve a listing, we confirm it belongs to a real business that isn't already listed. We couldn't confirm everything yet.</p>
+  </div>
+  <div class="status-grid">
+    <section class="panel">
+      <h2>What we couldn't confirm</h2>
+      <ul class="check-list">
+        <li><span class="dot warn" aria-hidden="true"></span>Some contact details match a business already listed on FleetCleared.</li>
+        <li><span class="dot warn" aria-hidden="true"></span>Your email address isn't on a company domain.</li>
+        <li><span class="dot ok" aria-hidden="true"></span>Business registration found.</li>
+      </ul>
+      <p class="hint">This isn't a judgment of your qualifications. It's how we keep one listing per business.</p>
+    </section>
+    <section class="panel">
+      <h2>Ask for a second look</h2>
+      <form id="appeal-form">
+        <div class="field"><label for="ap-why">Tell us what we should know</label><textarea id="ap-why" rows="4" required placeholder="Example: we share an office with another consultant, and we're a separate company."></textarea></div>
+        <div class="field"><label for="ap-link">Website or state business filing <span class="hint">(optional)</span></label><input id="ap-link" type="url" placeholder="https://"></div>
+        <button class="btn btn-primary btn-block" type="submit">Send for a second look</button>
+      </form>
+      <p class="notice" id="appeal-done" hidden>Sent. A person will review your application, usually within 2 business days, and email you either way.</p>
+    </section>
+  </div>
 </main>
 <footer class="site-footer">
   <div class="wrap">

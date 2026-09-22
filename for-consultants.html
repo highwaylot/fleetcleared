@@ -62,6 +62,12 @@
     <li><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><strong>Pay per lead after</strong>Add a card once your free lead is used.</li>
     <li><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6.5 6.5-6.5s6.5 2.5 6.5 6.5"/><path d="M16.5 12.5l1.7 1.7L22 10.5"/></svg></span><strong>Reviewed by a person</strong>Every listing is checked by hand, usually within 1–2 business days.</li>
   </ul>
+  <section class="pricing" aria-labelledby="pricing-title">
+    <h2 id="pricing-title">What a lead costs</h2>
+    <p>You pay only when a carrier sends you their contact details. The price depends on the size of their fleet, because bigger fleets are bigger clients. Leads go to you alone and are never sold to another consultant.</p>
+    <div class="table-wrap"><table><thead><tr><th>Carrier's fleet</th><th>Price per lead</th></tr></thead><tbody id="price-rows"></tbody></table></div>
+    <p class="hint">Your first lead is free. Set a monthly limit so you're never surprised. Fake or duplicate requests are credited back.</p>
+  </section>
   <div class="form-card">
     <h2>Submit your listing</h2>
     <p>We'll email you once it's approved.</p>
@@ -73,6 +79,7 @@
         <div class="field"><label for="lf-states">States you serve</label><input id="lf-states" required placeholder="OH, IN, KY"></div>
         <div class="field"><label for="lf-pref">Best way to reach you</label><select id="lf-pref"><option value="call">Phone call</option><option value="text">Text message</option><option value="email">Email</option></select></div>
         <div class="field"><label for="lf-tz">Time zone</label><select id="lf-tz"><option>Eastern</option><option selected>Central</option><option>Mountain</option><option>Pacific</option><option>Alaska</option><option>Hawaii</option></select></div>
+        <div class="field full"><label for="lf-cap">Monthly lead limit</label><select id="lf-cap"><option value="5">Up to 5 leads a month</option><option value="10" selected>Up to 10 leads a month</option><option value="20">Up to 20 leads a month</option><option value="">No limit</option></select><span class="hint">Once you reach it, new requests are politely declined until next month. You can change it any time.</span></div>
         <div class="field full"><label for="lf-hours">Hours carriers can contact you</label><input id="lf-hours" placeholder="Mon–Fri 7 AM – 5 PM, Sat 8 AM – noon"><span class="hint">Shown on your profile so carriers know when to expect a reply.</span></div>
         <div class="field full"><label for="lf-spec">Specialties</label><input id="lf-spec" placeholder="DQ files, HOS audits, drug and alcohol programs"></div>
         <div class="field full"><label for="lf-desc">Short description</label><textarea id="lf-desc" rows="3" placeholder="Which carriers do you help, and with what?"></textarea></div>
@@ -105,6 +112,7 @@
     <p class="footer-legal">© 2026 FleetCleared. Not affiliated with the FMCSA or the U.S. Department of Transportation.</p>
   </div>
 </footer>
+<script src="assets/rules.js"></script>
 <script src="assets/site.js" defer></script>
 </body>
 </html>

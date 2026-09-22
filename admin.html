@@ -43,38 +43,39 @@
 <div class="preview-banner">Design preview. On the live site this page requires sign-in and is never linked from public pages.</div>
 <header class="site-header"><div class="wrap"><a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a><span class="hint">Signed in as founder@fleetcleared.com</span></div></header>
 <main class="wrap" style="padding-block:32px 64px">
-  <div class="page-head" style="padding-block:0 24px"><h1>Admin</h1><p class="lede">Every new listing is approved by hand.</p></div>
+  <div class="page-head" style="padding-block:0 24px"><h1>Admin</h1><p class="lede">Every new listing is approved by hand. The screening score only tells you where to look harder.</p></div>
   <div class="stats">
-    <div class="stat"><b>3</b><span>Waiting for review</span></div>
-    <div class="stat"><b>14</b><span>Active listings</span></div>
-    <div class="stat"><b>6</b><span>Leads, last 30 days</span></div>
-    <div class="stat"><b>2</b><span>Need a card on file</span></div>
+    <div class="stat"><b id="stat-pending">–</b><span>Waiting for review</span></div>
+    <div class="stat"><b id="stat-appeals">–</b><span>Asked for a second look</span></div>
+    <div class="stat"><b id="stat-leads">–</b><span>Leads, last 30 days</span></div>
+    <div class="stat"><b id="stat-revenue">–</b><span>Charged, last 30 days</span></div>
   </div>
   <div class="tabs" role="tablist">
     <button role="tab" type="button" aria-selected="true" aria-controls="panel-pending">Waiting for review</button>
+    <button role="tab" type="button" aria-selected="false" aria-controls="panel-appeals">Second-look requests</button>
     <button role="tab" type="button" aria-selected="false" aria-controls="panel-listings">Active listings</button>
     <button role="tab" type="button" aria-selected="false" aria-controls="panel-leads">Lead log</button>
   </div>
   <section id="panel-pending" role="tabpanel">
-    <div class="table-wrap"><table><thead><tr><th>Company</th><th>Email</th><th>States</th><th>Submitted</th><th>Screening</th><th></th></tr></thead><tbody><tr><td>USA Trucking Compliance</td><td>info@usatruckingcompliance.com</td><td>TX, OK</td><td>Sep 20</td><td><span class="pill pill-ok">Clear</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr><tr><td>Commercial Truck Consulting</td><td>hello@gmail.com</td><td>OH, IN</td><td>Sep 21</td><td><span class="pill pill-warn">Free email domain</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr><tr><td>My Safety Manager LLC</td><td>contact@mysafetymanager.com</td><td>GA, FL, AL</td><td>Sep 22</td><td><span class="pill pill-ok">Clear</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr></tbody></table></div>
-    <p class="admin-note">Screening flags are signals for the reviewer, never automatic rejections. The full screening score from the approval-gate handoff will replace the single free-email check.</p>
+    <div class="table-wrap"><table><thead><tr><th>Company</th><th>Email</th><th>Submitted</th><th>Screening</th><th>Why</th><th></th></tr></thead><tbody id="pending-rows"></tbody></table></div>
+    <p class="admin-note">Clear 0–24 · Check 25–59 · Hold 60+ (contact the applicant before deciding). Scores are signals for you, never automatic rejections. "No free lead" means this business already used its free lead under another account.</p>
+  </section>
+  <section id="panel-appeals" role="tabpanel" hidden>
+    <div id="appeal-list" class="appeal-list"></div>
   </section>
   <section id="panel-listings" role="tabpanel" hidden>
-    <div class="table-wrap"><table><thead><tr><th>Company</th><th>States</th><th>Free lead</th><th>Card on file</th><th>Leads</th></tr></thead><tbody>
-      <tr><td>Midwest DOT Advisors</td><td>OH, IN, KY</td><td><span class="pill pill-trial">Used Sep 10</span></td><td><span class="pill pill-ok">Yes</span></td><td>Receiving</td></tr>
-      <tr><td>Lone Star Compliance Group</td><td>TX, OK</td><td><span class="pill pill-trial">Not used</span></td><td><span class="pill pill-warn">No</span></td><td>Receiving</td></tr>
-      <tr><td>Southeast Fleet Safety Co.</td><td>GA, FL, AL</td><td><span class="pill pill-trial">Used Sep 18</span></td><td><span class="pill pill-warn">No</span></td><td><strong>Paused</strong></td></tr>
+    <div class="table-wrap"><table><thead><tr><th>Company</th><th>States</th><th>Free lead</th><th>Card on file</th><th>This month</th><th>Leads</th></tr></thead><tbody>
+      <tr><td>Midwest DOT Advisors</td><td>OH, IN, KY</td><td><span class="pill pill-trial">Used Sep 10</span></td><td><span class="pill pill-ok">Yes</span></td><td>4 of 10</td><td>Receiving</td></tr>
+      <tr><td>Lone Star Compliance Group</td><td>TX, OK</td><td><span class="pill pill-trial">Not used</span></td><td><span class="pill pill-warn">No</span></td><td>0, no limit</td><td>Receiving</td></tr>
+      <tr><td>Southeast Fleet Safety Co.</td><td>GA, FL, AL</td><td><span class="pill pill-trial">Used Sep 18</span></td><td><span class="pill pill-warn">No</span></td><td>1 of 5</td><td><strong>Held until card added</strong></td></tr>
     </tbody></table></div>
   </section>
   <section id="panel-leads" role="tabpanel" hidden>
-    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Consultant</th><th>Carrier contact</th><th>Type</th><th>Charged</th></tr></thead><tbody>
-      <tr><td>Sep 18</td><td>Southeast Fleet Safety Co.</td><td>D. Alvarez · (912) 555-0142</td><td>Free lead</td><td>No</td></tr>
-      <tr><td>Sep 10</td><td>Midwest DOT Advisors</td><td>T. Nguyen · tnguyen@qtrucking.com</td><td>Free lead</td><td>No</td></tr>
-      <tr><td>Sep 5</td><td>Midwest DOT Advisors</td><td>R. Patel · (614) 555-0188</td><td>Paid lead</td><td>Yes</td></tr>
-    </tbody></table></div>
-    <p class="admin-note">Only a submitted name plus phone or email counts as a lead. Page views and clicks are never logged here.</p>
+    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Consultant</th><th>Carrier contact</th><th>Trucks</th><th>Result</th><th>Charged</th></tr></thead><tbody id="lead-rows"></tbody></table></div>
+    <p class="admin-note">Only a submitted name plus phone or email counts as a lead. The price comes from the carrier's fleet size: 1–2 trucks $30, 3–10 $45, 11+ $65.</p>
   </section>
 </main>
-<script src="assets/site.js" defer></script>
+<script src="assets/rules.js"></script>
+<script src="assets/admin.js" defer></script>
 </body>
 </html>
