@@ -153,7 +153,7 @@
       el('div', { className: 'review-head' }, [
         el('span', { className: 'avatar', textContent: initials(r.who), ariaHidden: 'true' }),
         el('div', { className: 'review-who' }, [el('b', { textContent: r.who }), el('span', { textContent: `${r.role} · ${r.when}` })]),
-        el('span', { className: 'verified', textContent: 'Contacted via FleetCleared' }),
+        el('span', { className: 'verified', textContent: 'Identity confirmed' }),
       ]),
       stars(r.stars),
       el('p', { textContent: r.text }),
@@ -183,10 +183,12 @@
     $('#cf-contact-label').textContent = v.field;
     input.type = v.type;
     input.autocomplete = v.auto;
+    $('#cf-text-consent').hidden = via !== 'text';
   }
   function openContact(c) {
     lastFocus = document.activeElement;
     $('#contact-to').textContent = c.name;
+    $$('.cf-to-name').forEach(n => { n.textContent = c.name; });
     $('#contact-form').reset();
     $(`#cf-via-${c.prefer}`).checked = true;
     setVia(c.prefer);

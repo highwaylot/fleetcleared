@@ -113,8 +113,13 @@
         <p class="sample-flag">Sample reviews for the design preview. Real reviews appear only after launch.</p>
         <div id="p-review-list" class="review-list"></div>
         <section class="panel how-reviews">
-          <h2>Who can leave a review</h2>
-          <p>Only carriers who contacted this consultant through FleetCleared. After you send a request, we email you a private link to review them. Consultants can't pay to remove or reorder reviews.</p>
+          <h2>How reviews work</h2>
+          <ul class="review-rules">
+            <li>Only carriers who contacted this consultant through FleetCleared can review them.</li>
+            <li>Because reviews affect real businesses, every reviewer's identity is confirmed before a review is posted, with a one-time code and their USDOT number.</li>
+            <li>Posting a false review breaks our <a href="terms.html#reviews">terms</a>.</li>
+            <li>We never remove a review for being negative, and consultants can't pay to change reviews.</li>
+          </ul>
         </section>
       </section>
     </div>
@@ -141,6 +146,7 @@
           <label><input type="radio" name="cf-via" id="cf-via-email" value="email"><span>Email</span></label>
         </div>
         <p class="hint" id="cf-pref-note"></p>
+        <p class="hint consent" id="cf-text-consent" hidden>By choosing Text, you agree that <span class="cf-to-name"></span> may text you about this request. Message and data rates may apply.</p>
       </fieldset>
       <div class="field"><label for="cf-contact" id="cf-contact-label">Phone number</label><input id="cf-contact" required type="tel" autocomplete="tel"></div>
       <div class="field"><label for="cf-need">What do you need help with? <span class="hint">(optional)</span></label><textarea id="cf-need" rows="2" placeholder="Example: new entrant audit next month"></textarea></div>
@@ -148,7 +154,7 @@
         <button type="button" class="btn btn-ghost" data-close>Cancel</button>
         <button type="submit" class="btn btn-primary">Send request</button>
       </div>
-      <p class="fine">We share what you enter here with this consultant only. See our <a href="privacy.html">privacy policy</a>.</p>
+      <p class="fine">We share what you enter here with this consultant only. By sending, you agree to our <a href="terms.html">terms</a> and <a href="privacy.html">privacy policy</a>.</p>
     </form>
     <p class="notice" id="contact-done" hidden>Request sent. The consultant will contact you directly. After you've talked, we'll email you a link to leave a review.</p>
   </div>
