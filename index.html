@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FleetCleared</title>
+<meta name="description" content="Find an independent DOT compliance consultant for your trucking company. Free to search and connect.">
+<meta name="theme-color" content="#0f4c3a">
+<meta property="og:title" content="FleetCleared">
+<meta property="og:description" content="Find a DOT compliance consultant before a bad inspection finds you.">
+<style>
+  :root{
+    --ink:#1a2332; --ink-soft:#4a5568; --bg:#f7f8fa; --panel:#fff; --border:#e2e5ea;
+    --brand:#0f4c3a; --brand-soft:#e8f3ee; --accent:#c0392b; --accent-soft:#fbeceb;
+    --gold:#b8860b; --gold-soft:#fdf1d6; --radius:8px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#e8eaed; --ink-soft:#a3abb8; --bg:#12161c; --panel:#1a1f27; --border:#2a3038;
+      --brand:#3fae82; --brand-soft:#173026; --accent:#e07a6f; --accent-soft:#331e1c;
+      --gold:#d4a72c; --gold-soft:#2f2712;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#e8eaed; --ink-soft:#a3abb8; --bg:#12161c; --panel:#1a1f27; --border:#2a3038;
+    --brand:#3fae82; --brand-soft:#173026; --accent:#e07a6f; --accent-soft:#331e1c;
+    --gold:#d4a72c; --gold-soft:#2f2712;
+  }
+  *{ box-sizing:border-box; }
+  html{ font-size:18px; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink); line-height:1.5;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{ outline:3px solid var(--brand); outline-offset:2px; }
+  [hidden]{ display:none !important; }
+
+  /* Preview switcher (mockup only) */
+  .nav-switch{
+    position:sticky; top:0; z-index:50; display:flex; overflow-x:auto;
+    background:var(--panel); border-bottom:1px solid var(--border); padding:0 16px;
+  }
+  .nav-switch button{
+    background:none; border:none; padding:14px 18px; font-size:14px; font-weight:600; white-space:nowrap;
+    color:var(--ink-soft); cursor:pointer; border-bottom:3px solid transparent;
+  }
+  .nav-switch button[aria-current="page"]{ color:var(--brand); border-bottom-color:var(--brand); }
+
+  /* Header + logo */
+  header.site{
+    background:var(--panel); border-bottom:1px solid var(--border); padding:18px 24px;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  }
+  .logo{
+    display:flex; align-items:center; font-weight:800; font-size:24px; letter-spacing:-0.02em;
+    white-space:nowrap; background:none; border:none; padding:0; cursor:pointer; color:inherit; font-family:inherit;
+  }
+  .logo svg{ flex:none; width:34px; height:34px; margin-right:-3px; }
+  .logo .fleet{ color:var(--ink); }
+  .logo .cleared{ color:var(--brand); margin-left:-1px; }
+  .logo .tag-admin{ color:var(--ink-soft); font-weight:500; font-size:13px; margin-left:8px; letter-spacing:0; }
+  header.site nav{ display:flex; gap:24px; align-items:center; font-size:16px; }
+  .link{ background:none; border:none; padding:0; font:inherit; color:var(--ink); font-weight:600; cursor:pointer; }
+  .link:hover{ color:var(--brand); }
+
+  .btn{
+    display:inline-block; padding:12px 20px; border-radius:6px; font-size:15px; font-weight:700;
+    font-family:inherit; text-decoration:none; border:2px solid transparent; cursor:pointer;
+  }
+  .btn-primary{ background:var(--brand); color:#fff; }
+  .btn-ghost{ background:transparent; color:var(--brand); border-color:var(--brand); }
+  .btn-lg{ padding:16px 28px; font-size:16px; border-radius:7px; }
+
+  main{ max-width:1080px; margin:0 auto; padding:0 20px; }
+
+  /* Home */
+  .hero{ max-width:720px; margin:0 auto; padding:72px 24px 48px; text-align:center; }
+  .kicker{
+    display:inline-block; background:var(--brand); color:#fff; font-size:13px; font-weight:800;
+    padding:7px 16px; border-radius:20px; margin-bottom:22px; text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .hero h1{ font-size:38px; line-height:1.28; margin:0 0 18px; letter-spacing:-0.01em; }
+  .hero p{ font-size:18px; color:var(--ink-soft); max-width:540px; margin:0 auto 32px; line-height:1.6; }
+  .hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  .icon-badge{
+    width:38px; height:38px; border-radius:10px; background:var(--brand);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .icon-badge svg{ width:20px; height:20px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+  .trust-strip{
+    display:flex; justify-content:center; gap:10px; list-style:none;
+    max-width:960px; margin:0 auto 44px; padding:0 24px;
+  }
+  .trust-strip li{
+    display:flex; align-items:center; gap:7px; white-space:nowrap;
+    padding:7px 14px 7px 7px; background:var(--panel); border:1px solid var(--border); border-radius:20px;
+    font-size:13px; color:var(--ink-soft);
+  }
+  .trust-strip .icon-badge{ width:24px; height:24px; border-radius:7px; }
+  .trust-strip .icon-badge svg{ width:13px; height:13px; }
+  .trust-strip strong{ color:var(--ink); }
+
+  /* Browse */
+  .section{ padding:48px 0 8px; }
+  .section h2{ font-size:24px; margin:0 0 8px; letter-spacing:-0.01em; }
+  .section .sub{ color:var(--ink-soft); font-size:15px; margin:0 0 28px; }
+  .filters{ display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+  .filters select, .filters input{
+    padding:12px 14px; border:1px solid var(--border); border-radius:6px; background:var(--panel);
+    color:var(--ink); font-size:15px; font-family:inherit;
+  }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px; }
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; display:flex; flex-direction:column; gap:10px;
+  }
+  .card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .card-id{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .card h3{ margin:0; font-size:17px; }
+  .badge{ font-size:12px; font-weight:700; padding:4px 9px; border-radius:12px; background:var(--brand-soft); color:var(--brand); }
+  .card .region{ font-size:14px; color:var(--ink-soft); }
+  .card .desc{ font-size:15px; color:var(--ink-soft); line-height:1.55; flex:1; margin:0; }
+  .tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .tag{ font-size:12px; background:var(--bg); border:1px solid var(--border); padding:4px 9px; border-radius:5px; color:var(--ink-soft); }
+  .card .btn{ text-align:center; margin-top:4px; }
+  .empty{ color:var(--ink-soft); font-size:15px; padding:24px 0; }
+
+  .card-logo{
+    width:42px; height:42px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:800; font-size:14px; letter-spacing:0.02em; background:#0f4c3a;
+  }
+  .card-logo.placeholder{
+    background:linear-gradient(120deg,#0a5c40,#17b978,#0a5c40); background-size:300% 300%;
+    animation:logoMorph 5s ease-in-out infinite;
+  }
+  @keyframes logoMorph{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+  @media (prefers-reduced-motion: reduce){ .card-logo.placeholder{ animation:none; } }
+
+  /* List your practice */
+  .list-hero{ text-align:center; max-width:640px; margin:0 auto 36px; }
+  .list-hero h1{ font-size:30px; line-height:1.3; margin:0 0 10px; letter-spacing:-0.01em; }
+  .list-hero p{ font-size:16px; color:var(--ink-soft); margin:0; }
+  .list-facts{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:0 0 44px; padding:0; list-style:none; }
+  .list-facts li{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px 14px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px;
+    font-size:13px; color:var(--ink-soft); line-height:1.4;
+  }
+  .list-facts .icon-badge{ margin-bottom:6px; }
+  .list-facts strong{ font-size:15px; color:var(--ink); }
+
+  .form-card{
+    max-width:600px; margin:0 auto 48px; background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius); padding:32px;
+  }
+  .form-card h2{ font-size:20px; margin:0 0 4px; }
+  .form-card .sub{ font-size:14px; margin:0 0 24px; }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:13px; font-weight:600; margin-bottom:5px; color:var(--ink-soft); }
+  .field input, .field textarea{
+    width:100%; padding:11px 13px; border:1px solid var(--border); border-radius:6px;
+    background:var(--bg); color:var(--ink); font-size:15px; font-family:inherit;
+  }
+  .hint{ display:block; font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  .logo-upload{ display:flex; align-items:center; gap:14px; }
+  .logo-upload .card-logo{ width:52px; height:52px; font-size:16px; overflow:hidden; }
+  .logo-upload .card-logo img{ width:100%; height:100%; object-fit:cover; }
+  .logo-upload input[type=file]{ padding:8px; font-size:13px; }
+  .notice{ background:var(--brand-soft); color:var(--brand); border-radius:6px; padding:14px 16px; font-size:15px; font-weight:600; }
+
+  footer{ padding:32px 24px; text-align:center; font-size:14px; color:var(--ink-soft); }
+
+  /* Modal */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,0.45); display:flex;
+    align-items:center; justify-content:center; z-index:100; padding:16px;
+  }
+  .modal{ background:var(--panel); border-radius:var(--radius); padding:24px; max-width:420px; width:100%; border:1px solid var(--border); }
+  .modal h3{ margin:0 0 4px; font-size:19px; }
+  .modal .sub{ font-size:14px; color:var(--ink-soft); margin:0 0 18px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:18px; }
+  .modal-actions .btn{ flex:1; text-align:center; }
+  .close-x{ float:right; background:none; border:none; color:var(--ink-soft); cursor:pointer; font-size:22px; line-height:1; }
+
+  /* Admin */
+  .admin-header{
+    background:var(--panel); border-bottom:1px solid var(--border); padding:14px 20px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .admin-header .logo{ font-size:20px; cursor:default; }
+  .admin-header .logo svg{ width:26px; height:26px; }
+  .admin-main{ max-width:1080px; margin:0 auto; padding:24px 20px 60px; }
+  .admin-main h1{ font-size:22px; margin:0 0 4px; }
+  .admin-main .sub{ color:var(--ink-soft); font-size:13px; margin:0 0 22px; }
+  .stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+  .stat{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .stat .num{ font-size:24px; font-weight:800; }
+  .stat .label{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .admin-tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:18px; overflow-x:auto; }
+  .admin-tabs button{
+    background:none; border:none; padding:10px 14px; font-size:13px; font-weight:600; white-space:nowrap;
+    color:var(--ink-soft); cursor:pointer; border-bottom:2px solid transparent;
+  }
+  .admin-tabs button[aria-selected="true"]{ color:var(--brand); border-bottom-color:var(--brand); }
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); }
+  table{ width:100%; border-collapse:collapse; background:var(--panel); }
+  thead th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap;
+    color:var(--ink-soft); padding:10px 14px; border-bottom:1px solid var(--border); background:var(--bg);
+  }
+  tbody td{ padding:12px 14px; font-size:13px; border-bottom:1px solid var(--border); }
+  tbody tr:last-child td{ border-bottom:none; }
+  .pill{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:12px; white-space:nowrap; }
+  .pill-warn{ background:var(--accent-soft); color:var(--accent); }
+  .pill-ok{ background:var(--brand-soft); color:var(--brand); }
+  .pill-free{ background:var(--gold-soft); color:var(--gold); }
+  .row-actions{ display:flex; gap:8px; }
+  .btn-sm{ padding:6px 11px; font-size:12px; border-radius:5px; border-width:1px; }
+  .btn-approve{ background:var(--brand); color:#fff; }
+  .btn-reject{ background:transparent; color:var(--accent); border-color:var(--accent); }
+  .btn-view{ background:transparent; color:var(--ink-soft); border-color:var(--border); }
+  .admin-note{ font-size:12px; color:var(--ink-soft); margin-top:12px; line-height:1.5; }
+
+  @media (max-width: 760px){
+    .trust-strip{ flex-direction:column; align-items:center; }
+  }
+  @media (max-width: 640px){
+    .hero h1{ font-size:28px; }
+    .list-facts{ grid-template-columns:repeat(2,1fr); }
+    .form-row{ grid-template-columns:1fr; }
+    .stat-row{ grid-template-columns:repeat(2,1fr); }
+    header.site nav .link{ display:none; }
+    .form-card{ padding:22px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="fcGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#17b978"/>
+      <stop offset="100%" stop-color="#0a5c40"/>
+    </linearGradient>
+    <symbol id="fc-shield" viewBox="0 0 24 24">
+      <g transform="rotate(-16 12 12)">
+        <path d="M12 1.6L4.3 4.7v6.1c0 5.2 3.4 8.9 7.7 10.2 4.3-1.3 7.7-5 7.7-10.2V4.7L12 1.6z" fill="url(#fcGrad)"/>
+        <line x1="12" y1="5.2" x2="12" y2="9.2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="12" y1="11.8" x2="12" y2="15.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav-switch" aria-label="Mockup pages">
+  <button data-view="home" aria-current="page">Home</button>
+  <button data-view="browse">Browse Page</button>
+  <button data-view="list">List Your Practice</button>
+  <button data-view="admin">Admin Panel</button>
+</nav>
+
+<!-- HOME -->
+<div id="view-home">
+  <header class="site">
+    <button class="logo" data-go="home" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span class="fleet">Fleet</span><span class="cleared">Cleared</span></button>
+    <nav>
+      <button class="link" data-go="browse">Browse Consultants</button>
+      <button class="btn btn-ghost" data-go="list">List Your Practice</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="kicker">Free to search &amp; connect</span>
+    <h1>Find a DOT compliance consultant before a bad inspection finds you.</h1>
+    <p>
+      Hours-of-service, driver files, drug &amp; alcohol testing, maintenance records —
+      one missed requirement can cost you your operating authority. FleetCleared connects
+      you with independent compliance consultants near you, at no cost to you. Consultants
+      set their own rates for their own services.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" data-go="browse">Browse Consultants</button>
+      <button class="btn btn-ghost btn-lg" data-go="list">List Your Practice — Free</button>
+    </div>
+  </section>
+
+  <ul class="trust-strip">
+    <li><span class="icon-badge"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></span><span><strong>Directory only</strong> — we don't perform compliance work</span></li>
+    <li><span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><line x1="6" y1="18" x2="18" y2="6"/></svg></span><span><strong>No guarantees</strong> — we don't certify or verify outcomes</span></li>
+    <li><span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16" y2="16"/></svg></span><span><strong>Your call</strong> — always do your own due diligence</span></li>
+  </ul>
+</div>
+
+<!-- BROWSE -->
+<div id="view-browse" hidden>
+  <header class="site">
+    <button class="logo" data-go="home" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span class="fleet">Fleet</span><span class="cleared">Cleared</span></button>
+    <nav>
+      <button class="link" data-go="home">Home</button>
+      <button class="btn btn-ghost" data-go="list">List Your Practice</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Browse Compliance Consultants</h2>
+      <p class="sub">Filter by state — FMCSA compliance needs are regional.</p>
+      <div class="filters">
+        <select id="f-state" aria-label="State">
+          <option value="">All States</option><option>AL</option><option>FL</option><option>GA</option>
+          <option>IN</option><option>KY</option><option>OH</option><option>OK</option><option>TX</option>
+        </select>
+        <select id="f-spec" aria-label="Specialty">
+          <option value="">All Specialties</option><option>DQ Files</option><option>Audits</option>
+          <option>Drug &amp; Alcohol</option><option>CSA Scores</option><option>Owner-Op</option>
+        </select>
+        <input id="f-q" type="search" placeholder="Search company name..." aria-label="Search company name">
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>No consultants match those filters yet.</p>
+    </section>
+  </main>
+</div>
+
+<!-- LIST YOUR PRACTICE -->
+<div id="view-list" hidden>
+  <header class="site">
+    <button class="logo" data-go="home" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span class="fleet">Fleet</span><span class="cleared">Cleared</span></button>
+    <nav>
+      <button class="link" data-go="browse">Browse Consultants</button>
+      <button class="link" data-go="home">Home</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="list-hero">
+        <span class="kicker">For compliance consultants</span>
+        <h1>List your practice. Get found by carriers who need you.</h1>
+        <p>Free to list. No cost until you've received your first real lead.</p>
+      </div>
+
+      <ul class="list-facts">
+        <li><span class="icon-badge"><svg viewBox="0 0 24 24"><path d="M20.6 13.4L11 3.8A2 2 0 0 0 9.6 3.2L4 3l.2 5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.4-4.4a2 2 0 0 0 0-2.8z"/><circle cx="8" cy="8" r="1" fill="#fff" stroke="none"/></svg></span><strong>Free to list</strong>No listing fee, no subscription.</li>
+        <li><span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.8" fill="#fff" stroke="none"/></svg></span><strong>1 free lead</strong>Your first real carrier contact costs nothing.</li>
+        <li><span class="icon-badge"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><strong>Pay per lead after</strong>Add payment info once your trial lead is used.</li>
+        <li><span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6.5 6.5-6.5s6.5 2.5 6.5 6.5"/><path d="M16.5 12.5l1.7 1.7L22 10.5"/></svg></span><strong>Manually reviewed</strong>A real person approves every listing, usually within 1–2 days.</li>
+      </ul>
+
+      <div class="form-card">
+        <h2>Submit Your Listing</h2>
+        <p class="sub hint">Reviewed manually — you'll get an email once you're approved.</p>
+        <form id="list-form">
+          <div class="form-row">
+            <div class="field"><label for="lf-name">Company name</label><input id="lf-name" name="company" required autocomplete="organization" placeholder="Midwest DOT Advisors"></div>
+            <div class="field"><label for="lf-email">Work email</label><input id="lf-email" name="email" type="email" required autocomplete="email" placeholder="you@yourcompany.com"><span class="hint">A business email speeds up approval.</span></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="lf-phone">Phone</label><input id="lf-phone" name="phone" type="tel" required autocomplete="tel" placeholder="(555) 123-4567"></div>
+            <div class="field"><label for="lf-states">States you serve</label><input id="lf-states" name="states" required placeholder="e.g. OH, IN, KY"></div>
+          </div>
+          <div class="field"><label for="lf-spec">Specialties</label><input id="lf-spec" name="specialties" placeholder="e.g. DQ Files, HOS Audits, Drug &amp; Alcohol Program"></div>
+          <div class="field"><label for="lf-desc">Short description</label><textarea id="lf-desc" name="description" rows="3" placeholder="What kind of carriers do you help, and with what?"></textarea></div>
+          <div class="field">
+            <label for="lf-logo">Company logo (optional)</label>
+            <div class="logo-upload">
+              <div class="card-logo placeholder" id="logo-preview" aria-hidden="true">?</div>
+              <div>
+                <input id="lf-logo" name="logo" type="file" accept="image/png,image/jpeg">
+                <span class="hint">Square works best. No logo? We'll use your initials.</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" style="width:100%;" type="submit">Submit for Review</button>
+        </form>
+        <p class="notice" id="list-done" hidden>Thanks — your listing is in the review queue. We'll email you once it's approved.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ADMIN -->
+<div id="view-admin" hidden>
+  <header class="admin-header">
+    <span class="logo"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span class="fleet">Fleet</span><span class="cleared">Cleared</span><span class="tag-admin">Admin</span></span>
+    <span style="font-size:13px; color:var(--ink-soft);">Signed in as founder@fleetcleared.com</span>
+  </header>
+
+  <main class="admin-main">
+    <h1>Admin Dashboard</h1>
+    <p class="sub">Every new listing is approved by hand at this stage.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">3</div><div class="label">Pending Approvals</div></div>
+      <div class="stat"><div class="num">14</div><div class="label">Active Listings</div></div>
+      <div class="stat"><div class="num">6</div><div class="label">Leads Sent (30d)</div></div>
+      <div class="stat"><div class="num">2</div><div class="label">Owe Payment Info</div></div>
+    </div>
+
+    <div class="admin-tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="pending">Pending Signups</button>
+      <button role="tab" aria-selected="false" data-tab="listings">Active Listings</button>
+      <button role="tab" aria-selected="false" data-tab="leads">Lead Log</button>
+    </div>
+
+    <div role="tabpanel" id="panel-pending">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Company</th><th>Contact Email</th><th>Region</th><th>Submitted</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>USA Trucking Compliance</td><td>info@usatruckingcompliance.com</td><td>TX, OK</td><td>Sep 20</td><td><span class="pill pill-warn">Pending</span></td><td class="row-actions"><button class="btn btn-sm btn-approve">Approve</button><button class="btn btn-sm btn-reject">Reject</button></td></tr>
+          <tr><td>Commercial Truck Consulting</td><td>hello@gmail.com</td><td>OH, IN</td><td>Sep 21</td><td><span class="pill pill-warn">Pending — free email</span></td><td class="row-actions"><button class="btn btn-sm btn-approve">Approve</button><button class="btn btn-sm btn-reject">Reject</button></td></tr>
+          <tr><td>My Safety Manager LLC</td><td>contact@mysafetymanager.com</td><td>GA, FL, AL</td><td>Sep 22</td><td><span class="pill pill-warn">Pending</span></td><td class="row-actions"><button class="btn btn-sm btn-approve">Approve</button><button class="btn btn-sm btn-reject">Reject</button></td></tr>
+        </tbody>
+      </table></div>
+      <p class="admin-note">"Free email" is a light signal, not an auto-reject. The full screening score (from the approval-gate handoff) will replace this flag.</p>
+    </div>
+
+    <div role="tabpanel" id="panel-listings" hidden>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Company</th><th>Region</th><th>Free Lead</th><th>Payment Info</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Midwest DOT Advisors</td><td>OH, IN, KY</td><td><span class="pill pill-free">Used — Sep 10</span></td><td><span class="pill pill-ok">On file</span></td><td>Active</td><td><button class="btn btn-sm btn-view">View</button></td></tr>
+          <tr><td>Lone Star Compliance Group</td><td>TX, OK</td><td><span class="pill pill-free">Not yet used</span></td><td><span class="pill pill-warn">Not on file</span></td><td>Active</td><td><button class="btn btn-sm btn-view">View</button></td></tr>
+          <tr><td>Southeast Fleet Safety Co.</td><td>GA, FL, AL</td><td><span class="pill pill-free">Used — Sep 18</span></td><td><span class="pill pill-warn">Awaiting card</span></td><td>Leads paused</td><td><button class="btn btn-sm btn-view">View</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div role="tabpanel" id="panel-leads" hidden>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Consultant</th><th>Carrier Contact</th><th>Type</th><th>Billable</th></tr></thead>
+        <tbody>
+          <tr><td>Sep 18</td><td>Southeast Fleet Safety Co.</td><td>D. Alvarez — (912) 555-0142</td><td>Free trial lead</td><td>No (trial)</td></tr>
+          <tr><td>Sep 10</td><td>Midwest DOT Advisors</td><td>T. Nguyen — tnguyen@qtrucking.com</td><td>Free trial lead</td><td>No (trial)</td></tr>
+          <tr><td>Sep 5</td><td>Midwest DOT Advisors</td><td>R. Patel — (614) 555-0188</td><td>Paid lead</td><td>Yes — charged</td></tr>
+        </tbody>
+      </table></div>
+      <p class="admin-note">Only a real name + phone/email submission counts as a lead. Page views and button clicks are never logged here.</p>
+    </div>
+  </main>
+</div>
+
+<footer id="site-footer">© 2026 FleetCleared. Not affiliated with FMCSA or the U.S. DOT.</footer>
+
+<!-- Request Contact modal -->
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="close-x" data-close aria-label="Close">&times;</button>
+    <h3 id="modal-title">Request Contact</h3>
+    <p class="sub" id="modal-sub"></p>
+    <form id="contact-form">
+      <div class="field"><label for="cf-name">Your name</label><input id="cf-name" required autocomplete="name" placeholder="Jane Rodriguez"></div>
+      <div class="field"><label for="cf-co">Company name</label><input id="cf-co" autocomplete="organization" placeholder="JR Trucking LLC"></div>
+      <div class="field"><label for="cf-contact">Phone or email</label><input id="cf-contact" required placeholder="(555) 123-4567"></div>
+      <div class="field"><label for="cf-need">What do you need help with? (optional)</label><textarea id="cf-need" rows="2" placeholder="e.g. upcoming DOT audit"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Send Request</button>
+      </div>
+    </form>
+    <p class="notice" id="contact-done" hidden>Sent. The consultant will reach out to you directly.</p>
+  </div>
+</div>
+
+<script>
+  const consultants = [
+    { name:'Midwest DOT Advisors', states:['OH','IN','KY'], region:'Ohio, Indiana, Kentucky', logo:null,
+      desc:'Driver qualification files, HOS audits, and drug & alcohol program setup for 1-15 truck fleets.', tags:['DQ Files','Audits','Drug & Alcohol'] },
+    { name:'Lone Star Compliance Group', states:['TX','OK'], region:'Texas, Oklahoma', logo:'uploaded',
+      desc:'Full-service FMCSA compliance for owner-operators. Se habla español.', tags:['Owner-Op','Bilingual'] },
+    { name:'Southeast Fleet Safety Co.', states:['GA','FL','AL'], region:'Georgia, Florida, Alabama', logo:null,
+      desc:'Specializes in post-audit corrective action plans and CSA score recovery.', tags:['CSA Scores','Audits'] },
+  ];
+
+  const $ = (sel) => document.querySelector(sel);
+  const initials = (name) => name.split(/\s+/).filter(w => /^[A-Za-z]/.test(w)).slice(0,2).map(w => w[0].toUpperCase()).join('');
+
+  function el(tag, props = {}, children = []) {
+    const node = Object.assign(document.createElement(tag), props);
+    node.append(...children);
+    return node;
+  }
+
+  function renderGrid() {
+    const state = $('#f-state').value, spec = $('#f-spec').value, q = $('#f-q').value.trim().toLowerCase();
+    const matches = consultants.filter(c =>
+      (!state || c.states.includes(state)) &&
+      (!spec || c.tags.includes(spec)) &&
+      (!q || c.name.toLowerCase().includes(q)));
+    $('#grid').replaceChildren(...matches.map(c => {
+      const btn = el('button', { className:'btn btn-primary', textContent:'Request Contact' });
+      btn.addEventListener('click', () => openModal(c.name));
+      return el('div', { className:'card' }, [
+        el('div', { className:'card-top' }, [
+          el('div', { className:'card-id' }, [
+            el('div', { className:'card-logo' + (c.logo ? '' : ' placeholder'), textContent:initials(c.name) }),
+            el('h3', { textContent:c.name }),
+          ]),
+          el('span', { className:'badge', textContent:'Listed' }),
+        ]),
+        el('div', { className:'region', textContent:c.region }),
+        el('p', { className:'desc', textContent:c.desc }),
+        el('div', { className:'tags' }, c.tags.map(t => el('span', { className:'tag', textContent:t }))),
+        btn,
+      ]);
+    }));
+    $('#empty').hidden = matches.length > 0;
+  }
+  ['#f-state','#f-spec'].forEach(s => $(s).addEventListener('change', renderGrid));
+  $('#f-q').addEventListener('input', renderGrid);
+
+  function showView(view) {
+    ['home','browse','list','admin'].forEach(v => { $('#view-' + v).hidden = v !== view; });
+    document.querySelectorAll('.nav-switch button').forEach(b => {
+      if (b.dataset.view === view) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+    $('#site-footer').hidden = view === 'admin';
+    window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => showView(b.dataset.go)));
+
+  document.querySelectorAll('.admin-tabs [role=tab]').forEach(tab => tab.addEventListener('click', () => {
+    document.querySelectorAll('.admin-tabs [role=tab]').forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      $('#panel-' + t.dataset.tab).hidden = !on;
+    });
+  }));
+
+  let lastFocus = null;
+  function openModal(name) {
+    lastFocus = document.activeElement;
+    $('#modal-sub').textContent = 'Connecting you with ' + name;
+    $('#contact-form').hidden = false;
+    $('#contact-form').reset();
+    $('#contact-done').hidden = true;
+    $('#modal').hidden = false;
+    $('#cf-name').focus();
+  }
+  function closeModal() {
+    $('#modal').hidden = true;
+    if (lastFocus) lastFocus.focus();
+  }
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden) closeModal(); });
+  $('#contact-form').addEventListener('submit', e => {
+    e.preventDefault();
+    $('#contact-form').hidden = true;
+    $('#contact-done').hidden = false;
+  });
+
+  $('#lf-name').addEventListener('input', e => {
+    const p = $('#logo-preview');
+    if (!p.querySelector('img')) p.textContent = initials(e.target.value) || '?';
+  });
+  $('#lf-logo').addEventListener('change', e => {
+    const file = e.target.files[0], p = $('#logo-preview');
+    if (!file) return;
+    const img = el('img', { alt:'' });
+    img.src = URL.createObjectURL(file);
+    p.classList.remove('placeholder');
+    p.replaceChildren(img);
+  });
+  $('#list-form').addEventListener('submit', e => {
+    e.preventDefault();
+    $('#list-form').hidden = true;
+    $('#list-done').hidden = false;
+  });
+
+  renderGrid();
+</script>
+</body>
+</html>
