@@ -1,0 +1,3 @@
+# PREVIEW MODE: blocks all crawlers. At launch, replace with the block in README.md.
+User-agent: *
+Disallow: /

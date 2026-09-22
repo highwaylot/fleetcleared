@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FleetCleared Admin</title>
+<meta name="description" content="Internal admin.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f4c3a">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FleetCleared">
+<meta property="og:title" content="FleetCleared Admin">
+<meta property="og:description" content="Internal admin.">
+<meta property="og:url" content="https://fleetcleared.com/admin.html">
+<meta property="og:image" content="https://fleetcleared.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="fcGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17b978"/><stop offset="1" stop-color="#0a5c40"/>
+    </linearGradient>
+    <symbol id="fc-shield" viewBox="0 0 24 24">
+      <g transform="rotate(-16 12 12)">
+        <path d="M12 1.6L4.3 4.7v6.1c0 5.2 3.4 8.9 7.7 10.2 4.3-1.3 7.7-5 7.7-10.2V4.7L12 1.6z" fill="url(#fcGrad)"/>
+        <line x1="12" y1="5.2" x2="12" y2="9.2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="12" y1="11.8" x2="12" y2="15.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<div class="preview-banner">Design preview. On the live site this page requires sign-in and is never linked from public pages.</div>
+<header class="site-header"><div class="wrap"><a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a><span class="hint">Signed in as founder@fleetcleared.com</span></div></header>
+<main class="wrap" style="padding-block:32px 64px">
+  <div class="page-head" style="padding-block:0 24px"><h1>Admin</h1><p class="lede">Every new listing is approved by hand.</p></div>
+  <div class="stats">
+    <div class="stat"><b>3</b><span>Waiting for review</span></div>
+    <div class="stat"><b>14</b><span>Active listings</span></div>
+    <div class="stat"><b>6</b><span>Leads, last 30 days</span></div>
+    <div class="stat"><b>2</b><span>Need a card on file</span></div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button role="tab" type="button" aria-selected="true" aria-controls="panel-pending">Waiting for review</button>
+    <button role="tab" type="button" aria-selected="false" aria-controls="panel-listings">Active listings</button>
+    <button role="tab" type="button" aria-selected="false" aria-controls="panel-leads">Lead log</button>
+  </div>
+  <section id="panel-pending" role="tabpanel">
+    <div class="table-wrap"><table><thead><tr><th>Company</th><th>Email</th><th>States</th><th>Submitted</th><th>Screening</th><th></th></tr></thead><tbody><tr><td>USA Trucking Compliance</td><td>info@usatruckingcompliance.com</td><td>TX, OK</td><td>Sep 20</td><td><span class="pill pill-ok">Clear</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr><tr><td>Commercial Truck Consulting</td><td>hello@gmail.com</td><td>OH, IN</td><td>Sep 21</td><td><span class="pill pill-warn">Free email domain</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr><tr><td>My Safety Manager LLC</td><td>contact@mysafetymanager.com</td><td>GA, FL, AL</td><td>Sep 22</td><td><span class="pill pill-ok">Clear</span></td><td><div class="row-actions"><button class="btn btn-primary btn-sm" type="button">Approve</button><button class="btn btn-danger btn-sm" type="button">Reject</button></div></td></tr></tbody></table></div>
+    <p class="admin-note">Screening flags are signals for the reviewer, never automatic rejections. The full screening score from the approval-gate handoff will replace the single free-email check.</p>
+  </section>
+  <section id="panel-listings" role="tabpanel" hidden>
+    <div class="table-wrap"><table><thead><tr><th>Company</th><th>States</th><th>Free lead</th><th>Card on file</th><th>Leads</th></tr></thead><tbody>
+      <tr><td>Midwest DOT Advisors</td><td>OH, IN, KY</td><td><span class="pill pill-trial">Used Sep 10</span></td><td><span class="pill pill-ok">Yes</span></td><td>Receiving</td></tr>
+      <tr><td>Lone Star Compliance Group</td><td>TX, OK</td><td><span class="pill pill-trial">Not used</span></td><td><span class="pill pill-warn">No</span></td><td>Receiving</td></tr>
+      <tr><td>Southeast Fleet Safety Co.</td><td>GA, FL, AL</td><td><span class="pill pill-trial">Used Sep 18</span></td><td><span class="pill pill-warn">No</span></td><td><strong>Paused</strong></td></tr>
+    </tbody></table></div>
+  </section>
+  <section id="panel-leads" role="tabpanel" hidden>
+    <div class="table-wrap"><table><thead><tr><th>Date</th><th>Consultant</th><th>Carrier contact</th><th>Type</th><th>Charged</th></tr></thead><tbody>
+      <tr><td>Sep 18</td><td>Southeast Fleet Safety Co.</td><td>D. Alvarez · (912) 555-0142</td><td>Free lead</td><td>No</td></tr>
+      <tr><td>Sep 10</td><td>Midwest DOT Advisors</td><td>T. Nguyen · tnguyen@qtrucking.com</td><td>Free lead</td><td>No</td></tr>
+      <tr><td>Sep 5</td><td>Midwest DOT Advisors</td><td>R. Patel · (614) 555-0188</td><td>Paid lead</td><td>Yes</td></tr>
+    </tbody></table></div>
+    <p class="admin-note">Only a submitted name plus phone or email counts as a lead. Page views and clicks are never logged here.</p>
+  </section>
+</main>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

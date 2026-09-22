@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Find a DOT Compliance Consultant | FleetCleared</title>
+<meta name="description" content="Browse independent DOT and FMCSA compliance consultants by state and specialty. Free for carriers.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://fleetcleared.com/browse.html">
+<meta name="theme-color" content="#0f4c3a">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FleetCleared">
+<meta property="og:title" content="Find a DOT Compliance Consultant | FleetCleared">
+<meta property="og:description" content="Browse independent DOT and FMCSA compliance consultants by state and specialty. Free for carriers.">
+<meta property="og:url" content="https://fleetcleared.com/browse.html">
+<meta property="og:image" content="https://fleetcleared.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="fcGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17b978"/><stop offset="1" stop-color="#0a5c40"/>
+    </linearGradient>
+    <symbol id="fc-shield" viewBox="0 0 24 24">
+      <g transform="rotate(-16 12 12)">
+        <path d="M12 1.6L4.3 4.7v6.1c0 5.2 3.4 8.9 7.7 10.2 4.3-1.3 7.7-5 7.7-10.2V4.7L12 1.6z" fill="url(#fcGrad)"/>
+        <line x1="12" y1="5.2" x2="12" y2="9.2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="12" y1="11.8" x2="12" y2="15.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="browse.html" aria-current="page">Find a consultant</a>
+      <a href="for-consultants.html" class="btn btn-ghost">For consultants</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <div class="page-head">
+    <h1>Find a compliance consultant</h1>
+    <p class="lede">Filter by the state you run in and what you need help with. Requesting contact is free. The consultant reaches out to you directly.</p>
+  </div>
+  <div class="filters">
+    <select id="f-state" aria-label="State"><option value="">All states</option><option>AL</option><option>FL</option><option>GA</option><option>IN</option><option>KS</option><option>KY</option><option>NE</option><option>OH</option><option>OK</option><option>TX</option></select>
+    <select id="f-spec" aria-label="Specialty"><option value="">All specialties</option><option>Audits</option><option>CSA Scores</option><option>DQ Files</option><option>Drug &amp; Alcohol</option><option>New Entrant Audits</option><option>Owner-Operators</option><option>Bilingual</option></select>
+    <input id="f-q" type="search" placeholder="Search by company name" aria-label="Search by company name">
+  </div>
+  <p class="result-count" id="result-count" aria-live="polite"></p>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>No consultants match those filters yet. Try another state or clear the specialty.</p>
+</main>
+
+<div class="modal-backdrop" id="contact-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <div class="modal-head">
+      <div>
+        <h2 id="contact-title">Request contact</h2>
+        <p>Sending to <strong id="contact-to"></strong></p>
+      </div>
+      <button class="icon-btn" type="button" data-close aria-label="Close">&times;</button>
+    </div>
+    <form id="contact-form">
+      <div class="field"><label for="cf-name">Your name</label><input id="cf-name" required autocomplete="name"></div>
+      <div class="field"><label for="cf-co">Company name</label><input id="cf-co" autocomplete="organization"></div>
+      <div class="field"><label for="cf-contact">Phone or email</label><input id="cf-contact" required autocomplete="tel"></div>
+      <div class="field"><label for="cf-need">What do you need help with? <span class="hint">(optional)</span></label><textarea id="cf-need" rows="2" placeholder="Example: new entrant audit next month"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Send request</button>
+      </div>
+      <p class="fine">We share what you enter here with this consultant only. See our <a href="privacy.html">privacy policy</a>.</p>
+    </form>
+    <p class="notice" id="contact-done" hidden>Request sent. The consultant will contact you directly.</p>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a>
+      <p class="footer-note">A directory that connects trucking companies with independent DOT compliance consultants. We don't perform, certify, or guarantee compliance work.</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="browse.html">Find a consultant</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="for-consultants.html">For consultants</a></li>
+      <li><a href="terms.html">Terms of service</a></li>
+    </ul>
+    <p class="footer-legal">© 2026 FleetCleared. Not affiliated with the FMCSA or the U.S. Department of Transportation.</p>
+  </div>
+</footer>
+<script src="assets/site.js" defer></script>
+</body>
+</html>
