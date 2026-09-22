@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Find a DOT Compliance Consultant | FleetCleared</title>
-<meta name="description" content="Browse independent DOT and FMCSA compliance consultants by state and specialty. Free for carriers.">
+<title>Consultant Profile | FleetCleared</title>
+<meta name="description" content="Services, service area, contact hours, and reviews from carriers who contacted this compliance consultant through FleetCleared.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="canonical" href="https://fleetcleared.com/browse.html">
+<link rel="canonical" href="https://fleetcleared.com/consultant.html">
 <meta name="theme-color" content="#0f4c3a">
 <link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -14,9 +14,9 @@
 <link rel="manifest" href="site.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FleetCleared">
-<meta property="og:title" content="Find a DOT Compliance Consultant | FleetCleared">
-<meta property="og:description" content="Browse independent DOT and FMCSA compliance consultants by state and specialty. Free for carriers.">
-<meta property="og:url" content="https://fleetcleared.com/browse.html">
+<meta property="og:title" content="Consultant Profile | FleetCleared">
+<meta property="og:description" content="Services, service area, contact hours, and reviews from carriers who contacted this compliance consultant through FleetCleared.">
+<meta property="og:url" content="https://fleetcleared.com/consultant.html">
 <meta property="og:image" content="https://fleetcleared.com/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -50,19 +50,75 @@
     </nav>
   </div>
 </header>
-<main class="wrap">
-  <div class="page-head">
-    <h1>Find a compliance consultant</h1>
-    <p class="lede">Filter by the state you run in and what you need help with. Requesting contact is free. The consultant reaches out to you directly.</p>
+<main>
+  <section class="profile-top">
+    <div class="cover" aria-hidden="true"></div>
+    <div class="wrap profile-head">
+      <div class="org-logo profile-logo" id="p-logo" aria-hidden="true"></div>
+      <div class="profile-id">
+        <h1 id="p-name">Consultant</h1>
+        <p class="profile-meta"><span id="p-region"></span> · <a href="#reviews" class="rating-link" id="p-rating-link"></a></p>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-primary btn-lg" type="button" id="p-contact">Request contact</button>
+      </div>
+    </div>
+    <nav class="wrap profile-tabs" role="tablist" aria-label="Profile sections">
+      <button role="tab" type="button" id="tab-about" aria-selected="true" aria-controls="about">About</button>
+      <button role="tab" type="button" id="tab-reviews" aria-selected="false" aria-controls="reviews">Reviews <span class="count" id="p-review-count"></span></button>
+    </nav>
+  </section>
+
+  <div class="wrap profile-body">
+    <aside class="intro">
+      <section class="panel">
+        <h2>Contact details</h2>
+        <dl class="facts-list">
+          <div><dt>Prefers</dt><dd><span class="pref-chip" id="p-pref"></span></dd></div>
+          <div><dt>Usually responds</dt><dd id="p-response"></dd></div>
+          <div><dt>Languages</dt><dd id="p-langs"></dd></div>
+          <div><dt>In business since</dt><dd id="p-since"></dd></div>
+        </dl>
+        <p class="hint">Contact details are shared after you send a request, so every request is tracked and answered.</p>
+      </section>
+      <section class="panel">
+        <h2>Hours to contact</h2>
+        <p class="hint" id="p-tz"></p>
+        <table class="hours"><tbody id="p-hours"></tbody></table>
+      </section>
+    </aside>
+
+    <div class="profile-main">
+      <section id="about" role="tabpanel" aria-labelledby="tab-about">
+        <section class="panel">
+          <h2>About</h2>
+          <p id="p-about"></p>
+        </section>
+        <section class="panel">
+          <h2>Services</h2>
+          <div class="tags" id="p-tags"></div>
+        </section>
+        <section class="panel">
+          <h2>States served</h2>
+          <div class="tags" id="p-states"></div>
+        </section>
+        <p class="disclaimer-line"><span class="icon-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></span><span>FleetCleared lists this consultant but doesn't verify their credentials or guarantee their work. Ask about experience and get the price in writing.</span></p>
+      </section>
+
+      <section id="reviews" role="tabpanel" aria-labelledby="tab-reviews" hidden>
+        <section class="panel rating-summary">
+          <div class="rating-big"><b id="p-avg"></b><span class="stars" id="p-avg-stars"></span><span class="hint" id="p-total"></span></div>
+          <div class="bars" id="p-bars"></div>
+        </section>
+        <p class="sample-flag">Sample reviews for the design preview. Real reviews appear only after launch.</p>
+        <div id="p-review-list" class="review-list"></div>
+        <section class="panel how-reviews">
+          <h2>Who can leave a review</h2>
+          <p>Only carriers who contacted this consultant through FleetCleared. After you send a request, we email you a private link to review them. Consultants can't pay to remove or reorder reviews.</p>
+        </section>
+      </section>
+    </div>
   </div>
-  <div class="filters">
-    <select id="f-state" aria-label="State"><option value="">All states</option><option>AL</option><option>FL</option><option>GA</option><option>IN</option><option>KS</option><option>KY</option><option>NE</option><option>OH</option><option>OK</option><option>TX</option></select>
-    <select id="f-spec" aria-label="Specialty"><option value="">All specialties</option><option>Audits</option><option>CSA Scores</option><option>DQ Files</option><option>Drug &amp; Alcohol</option><option>New Entrant Audits</option><option>Owner-Operators</option><option>Bilingual</option></select>
-    <input id="f-q" type="search" placeholder="Search by company name" aria-label="Search by company name">
-  </div>
-  <p class="result-count" id="result-count" aria-live="polite"></p>
-  <div class="grid" id="grid"></div>
-  <p class="empty" id="empty" hidden>No consultants match those filters yet. Try another state or clear the specialty.</p>
 </main>
 
 <div class="modal-backdrop" id="contact-modal" hidden>
