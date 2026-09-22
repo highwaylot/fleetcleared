@@ -26,43 +26,8 @@
       icon: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>' },
   };
 
-  // Sample listings and reviews for the design preview. Real data comes from the database after launch.
-  const weekdays = (hours, sat = null) => [hours, hours, hours, hours, hours, sat, null];
-  const consultants = [
-    { slug: 'midwest-dot-advisors', name: 'Midwest DOT Advisors', states: ['OH', 'IN', 'KY'], region: 'Columbus, Ohio', hasLogo: false,
-      desc: 'Driver qualification files, HOS audits, and drug & alcohol program setup for 1–15 truck fleets.',
-      tags: ['DQ Files', 'Audits', 'Drug & Alcohol'], prefer: 'call', response: 'Same business day', langs: 'English', since: '2014',
-      tz: 'Eastern Time', hours: weekdays('7:00 AM – 5:00 PM', '8:00 AM – 12:00 PM'),
-      about: 'Former fleet safety manager helping small carriers get their files in order before an audit, not after. Most clients run 1 to 15 trucks. I set up driver qualification files, walk you through hours-of-service records, and get your drug and alcohol program enrolled with a consortium.',
-      reviews: [
-        { stars: 5, who: 'Mike R.', role: 'Owner-operator, 1 truck', when: 'August 2026', text: 'Had a new entrant audit coming and no idea where to start. He went through every driver file with me over two calls and told me exactly what was missing. Passed.', reply: 'Glad it went smooth, Mike. Keep those annual reviews on the calendar.' },
-        { stars: 4, who: 'Angela T.', role: 'Fleet owner, 6 trucks', when: 'July 2026', text: 'Knows his stuff and explains it in plain English. Took a few days to get on his schedule, but worth it.' },
-        { stars: 5, who: 'Darnell W.', role: 'Owner-operator, 2 trucks', when: 'June 2026', text: 'Set up my drug and alcohol consortium and cleaned up my HOS records. Fair price, quoted up front.' },
-      ] },
-    { slug: 'lone-star-compliance-group', name: 'Lone Star Compliance Group', states: ['TX', 'OK'], region: 'San Antonio, Texas', hasLogo: true,
-      desc: 'Full-service FMCSA compliance for owner-operators. Se habla español.',
-      tags: ['Owner-Operators', 'Bilingual', 'New Entrant Audits'], prefer: 'text', response: 'Within 2 hours', langs: 'English, Spanish', since: '2011',
-      tz: 'Central Time', hours: weekdays('6:00 AM – 7:00 PM', '9:00 AM – 2:00 PM'),
-      about: 'Bilingual team serving owner-operators across Texas and Oklahoma. We handle new authority setup, new entrant safety audits, and ongoing compliance so you can keep driving. Text us any time during business hours.',
-      reviews: [
-        { stars: 5, who: 'José M.', role: 'Owner-operator, 1 truck', when: 'September 2026', text: 'Me ayudaron con todo el papeleo en español. Very patient and answered every text fast.' },
-        { stars: 5, who: 'Kim L.', role: 'Fleet owner, 4 trucks', when: 'August 2026', text: 'They caught two expired medical cards before our audit. Saved us a headache.' },
-      ] },
-    { slug: 'southeast-fleet-safety', name: 'Southeast Fleet Safety Co.', states: ['GA', 'FL', 'AL'], region: 'Macon, Georgia', hasLogo: false,
-      desc: 'Post-audit corrective action plans and CSA score recovery.',
-      tags: ['CSA Scores', 'Audits'], prefer: 'email', response: 'Within 1 business day', langs: 'English', since: '2018',
-      tz: 'Eastern Time', hours: weekdays('8:00 AM – 5:00 PM'),
-      about: 'We work with carriers after a bad audit or a rising CSA score. We write the corrective action plan, help you file DataQs challenges where they apply, and set up the habits that keep your scores down.',
-      reviews: [
-        { stars: 3, who: 'Brian K.', role: 'Fleet owner, 12 trucks', when: 'July 2026', text: 'Good corrective action plan, but communication was slow and mostly by email. Would have liked a phone call or two.', reply: 'Fair point, Brian. We now offer a scheduled call with every plan.' },
-      ] },
-    { slug: 'great-plains-carrier-services', name: 'Great Plains Carrier Services', states: ['KS', 'NE', 'OK'], region: 'Wichita, Kansas', hasLogo: false,
-      desc: 'New authority setup, BOC-3 guidance, and first-year safety program for new carriers.',
-      tags: ['New Entrant Audits', 'DQ Files'], prefer: 'call', response: 'Same business day', langs: 'English', since: '2020',
-      tz: 'Central Time', hours: weekdays('8:00 AM – 6:00 PM'),
-      about: 'Just got your authority? We walk new carriers through the first 18 months: BOC-3, driver files, maintenance records, and getting ready for the new entrant safety audit.',
-      reviews: [] },
-  ];
+  // Listings: the demo pages load assets/demo-data.js; the live site starts empty until real listings come from the database.
+  const consultants = window.FC_DEMO_CONSULTANTS || [];
   const bySlug = Object.fromEntries(consultants.map(c => [c.slug, c]));
   const avg = (c) => c.reviews.length ? c.reviews.reduce((s, r) => s + r.stars, 0) / c.reviews.length : 0;
   const STAR = '<svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.9z"/></svg>';
@@ -75,6 +40,19 @@
     ? `${avg(c).toFixed(1)} ★ (${c.reviews.length} review${c.reviews.length === 1 ? '' : 's'})`
     : 'No reviews yet';
 
+  // A consultant at their monthly lead limit can't receive requests until it resets.
+  function contactButton(c, big = false) {
+    const btn = el('button', { className: 'btn btn-primary' + (big ? ' btn-lg' : ''), type: 'button' });
+    if (c.atLimit) {
+      btn.disabled = true;
+      btn.textContent = `Not taking requests until ${c.resumes}`;
+    } else {
+      btn.textContent = 'Request contact';
+      btn.addEventListener('click', () => openContact(c));
+    }
+    return btn;
+  }
+
   // Browse page
   const grid = $('#grid');
   if (grid) {
@@ -86,8 +64,7 @@
         (!spec.value || c.tags.includes(spec.value)) &&
         (!needle || c.name.toLowerCase().includes(needle)));
       grid.replaceChildren(...matches.map(c => {
-        const btn = el('button', { className: 'btn btn-primary', type: 'button', textContent: 'Request contact' });
-        btn.addEventListener('click', () => openContact(c));
+        const btn = contactButton(c);
         const href = `consultant.html#${c.slug}`;
         return el('article', { className: 'card' }, [
           el('div', { className: 'card-id' }, [
@@ -103,7 +80,9 @@
         ]);
       }));
       $('#result-count').textContent = `${matches.length} consultant${matches.length === 1 ? '' : 's'} listed`;
-      $('#empty').hidden = matches.length > 0;
+      $('#result-count').hidden = consultants.length === 0;
+      $('#empty').hidden = matches.length > 0 || consultants.length === 0;
+      $('#empty-launch').hidden = consultants.length > 0;
     };
     [state, spec].forEach(s => s.addEventListener('change', render));
     q.addEventListener('input', render);
@@ -113,7 +92,12 @@
   // Consultant profile page
   const profile = $('#p-name');
   if (profile) {
-    const c = bySlug[location.hash.slice(1)] || consultants[0];
+    const c = bySlug[location.hash.slice(1)];
+    if (!c) {
+      $('#profile-page').hidden = true;
+      $('#profile-missing').hidden = false;
+      return;
+    }
     document.title = `${c.name} | FleetCleared`;
     const logo = $('#p-logo');
     logo.textContent = initials(c.name);
@@ -134,7 +118,9 @@
       el('td', { textContent: i === today ? `${d} (today)` : d }),
       el('td', { textContent: c.hours[i] || 'Closed' }),
     ])));
-    $('#p-contact').addEventListener('click', () => openContact(c));
+    $('#p-contact').replaceWith(contactButton(c, true));
+    $('#p-limit').hidden = !c.atLimit;
+    if (c.atLimit) $('#p-limit-date').textContent = c.resumes;
 
     const n = c.reviews.length;
     $('#p-review-count').textContent = n ? `(${n})` : '';

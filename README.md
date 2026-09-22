@@ -17,6 +17,7 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
 | `assets/rules.js` | **Business rules: lead pricing and signup screening.** Every number lives at the top of this file |
 | `assets/admin.js` | Admin preview. Scores, reasons and charges come from `rules.js` |
 | `application-status.html` | What a flagged applicant sees, with the "Ask for a second look" form. Reached from the review email, not the menu |
+| `demo/` | **Taste of FleetCleared**: a copy of the site with fictional example consultants (top rated, low rated, brand new, monthly limit reached, flagged application) to show prospective consultants. Data lives in `assets/demo-data.js`, which only the demo loads. The live pages start with no listings |
 | `tests/` | Automated checks for the business rules. Run `npm test` |
 | `favicon.ico`, `favicon.svg`, `assets/icons/`, `site.webmanifest` | Browser, iOS and Android icons |
 | `assets/og-image.png` | Link preview image for Facebook, texts, etc. |

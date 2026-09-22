@@ -1,0 +1,68 @@
+// "Taste of FleetCleared" demo data. Loaded only by pages in /demo. Every business and person here is fictional.
+// Each consultant shows one variation a real listing can be in.
+(function () {
+  const weekdays = (hours, sat = null) => [hours, hours, hours, hours, hours, sat, null];
+  window.FC_DEMO_CONSULTANTS = [
+    { slug: 'red-mesa-compliance', variation: 'Top rated, prefers text, has a logo',
+      name: 'Red Mesa Compliance', states: ['TX', 'OK', 'NM'], region: 'San Antonio, Texas', hasLogo: true,
+      desc: 'Owner-operator specialists. New authority, new entrant audits, and ongoing compliance. Se habla español.',
+      tags: ['Owner-Operators', 'Bilingual', 'New Entrant Audits'], prefer: 'text', response: 'Within 2 hours', langs: 'English, Spanish', since: '2011',
+      tz: 'Central Time', hours: weekdays('6:00 AM – 7:00 PM', '9:00 AM – 2:00 PM'),
+      about: 'Bilingual team serving owner-operators across Texas, Oklahoma and New Mexico. We handle new authority setup, new entrant safety audits, and the paperwork that keeps you rolling. Text us any time during business hours.',
+      reviews: [
+        { stars: 5, who: 'José M.', role: 'Owner-operator, 1 truck', when: 'September 2026', text: 'Me ayudaron con todo el papeleo en español. Very patient and answered every text fast.' },
+        { stars: 5, who: 'Kim L.', role: 'Fleet owner, 4 trucks', when: 'August 2026', text: 'They caught two expired medical cards before our audit. Saved us a headache.' },
+        { stars: 5, who: 'Ray D.', role: 'Owner-operator, 2 trucks', when: 'July 2026', text: 'Walked me through my new entrant audit start to finish. Clear price up front, no surprises.' },
+      ] },
+    { slug: 'buckeye-fleet-advisors', variation: 'Solid rating, one mixed review with a reply',
+      name: 'Buckeye Fleet Advisors', states: ['OH', 'IN', 'KY'], region: 'Columbus, Ohio', hasLogo: false,
+      desc: 'Driver qualification files, HOS audits, and drug & alcohol program setup for 1–15 truck fleets.',
+      tags: ['DQ Files', 'Audits', 'Drug & Alcohol'], prefer: 'call', response: 'Same business day', langs: 'English', since: '2014',
+      tz: 'Eastern Time', hours: weekdays('7:00 AM – 5:00 PM', '8:00 AM – 12:00 PM'),
+      about: 'Former fleet safety manager helping small carriers get their files in order before an audit, not after. I set up driver qualification files, walk you through hours-of-service records, and enroll your drug and alcohol program with a consortium.',
+      reviews: [
+        { stars: 5, who: 'Mike R.', role: 'Owner-operator, 1 truck', when: 'August 2026', text: 'Had a new entrant audit coming and no idea where to start. Went through every driver file with me over two calls and told me exactly what was missing. Passed.', reply: 'Glad it went smooth, Mike. Keep those annual reviews on the calendar.' },
+        { stars: 4, who: 'Angela T.', role: 'Fleet owner, 6 trucks', when: 'July 2026', text: 'Knows his stuff and explains it in plain English. Took a few days to get on his schedule, but worth it.' },
+        { stars: 5, who: 'Darnell W.', role: 'Owner-operator, 2 trucks', when: 'June 2026', text: 'Set up my drug and alcohol consortium and cleaned up my HOS records. Fair price, quoted up front.' },
+      ] },
+    { slug: 'keystone-haul-safety', variation: 'Reached its monthly lead limit',
+      name: 'Keystone Haul Safety', states: ['PA', 'NJ', 'NY'], region: 'Harrisburg, Pennsylvania', hasLogo: false,
+      atLimit: true, resumes: 'October 1',
+      desc: 'Mock DOT audits and safety management plans for small and mid-size fleets.',
+      tags: ['Audits', 'DQ Files'], prefer: 'call', response: 'Same business day', langs: 'English', since: '2016',
+      tz: 'Eastern Time', hours: weekdays('8:00 AM – 5:00 PM'),
+      about: 'Retired state inspector running mock audits the way the real ones go. We keep our client list small on purpose, so we cap how many new requests we take each month.',
+      reviews: [
+        { stars: 5, who: 'Paul S.', role: 'Fleet owner, 9 trucks', when: 'August 2026', text: 'The mock audit was tougher than the real one. That is the point. We passed clean.' },
+        { stars: 4, who: 'Denise K.', role: 'Fleet owner, 3 trucks', when: 'July 2026', text: 'Very thorough. Busy, so book early.' },
+      ] },
+    { slug: 'delta-pine-safety', variation: 'Mixed rating, prefers email, slower to respond',
+      name: 'Delta Pine Safety Co.', states: ['GA', 'FL', 'AL'], region: 'Macon, Georgia', hasLogo: false,
+      desc: 'Post-audit corrective action plans and CSA score recovery.',
+      tags: ['CSA Scores', 'Audits'], prefer: 'email', response: 'Within 1 business day', langs: 'English', since: '2018',
+      tz: 'Eastern Time', hours: weekdays('8:00 AM – 5:00 PM'),
+      about: 'We work with carriers after a bad audit or a rising CSA score. We write the corrective action plan, help you file DataQs challenges where they apply, and set up habits that keep your scores down.',
+      reviews: [
+        { stars: 4, who: 'Tanya H.', role: 'Fleet owner, 7 trucks', when: 'August 2026', text: 'Our CSA scores came down within two quarters. Good plan, clearly written.' },
+        { stars: 2, who: 'Brian K.', role: 'Fleet owner, 12 trucks', when: 'July 2026', text: 'Plan was fine, but communication was slow and all by email. Hard to get a phone call.', reply: 'Fair point, Brian. We now offer a scheduled call with every plan.' },
+      ] },
+    { slug: 'two-rivers-compliance', variation: 'Low rated: negative reviews stay up',
+      name: 'Two Rivers Compliance', states: ['MO', 'AR'], region: 'Springfield, Missouri', hasLogo: false,
+      desc: 'DOT registration, BOC-3, UCR filings, and compliance packages.',
+      tags: ['New Entrant Audits'], prefer: 'email', response: 'Within 3 business days', langs: 'English', since: '2023',
+      tz: 'Central Time', hours: weekdays('9:00 AM – 4:00 PM'),
+      about: 'Filing and compliance packages for new carriers.',
+      reviews: [
+        { stars: 1, who: 'Chris P.', role: 'Owner-operator, 1 truck', when: 'September 2026', text: 'Paid for a compliance package and waited three weeks for a reply. Missed my audit window prep.', reply: 'We had a staffing gap in August. We have since added help and refunded part of your package.' },
+        { stars: 2, who: 'Luis V.', role: 'Owner-operator, 2 trucks', when: 'August 2026', text: 'Filings got done but they kept pushing add-ons I did not need.' },
+        { stars: 3, who: 'Erin M.', role: 'Fleet owner, 3 trucks', when: 'June 2026', text: 'BOC-3 and UCR handled fine. Nothing special.' },
+      ] },
+    { slug: 'prairie-line-carrier-services', variation: 'Brand new: no reviews or logo yet',
+      name: 'Prairie Line Carrier Services', states: ['KS', 'NE'], region: 'Wichita, Kansas', hasLogo: false,
+      desc: 'New authority setup, BOC-3 guidance, and first-year safety program for new carriers.',
+      tags: ['New Entrant Audits', 'DQ Files'], prefer: 'call', response: 'Same business day', langs: 'English', since: '2020',
+      tz: 'Central Time', hours: weekdays('8:00 AM – 6:00 PM'),
+      about: 'Just got your authority? We walk new carriers through the first 18 months: BOC-3, driver files, maintenance records, and getting ready for the new entrant safety audit.',
+      reviews: [] },
+  ];
+})();
