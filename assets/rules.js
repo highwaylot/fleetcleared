@@ -99,6 +99,20 @@
     return Math.round(Math.min(PRICING.ceiling, Math.max(PRICING.floor, raw)));
   }
 
+
+  // Rough monthly cost for the consultant-page estimator. Uses decideLead for every lead, so it can never disagree with real billing.
+  // freeLeadAvailable: this business hasn't used its free lead yet. monthlyCap: null = no limit.
+  function estimateMonthly({ leadsPerMonth, fleetSize, monthlyCap = null, freeLeadAvailable = false }) {
+    if (!Number.isInteger(leadsPerMonth) || leadsPerMonth < 0) throw new Error('Leads per month must be a whole number, 0 or more');
+    let total = 0, delivered = 0, declined = 0, freeUsed = !freeLeadAvailable;
+    for (let i = 0; i < leadsPerMonth; i++) {
+      const d = decideLead({ freeLeadUsedByBusiness: freeUsed, cardOnFile: true, leadsThisMonth: delivered, monthlyCap }, fleetSize);
+      if (d.action === 'deliver') { delivered++; total += d.charge; if (!freeUsed) freeUsed = true; }
+      else declined++;
+    }
+    return { delivered, declined, total };
+  }
+
   // ---------- screening ----------
   // Two accounts are the same business (for the one free lead) if they share a phone, address, card, or company email domain.
   function sameBusiness(a, b) {
@@ -142,7 +156,7 @@
     return { score, band: band.key, bandLabel: band.label, reasons: hits, freeLeadAlreadyUsed };
   }
 
-  const api = { PRICING, SCREENING, tierFor, leadPrice, decideLead, suggestedPrice, screen, sameBusiness, similarity, normPhone, normAddress };
+  const api = { PRICING, SCREENING, tierFor, leadPrice, decideLead, suggestedPrice, estimateMonthly, screen, sameBusiness, similarity, normPhone, normAddress };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.FCRules = api;
 })(typeof window !== 'undefined' ? window : globalThis);

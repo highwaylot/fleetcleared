@@ -16,6 +16,21 @@
     return node;
   }
 
+  // Per-visitor conveniences only (remembered contact details, a signup draft). Storage can be blocked, so every call is guarded.
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } },
+    del(k) { try { localStorage.removeItem(k); } catch { /* storage unavailable */ } },
+  };
+  const openInfo = (c) => (window.FCHours && c.hours ? window.FCHours.openStatus(c.hours, c.tz) : null);
+  const digitsOnly = (v) => v.replace(/\D/g, '');
+  function formatPhone(v) {
+    const d = digitsOnly(v).replace(/^1(?=\d{10})/, '').slice(0, 10);
+    if (d.length < 4) return d;
+    if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+    return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+  }
+
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const VIA = {
     call: { label: 'Phone call', field: 'Phone number', type: 'tel', auto: 'tel',
@@ -56,13 +71,20 @@
   // Browse page
   const grid = $('#grid');
   if (grid) {
-    const state = $('#f-state'), spec = $('#f-spec'), q = $('#f-q');
+    const state = $('#f-state'), spec = $('#f-spec'), q = $('#f-q'), sort = $('#f-sort'), onlyOpen = $('#f-open'), clear = $('#f-clear');
+    const SORTS = {
+      rating: (a, b) => avg(b) - avg(a) || b.reviews.length - a.reviews.length,
+      reviews: (a, b) => b.reviews.length - a.reviews.length || avg(b) - avg(a),
+      name: (a, b) => a.name.localeCompare(b.name),
+    };
     const render = () => {
       const needle = q.value.trim().toLowerCase();
       const matches = consultants.filter(c =>
         (!state.value || c.states.includes(state.value)) &&
         (!spec.value || c.tags.includes(spec.value)) &&
-        (!needle || c.name.toLowerCase().includes(needle)));
+        (!onlyOpen.checked || !c.atLimit) &&
+        (!needle || c.name.toLowerCase().includes(needle))).sort(SORTS[sort.value]);
+      clear.hidden = !(state.value || spec.value || needle || onlyOpen.checked);
       grid.replaceChildren(...matches.map(c => {
         const btn = contactButton(c);
         const href = `consultant.html#${c.slug}`;
@@ -74,6 +96,7 @@
               el('p', { className: 'region', textContent: `${c.states.join(', ')} · ${ratingText(c)}` }),
             ]),
           ]),
+          ...(() => { const o = openInfo(c); return o ? [el('p', { className: 'open-chip' + (o.open ? ' is-open' : ''), textContent: c.atLimit ? `Not taking requests until ${c.resumes}` : o.text })] : []; })(),
           el('p', { className: 'desc', textContent: c.desc }),
           el('div', { className: 'tags' }, c.tags.map(t => el('span', { className: 'tag', textContent: t }))),
           el('div', { className: 'card-actions' }, [el('a', { className: 'btn btn-ghost', href, textContent: 'View profile' }), btn]),
@@ -84,8 +107,13 @@
       $('#empty').hidden = matches.length > 0 || consultants.length === 0;
       $('#empty-launch').hidden = consultants.length > 0;
     };
-    [state, spec].forEach(s => s.addEventListener('change', render));
+    [state, spec, sort, onlyOpen].forEach(s => s.addEventListener('change', render));
     q.addEventListener('input', render);
+    clear.addEventListener('click', () => {
+      state.value = ''; spec.value = ''; q.value = ''; onlyOpen.checked = false;
+      render();
+      q.focus();
+    });
     render();
   }
 
@@ -113,7 +141,18 @@
     $('#p-langs').textContent = c.langs;
     $('#p-since').textContent = c.since;
     $('#p-tz').textContent = `All times ${c.tz}`;
-    const today = (new Date().getDay() + 6) % 7;
+    const status = openInfo(c);
+    const today = status ? status.today : (new Date().getDay() + 6) % 7;
+    const chipText = c.atLimit ? `Not taking requests until ${c.resumes}` : (status ? status.text : '');
+    for (const id of ['#p-open-chip', '#p-open-line']) {
+      $(id).textContent = chipText;
+      $(id).classList.toggle('is-open', Boolean(status && status.open && !c.atLimit));
+    }
+    $('#p-mobile-name').textContent = c.name;
+    $('#p-mobile-open').textContent = c.atLimit ? '' : chipText;
+    const barBtn = contactButton(c);
+    if (c.atLimit) barBtn.textContent = `Back ${c.resumes}`;
+    $('#p-mobile-btn').replaceWith(barBtn);
     $('#p-hours').replaceChildren(...DAYS.map((d, i) => el('tr', { className: [i === today ? 'today' : '', c.hours[i] ? '' : 'closed'].join(' ').trim() }, [
       el('td', { textContent: i === today ? `${d} (today)` : d }),
       el('td', { textContent: c.hours[i] || 'Closed' }),
@@ -135,7 +174,8 @@
         el('span', { textContent: String(count) }),
       ]);
     }));
-    $('#p-review-list').replaceChildren(...(n ? c.reviews.map(r => el('article', { className: 'panel review' }, [
+    const REVIEW_SORTS = { newest: () => 0, lowest: (a, b) => a.stars - b.stars, highest: (a, b) => b.stars - a.stars };
+    const renderReviews = () => $('#p-review-list').replaceChildren(...(n ? [...c.reviews].sort(REVIEW_SORTS[$('#p-review-sort').value]).map(r => el('article', { className: 'panel review' }, [
       el('div', { className: 'review-head' }, [
         el('span', { className: 'avatar', textContent: initials(r.who), ariaHidden: 'true' }),
         el('div', { className: 'review-who' }, [el('b', { textContent: r.who }), el('span', { textContent: `${r.role} · ${r.when}` })]),
@@ -145,6 +185,9 @@
       el('p', { textContent: r.text }),
       ...(r.reply ? [el('div', { className: 'reply' }, [el('b', { textContent: `Reply from ${c.name}` }), r.reply])] : []),
     ])) : [el('p', { className: 'panel', textContent: 'No reviews yet. Reviews come only from carriers who contacted this consultant through FleetCleared.' })]));
+    renderReviews();
+    $('#p-review-sort').addEventListener('change', renderReviews);
+    $('.review-tools').hidden = n < 2;
 
     const showTab = (name) => {
       $$('.profile-tabs [role=tab]').forEach(t => {
@@ -167,9 +210,33 @@
   function setVia(via) {
     const v = VIA[via], input = $('#cf-contact');
     $('#cf-contact-label').textContent = v.field;
+    if (input.type !== v.type) input.value = '';
     input.type = v.type;
+    showContactError('');
     input.autocomplete = v.auto;
     $('#cf-text-consent').hidden = via !== 'text';
+  }
+  function showContactError(msg) {
+    const err = $('#cf-contact-error');
+    if (!err) return;
+    err.textContent = msg;
+    err.hidden = !msg;
+    $('#cf-contact').setAttribute('aria-invalid', String(Boolean(msg)));
+  }
+  function contactError() {
+    const input = $('#cf-contact');
+    const v = input.value.trim();
+    if (!v) return input.type === 'email' ? 'Enter your email address.' : 'Enter your phone number.';
+    if (input.type === 'email') return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v) ? '' : 'That email address looks incomplete. Check for a typo.';
+    return digitsOnly(v).length === 10 || (digitsOnly(v).length === 11 && digitsOnly(v)[0] === '1') ? '' : 'Enter a 10-digit phone number, area code first.';
+  }
+  function fillRemembered() {
+    const saved = store.get('fc-carrier');
+    $('#cf-remembered').hidden = !saved;
+    if (!saved) return;
+    $('#cf-name').value = saved.name || '';
+    $('#cf-co').value = saved.company || '';
+    if (saved.fleet) $('#cf-fleet').value = saved.fleet;
   }
   function openContact(c) {
     lastFocus = document.activeElement;
@@ -179,10 +246,11 @@
     $(`#cf-via-${c.prefer}`).checked = true;
     setVia(c.prefer);
     $('#cf-pref-note').textContent = `${c.name} prefers ${VIA[c.prefer].label.toLowerCase()}. Pick whatever works for you.`;
+    fillRemembered();
     $('#contact-form').hidden = false;
     $('#contact-done').hidden = true;
     modal.hidden = false;
-    $('#cf-name').focus();
+    ($('#cf-name').value ? $('#cf-contact') : $('#cf-name')).focus();
   }
   function closeContact() {
     modal.hidden = true;
@@ -193,8 +261,25 @@
     $$('[data-close]', modal).forEach(b => b.addEventListener('click', closeContact));
     modal.addEventListener('click', e => { if (e.target === modal) closeContact(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeContact(); });
+    // Phone numbers are tidied when the field is left, never while typing, so the cursor never jumps.
+    $('#cf-contact').addEventListener('input', () => { if (!$('#cf-contact-error').hidden) showContactError(contactError()); });
+    $('#cf-contact').addEventListener('blur', e => {
+      if (e.target.type === 'tel' && digitsOnly(e.target.value).length >= 10) e.target.value = formatPhone(e.target.value);
+      if (e.target.value) showContactError(contactError());
+    });
+    $('#cf-forget').addEventListener('click', () => {
+      store.del('fc-carrier');
+      ['#cf-name', '#cf-co'].forEach(sel => { $(sel).value = ''; });
+      $('#cf-fleet').value = '';
+      $('#cf-remembered').hidden = true;
+      $('#cf-name').focus();
+    });
     $('#contact-form').addEventListener('submit', e => {
       e.preventDefault();
+      const msg = contactError();
+      showContactError(msg);
+      if (msg) { $('#cf-contact').focus(); return; }
+      store.set('fc-carrier', { name: $('#cf-name').value.trim(), company: $('#cf-co').value.trim(), fleet: $('#cf-fleet').value });
       $('#contact-form').hidden = true;
       $('#contact-done').hidden = false;
     });
@@ -204,9 +289,40 @@
   const listForm = $('#list-form');
   if (listForm) {
     const preview = $('#logo-preview');
-    $('#lf-name').addEventListener('input', e => {
-      if (!preview.querySelector('img')) preview.textContent = initials(e.target.value) || '?';
-    });
+    const FIELDS = ['lf-name', 'lf-email', 'lf-phone', 'lf-states', 'lf-pref', 'lf-tz', 'lf-cap', 'lf-hours', 'lf-spec', 'lf-desc'];
+    const PREF = { call: 'Prefers a phone call', text: 'Prefers text messages', email: 'Prefers email' };
+    const updatePreview = () => {
+      const name = $('#lf-name').value.trim();
+      const states = $('#lf-states').value.split(/[,\s]+/).filter(Boolean).map(x => x.toUpperCase());
+      const tags = $('#lf-spec').value.split(',').map(x => x.trim()).filter(Boolean).slice(0, 4);
+      if (!preview.querySelector('img')) preview.textContent = initials(name) || '?';
+      const pvLogo = $('#pv-logo');
+      if (!pvLogo.querySelector('img')) pvLogo.textContent = initials(name) || '?';
+      $('#pv-name').textContent = name || 'Your company';
+      $('#pv-meta').textContent = `${states.length ? states.join(', ') : 'Your states'} · No reviews yet`;
+      $('#pv-desc').textContent = $('#lf-desc').value.trim() || 'Your short description shows here.';
+      $('#pv-tags').replaceChildren(...tags.map(t => el('span', { className: 'tag', textContent: t })));
+      $('#pv-pref').textContent = PREF[$('#lf-pref').value];
+      $('#lf-desc-count').textContent = String($('#lf-desc').value.length);
+    };
+    let saveTimer = null;
+    const saveDraft = () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        store.set('fc-listing-draft', Object.fromEntries(FIELDS.map(id => [id, $('#' + id).value])));
+        $('#lf-draft-note').hidden = false;
+      }, 400);
+    };
+    const draft = store.get('fc-listing-draft');
+    if (draft) {
+      FIELDS.forEach(id => { if (draft[id] != null) $('#' + id).value = draft[id]; });
+      $('#lf-draft-note').textContent = 'We restored your unfinished draft.';
+      $('#lf-draft-note').hidden = false;
+    }
+    FIELDS.forEach(id => $('#' + id).addEventListener('input', () => { updatePreview(); saveDraft(); }));
+    FIELDS.forEach(id => $('#' + id).addEventListener('change', () => { updatePreview(); saveDraft(); }));
+    $('#lf-phone').addEventListener('blur', e => { if (digitsOnly(e.target.value).length >= 10) e.target.value = formatPhone(e.target.value); });
+    updatePreview();
     $('#lf-logo').addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
@@ -214,10 +330,15 @@
       img.src = URL.createObjectURL(file);
       preview.classList.remove('placeholder');
       preview.replaceChildren(img);
+      const copy = img.cloneNode();
+      $('#pv-logo').classList.remove('placeholder');
+      $('#pv-logo').replaceChildren(copy);
     });
     listForm.addEventListener('submit', e => {
       e.preventDefault();
+      store.del('fc-listing-draft');
       listForm.hidden = true;
+      $('#lf-draft-note').hidden = true;
       $('#list-done').hidden = false;
     });
   }
@@ -227,6 +348,23 @@
   if (priceRows && window.FCRules) {
     priceRows.replaceChildren(...window.FCRules.PRICING.tiers.map(t =>
       el('tr', {}, [el('td', { textContent: t.label }), el('td', { textContent: `$${t.price}` })])));
+  }
+
+  // Monthly cost estimator on the consultant page, computed by the same pricing rules as real billing.
+  const est = $('#estimator');
+  if (est && window.FCRules) {
+    const run = () => {
+      const leads = Number($('#est-leads').value);
+      const cap = $('#est-cap').value === '' ? null : Number($('#est-cap').value);
+      const r = window.FCRules.estimateMonthly({ leadsPerMonth: leads, fleetSize: Number($('#est-fleet').value), monthlyCap: cap, freeLeadAvailable: true });
+      $('#est-leads-out').textContent = String(leads);
+      const declined = r.declined ? ` Your limit would decline ${r.declined} request${r.declined === 1 ? '' : 's'}, at no charge.` : '';
+      $('#est-result').textContent = leads === 0
+        ? 'No requests, no cost.'
+        : `About $${r.total} for your first month: ${r.delivered} lead${r.delivered === 1 ? '' : 's'}, the first one free.${declined}`;
+    };
+    ['#est-leads', '#est-fleet', '#est-cap'].forEach(sel => $(sel).addEventListener('input', run));
+    run();
   }
 
   // Second-look request on the application status page

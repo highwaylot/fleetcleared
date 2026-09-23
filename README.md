@@ -15,6 +15,7 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
 | `admin.html` | Admin mockup. Not linked from any public page |
 | `assets/site.css`, `assets/site.js` | Shared styles and behavior |
 | `assets/rules.js` | **Business rules: lead pricing and signup screening.** Every number lives at the top of this file |
+| `assets/hours.js` | Works out "Open now" / "Closed · opens tomorrow at 7:00 AM" in the consultant's own time zone. Tested in `tests/hours.test.js` |
 | `assets/admin.js` | Admin preview. Scores, reasons and charges come from `rules.js` |
 | `application-status.html` | What a flagged applicant sees, with the "Ask for a second look" form. Reached from the review email, not the menu |
 | `demo/` | **Taste of FleetCleared**: a copy of the site with fictional example consultants (top rated, low rated, brand new, monthly limit reached, flagged application) to show prospective consultants. Data lives in `assets/demo-data.js`, which only the demo loads. The live pages start with no listings |

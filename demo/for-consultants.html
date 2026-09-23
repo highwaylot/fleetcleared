@@ -68,10 +68,20 @@
     <p>You pay only when a carrier sends you their contact details. The price depends on the size of their fleet, because bigger fleets are bigger clients. Leads go to you alone and are never sold to another consultant.</p>
     <div class="table-wrap"><table><thead><tr><th>Carrier's fleet</th><th>Price per lead</th></tr></thead><tbody id="price-rows"></tbody></table></div>
     <p class="hint">Your first lead is free. Set a monthly limit so you're never surprised. Fake or duplicate requests are credited back.</p>
+    <div class="estimator" id="estimator">
+      <h3>Estimate your month</h3>
+      <div class="est-grid">
+        <div class="field"><label for="est-leads">Requests you might get</label><input id="est-leads" type="range" min="0" max="30" value="6"><span class="hint"><b id="est-leads-out">6</b> a month</span></div>
+        <div class="field"><label for="est-fleet">Typical carrier</label><select id="est-fleet"><option value="1">1–2 trucks</option><option value="3" selected>3–10 trucks</option><option value="11">11+ trucks</option></select></div>
+        <div class="field"><label for="est-cap">Your monthly limit</label><select id="est-cap"><option value="5">5 leads</option><option value="10" selected>10 leads</option><option value="20">20 leads</option><option value="">No limit</option></select></div>
+      </div>
+      <p class="est-result" id="est-result" aria-live="polite"></p>
+    </div>
   </section>
+  <div class="signup-layout">
   <div class="form-card">
     <h2>Submit your listing</h2>
-    <p>We'll email you once it's approved.</p>
+    <p>We'll email you once it's approved. <span class="hint" id="lf-draft-note" hidden>Draft saved on this device.</span></p>
     <form id="list-form">
       <div class="form-grid">
         <div class="field"><label for="lf-name">Company name</label><input id="lf-name" required autocomplete="organization"></div>
@@ -83,7 +93,7 @@
         <div class="field full"><label for="lf-cap">Monthly lead limit</label><select id="lf-cap"><option value="5">Up to 5 leads a month</option><option value="10" selected>Up to 10 leads a month</option><option value="20">Up to 20 leads a month</option><option value="">No limit</option></select><span class="hint">Once you reach it, new requests are politely declined until next month. You can change it any time.</span></div>
         <div class="field full"><label for="lf-hours">Hours carriers can contact you</label><input id="lf-hours" placeholder="Mon–Fri 7 AM – 5 PM, Sat 8 AM – noon"><span class="hint">Shown on your profile so carriers know when to expect a reply.</span></div>
         <div class="field full"><label for="lf-spec">Specialties</label><input id="lf-spec" placeholder="DQ files, HOS audits, drug and alcohol programs"></div>
-        <div class="field full"><label for="lf-desc">Short description</label><textarea id="lf-desc" rows="3" placeholder="Which carriers do you help, and with what?"></textarea></div>
+        <div class="field full"><label for="lf-desc">Short description</label><textarea id="lf-desc" rows="3" maxlength="300" placeholder="Which carriers do you help, and with what?"></textarea><span class="hint"><span id="lf-desc-count">0</span> / 300</span></div>
         <div class="field full">
           <label for="lf-logo">Company logo <span class="hint">(optional)</span></label>
           <div class="logo-upload">
@@ -96,6 +106,19 @@
       <button class="btn btn-primary btn-lg btn-block" type="submit">Submit for review</button>
     </form>
     <p class="notice" id="list-done" hidden>Your listing is in the review queue. We'll email you once it's approved.</p>
+  </div>
+  <aside class="listing-preview" aria-label="Preview of your listing">
+    <p class="preview-label">How carriers will see you</p>
+    <article class="card">
+      <div class="card-id">
+        <div class="org-logo placeholder" id="pv-logo" aria-hidden="true">?</div>
+        <div><h2 id="pv-name">Your company</h2><p class="region" id="pv-meta">Your states · No reviews yet</p></div>
+      </div>
+      <p class="desc" id="pv-desc">Your short description shows here.</p>
+      <div class="tags" id="pv-tags"></div>
+      <p class="hint" id="pv-pref"></p>
+    </article>
+  </aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -115,6 +138,7 @@
 </footer>
 <script src="../assets/rules.js"></script>
 <script src="../assets/demo-data.js"></script>
+<script src="../assets/hours.js"></script>
 <script src="../assets/site.js" defer></script>
 </body>
 </html>

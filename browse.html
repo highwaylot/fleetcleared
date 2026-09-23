@@ -59,6 +59,9 @@
     <select id="f-state" aria-label="State"><option value="">All states</option><option>AL</option><option>AR</option><option>FL</option><option>GA</option><option>IN</option><option>KS</option><option>KY</option><option>MO</option><option>NE</option><option>NJ</option><option>NM</option><option>NY</option><option>OH</option><option>OK</option><option>PA</option><option>TX</option></select>
     <select id="f-spec" aria-label="Specialty"><option value="">All specialties</option><option>Audits</option><option>CSA Scores</option><option>DQ Files</option><option>Drug &amp; Alcohol</option><option>New Entrant Audits</option><option>Owner-Operators</option><option>Bilingual</option></select>
     <input id="f-q" type="search" placeholder="Search by company name" aria-label="Search by company name">
+    <select id="f-sort" aria-label="Sort"><option value="rating">Top rated</option><option value="reviews">Most reviews</option><option value="name">Name A–Z</option></select>
+    <label class="check-inline" for="f-open"><input id="f-open" type="checkbox"> Taking requests now</label>
+    <button class="btn btn-ghost btn-sm" type="button" id="f-clear" hidden>Clear filters</button>
   </div>
   <p class="result-count" id="result-count" aria-live="polite"></p>
   <div class="grid" id="grid"></div>
@@ -94,7 +97,8 @@
         <p class="hint" id="cf-pref-note"></p>
         <p class="hint consent" id="cf-text-consent" hidden>By choosing Text, you agree that <span class="cf-to-name"></span> may text you about this request. Message and data rates may apply.</p>
       </fieldset>
-      <div class="field"><label for="cf-contact" id="cf-contact-label">Phone number</label><input id="cf-contact" required type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="cf-contact" id="cf-contact-label">Phone number</label><input id="cf-contact" required type="tel" autocomplete="tel" aria-describedby="cf-contact-error"><span class="field-error" id="cf-contact-error" hidden></span></div>
+      <p class="hint remembered" id="cf-remembered" hidden>We filled in your details from last time. <button type="button" class="link-btn" id="cf-forget">Clear them</button></p>
       <div class="field"><label for="cf-need">What do you need help with? <span class="hint">(optional)</span></label><textarea id="cf-need" rows="2" placeholder="Example: new entrant audit next month"></textarea></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" data-close>Cancel</button>
@@ -121,6 +125,7 @@
   </div>
 </footer>
 <script src="assets/rules.js"></script>
+<script src="assets/hours.js"></script>
 <script src="assets/site.js" defer></script>
 </body>
 </html>
