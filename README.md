@@ -18,6 +18,7 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
 | `assets/admin.js` | Admin preview. Scores, reasons and charges come from `rules.js` |
 | `application-status.html` | What a flagged applicant sees, with the "Ask for a second look" form. Reached from the review email, not the menu |
 | `demo/` | **Taste of FleetCleared**: a copy of the site with fictional example consultants (top rated, low rated, brand new, monthly limit reached, flagged application) to show prospective consultants. Data lives in `assets/demo-data.js`, which only the demo loads. The live pages start with no listings |
+| `review.html` | **Founder review hub**: links to every live page, every demo example, and a log of each saved version. Not linked anywhere, never indexed. Remove or put behind sign-in before launch |
 | `tests/` | Automated checks for the business rules. Run `npm test` |
 | `favicon.ico`, `favicon.svg`, `assets/icons/`, `site.webmanifest` | Browser, iOS and Android icons |
 | `assets/og-image.png` | Link preview image for Facebook, texts, etc. |
@@ -32,6 +33,7 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
    ```
    User-agent: *
    Disallow: /admin.html
+   Disallow: /review.html
    Sitemap: https://fleetcleared.com/sitemap.xml
    ```
 5. **Google Search Console:** verify `fleetcleared.com` with a DNS TXT record (no code change needed), then submit `sitemap.xml`.

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FleetCleared Review</title>
+<meta name="description" content="Founder review hub.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f4c3a">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FleetCleared">
+<meta property="og:title" content="FleetCleared Review">
+<meta property="og:description" content="Founder review hub.">
+<meta property="og:url" content="https://fleetcleared.com/review.html">
+<meta property="og:image" content="https://fleetcleared.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="fcGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17b978"/><stop offset="1" stop-color="#0a5c40"/>
+    </linearGradient>
+    <symbol id="fc-shield" viewBox="0 0 24 24">
+      <g transform="rotate(-16 12 12)">
+        <path d="M12 1.6L4.3 4.7v6.1c0 5.2 3.4 8.9 7.7 10.2 4.3-1.3 7.7-5 7.7-10.2V4.7L12 1.6z" fill="url(#fcGrad)"/>
+        <line x1="12" y1="5.2" x2="12" y2="9.2" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        <line x1="12" y1="11.8" x2="12" y2="15.8" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+<div class="preview-banner">Founder review page. Not linked from the site and blocked from search engines. Remove or protect it before launch.</div>
+<header class="site-header"><div class="wrap"><a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a><span class="hint">Review hub</span></div></header>
+<main class="wrap">
+  <div class="page-head"><h1>Review every piece in one place</h1><p class="lede">The live site starts empty. The example consultants live only in the demo, so you can see how each situation looks and works without anything going live.</p></div>
+  <div class="tour">
+    <section class="tour-section"><h2>Live site (what launches)</h2><p>No listings yet. This is exactly what the public will see on day one.</p>
+      <div class="tour-grid"><a class="tour-card" href="index.html"><b>Home</b><span>No-robocalls message, trust strip</span></a><a class="tour-card" href="browse.html"><b>Find a consultant</b><span>Empty state: we're adding consultants now</span></a><a class="tour-card" href="for-consultants.html"><b>For consultants</b><span>Pricing table, monthly limit, signup</span></a><a class="tour-card" href="application-status.html"><b>Application status</b><span>Flagged applicant and second-look request</span></a><a class="tour-card" href="terms.html"><b>Terms of service</b><span>Draft for lawyer review</span></a><a class="tour-card" href="privacy.html"><b>Privacy policy</b><span>Draft for lawyer review</span></a></div></section>
+    <section class="tour-section"><h2>Example consultants (demo only)</h2><p>Fictional data from <code>assets/demo-data.js</code>. Each one shows a different situation.</p>
+      <div class="tour-grid"><a class="tour-card" href="demo/index.html"><b>Demo tour</b><span>The walkthrough page to show consultants</span></a><a class="tour-card" href="demo/browse.html"><b>Demo search</b><span>All six examples, with filters</span></a><a class="tour-card" href="demo/consultant.html#red-mesa-compliance"><b>Top rated</b><span>Red Mesa Compliance</span></a><a class="tour-card" href="demo/consultant.html#buckeye-fleet-advisors"><b>Solid, with a reply</b><span>Buckeye Fleet Advisors</span></a><a class="tour-card" href="demo/consultant.html#delta-pine-safety"><b>Mixed rating</b><span>Delta Pine Safety Co.</span></a><a class="tour-card" href="demo/consultant.html#two-rivers-compliance"><b>Low rated</b><span>Two Rivers Compliance</span></a><a class="tour-card" href="demo/consultant.html#keystone-haul-safety"><b>Monthly limit reached</b><span>Keystone Haul Safety</span></a><a class="tour-card" href="demo/consultant.html#prairie-line-carrier-services"><b>Brand new</b><span>Prairie Line Carrier Services</span></a></div></section>
+    <section class="tour-section"><h2>How the code decides</h2><p>Pricing and screening live in <code>assets/rules.js</code>, checked by <code>tests/rules.test.js</code> (run <code>npm test</code>). The admin preview is a separate private link.</p></section>
+    <section class="tour-section"><h2>Iteration log</h2><p>Every saved version, newest first. Each code is a commit you can go back to.</p>
+      <div class="table-wrap"><table><thead><tr><th>When</th><th>What changed</th><th>Version</th></tr></thead><tbody><tr><td>Sep 23, 12:00 AM</td><td>Lead with no-robocalls message; ban government look-alike listings</td><td><code>9e8628d</code></td></tr><tr><td>Sep 22, 11:54 PM</td><td>Add Taste of FleetCleared demo; live site starts with no listings</td><td><code>9f13b0f</code></td></tr><tr><td>Sep 22, 11:46 PM</td><td>Add tested lead-pricing and signup-screening rules</td><td><code>64c221e</code></td></tr><tr><td>Sep 22, 11:21 PM</td><td>Close legal gaps: clickwrap, payment authorization, text consent, DMCA, reviews</td><td><code>70b3fce</code></td></tr><tr><td>Sep 22, 10:59 PM</td><td>Add consultant profile page with reviews, contact hours, and preferred contact</td><td><code>ef7535b</code></td></tr><tr><td>Sep 22, 10:14 PM</td><td>Split preview into multi-page static site with legal pages and icons</td><td><code>dd031f9</code></td></tr><tr><td>Sep 22, 10:00 PM</td><td>Add FleetCleared v1 static mockup: home, browse, list-your-practice, admin</td><td><code>ba5290f</code></td></tr></tbody></table></div></section>
+  </div>
+</main>
+<script src="assets/rules.js"></script>
+</body>
+</html>
