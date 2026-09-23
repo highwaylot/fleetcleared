@@ -117,3 +117,10 @@ test('many weak signals can reach Hold, but are never described as a duplicate',
   assert.equal(r.band, 'hold');
   assert.ok(!r.reasons.some((h) => /same|matches/i.test(h.reason)), 'no match reasons when nothing matched');
 });
+
+test('names that sound like a government agency are flagged, ordinary "DOT" names are not', () => {
+  assert.ok(R.screen({ name: 'USDOT Registration Center' }, []).reasons.some((h) => h.key === 'governmentStyle'));
+  assert.ok(R.screen({ name: 'Acme', description: 'Official FMCSA filing service' }, []).reasons.some((h) => h.key === 'governmentStyle'));
+  assert.ok(!R.screen({ name: 'Buckeye DOT Advisors' }, []).reasons.some((h) => h.key === 'governmentStyle'));
+  assert.equal(R.screen({ name: 'DOT Authority Filings' }, []).band, 'check');
+});

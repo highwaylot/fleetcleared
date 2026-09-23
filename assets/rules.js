@@ -24,6 +24,7 @@
       newDomain:        { points: 10, reason: () => 'Email domain registered in the last 90 days' },
       freeEmail:        { points: 10, reason: () => 'Uses a free email address' },
       noWebPresence:    { points: 10, reason: () => 'No website or business listing found' },
+      governmentStyle:  { points: 25, reason: () => 'Name or description may suggest a government agency' },
       domainMatchesSite:{ points: -10, reason: () => 'Email domain matches their website' },
       associationMember:{ points: -15, reason: () => 'Listed as a state trucking association member' },
     },
@@ -35,6 +36,8 @@
     nameSimilarity: 0.9,
     recentIpDays: 30,
     newDomainDays: 90,
+    // Wording that can make a private business look like a government agency. 'DOT' alone is normal in this industry, so it isn't listed.
+    governmentWords: /\b(department of transportation|fmcsa|federal motor carrier|usdot|u\.s\. dot|government|official|dot authority)\b/i,
     freeEmailDomains: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com', 'live.com', 'msn.com', 'proton.me', 'protonmail.com'],
   };
 
@@ -129,6 +132,7 @@
     if (typeof applicant.emailDomainAgeDays === 'number' && applicant.emailDomainAgeDays < SCREENING.newDomainDays) hit('newDomain');
     if (isFreeEmail(applicant.email)) hit('freeEmail');
     if (applicant.webPresenceFound === false) hit('noWebPresence');
+    if (SCREENING.governmentWords.test(`${applicant.name || ''} ${applicant.description || ''}`)) hit('governmentStyle');
     if (applicant.website && !isFreeEmail(applicant.email) && emailDomain(applicant.email) === siteDomain(applicant.website)) hit('domainMatchesSite');
     if (applicant.associationMember === true) hit('associationMember');
 
