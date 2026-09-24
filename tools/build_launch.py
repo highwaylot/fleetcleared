@@ -35,12 +35,12 @@ featured_cards = "".join(f'<a class="tour-card" href="{s}"><span class="variatio
 WAITLIST = f'''<section class="form-card wait-card" id="waitlist" aria-labelledby="wait-h">
   <h2 id="wait-h">Get first pick when we open</h2>
   <p>We\'ll email you once when consultants are live in your area. That\'s the only email you\'ll get from this list.</p>
-  <form id="waitlist-form" novalidate>
+  <form class="waitlist-form" data-kind="carrier" data-done-id="wait-done" novalidate>
     <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off">
-    <div class="field"><label for="wl-email">Email</label><input id="wl-email" name="email" type="email" autocomplete="email" required></div>
-    <div class="field"><label for="wl-name">Name (optional)</label><input id="wl-name" name="name" type="text" autocomplete="name"></div>
-    <input type="hidden" name="state" id="wl-state" value="">
-    <p class="field-error" id="wait-error" hidden></p>
+    <div class="field"><label for="wl-email">Email</label><input id="wl-email" data-field="email" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="wl-name">Name (optional)</label><input id="wl-name" data-field="name" type="text" autocomplete="name"></div>
+    <input type="hidden" id="wl-state" data-field="state" value="">
+    <p class="field-error" hidden></p>
     <button class="btn btn-primary" type="submit">Notify me</button>
   </form>
   <p class="notice" id="wait-done" hidden>You\'re on the list.</p>
@@ -68,6 +68,7 @@ write("index.html", head("FleetCleared: Plain-Language DOT Compliance Guides for
   </section>
   <section class="wrap">{WAITLIST}</section>
 </main>
+<script src="assets/guides.js" defer></script>
 ''' + FOOTER)
 
 # ---------- TERMS OF USE ----------
@@ -106,6 +107,54 @@ launch_legal("privacy.html", "Privacy Policy | FleetCleared",
    ("kids", "Children", "<p>FleetCleared is for businesses and isn't directed to anyone under 18.</p>"),
    ("contact", "Contact", f"<p><strong>privacy@fleetcleared.com</strong><br>{NAME}, {ADDRESS}</p>"),
   ])
+
+
+# ---------- FOR CONSULTANTS (waitlist, not the real signup -- that needs a backend that doesn't exist yet) ----------
+# The scarcity here is real, not invented: the launch plan targets a first wave of about 10-15 Texas
+# consultants (see the field guide), and whoever lists first genuinely gets seen first while the
+# directory is new and thin -- that advantage is structural, not a marketing trick, and goes away
+# once more consultants join. Change FIRST_WAVE_SIZE if the plan changes.
+FIRST_WAVE_SIZE = 15
+consultant_page_ld = {"@context": "https://schema.org", "@type": "WebPage", "name": "FleetCleared for consultants", "url": f"{SITE}/for-consultants.html"}
+write("for-consultants.html", head(
+  "Be First in Texas | FleetCleared for DOT Compliance Consultants",
+  "FleetCleared opens to a small first wave of Texas DOT compliance consultants. Reserve your spot before the directory fills in.",
+  "for-consultants.html", f'\n<script type="application/ld+json">{json.dumps(consultant_page_ld)}</script>') + header("guides") + f'''<main class="wrap">
+  <section class="hero wrap hero-launch">
+    <span class="eyebrow">For DOT compliance consultants</span>
+    <h1>Texas carriers are already reading. You're not listed yet.</h1>
+    <p class="lede">Every guide on this site ends with "find a consultant." Right now that page has nowhere to send them. The first wave of about {FIRST_WAVE_SIZE} Texas consultants gets listed while the directory is still new and thin -- seen first, not buried on page three once everyone else catches on.</p>
+  </section>
+  <section class="wrap" style="max-width:760px;margin-inline:auto">
+    <div class="grid3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:8px">
+      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">Free to list</h3><p class="hint" style="margin:0">Your first lead is free. After that, you pay only per lead, by fleet size.</p></div>
+      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">First wave, first seen</h3><p class="hint" style="margin:0">Fewer listings means every one of them gets more attention. That window closes as we grow.</p></div>
+      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">No robocalls, ever</h3><p class="hint" style="margin:0">Carriers only reach you when they ask to. We screen every signup by hand.</p></div>
+    </div>
+  </section>
+  <section class="wrap">
+    <section class="form-card wait-card" id="waitlist" aria-labelledby="cwait-h">
+      <h2 id="cwait-h">Reserve your spot</h2>
+      <p>We'll email you the moment the directory opens in your area, before it's public. No cost, no obligation to list.</p>
+      <form class="waitlist-form" data-kind="consultant" data-done-id="cwait-done" novalidate>
+        <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off">
+        <div class="form-grid">
+          <div class="field"><label for="cwl-email">Email</label><input id="cwl-email" data-field="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="cwl-name">Your name</label><input id="cwl-name" data-field="name" type="text" autocomplete="name"></div>
+          <div class="field full"><label for="cwl-company">Company (optional)</label><input id="cwl-company" data-field="company" type="text" autocomplete="organization"></div>
+        </div>
+        <input type="hidden" data-field="state" value="TX">
+        <p class="field-error" hidden></p>
+        <button class="btn btn-primary" type="submit">Reserve my spot</button>
+      </form>
+      <p class="notice" id="cwait-done" hidden>You're on the list. First wave, first seen.</p>
+      <p class="fine">We only use this to tell you the directory opened, and to review your listing when you apply. See our <a href="privacy.html">privacy policy</a>.</p>
+    </section>
+  </section>
+  {DISCLAIMER}
+</main>
+<script src="assets/guides.js" defer></script>
+''' + FOOTER)
 
 
 # ---------- PRIVATE STATUS PAGE (founder only: unguessable URL, never linked, noindex) ----------
@@ -152,37 +201,48 @@ admin_page = head("FleetCleared Waitlist", "Private waitlist admin.", ADMIN_SLUG
     <p class="field-error" id="admin-error" hidden></p>
   </div>
   <div id="admin-results" hidden>
-    <div class="stats" style="margin:20px 0"><div><small>Signed up</small><b id="admin-count">0</b></div></div>
+    <div class="tabs" role="tablist" style="display:flex;gap:6px;margin-bottom:14px">
+      <button class="btn btn-ghost btn-sm" type="button" data-list="carrier" aria-selected="true">Carriers</button>
+      <button class="btn btn-ghost btn-sm" type="button" data-list="consultant" aria-selected="false">Consultants</button>
+    </div>
+    <div class="stats" style="margin:0 0 14px"><div><small>Signed up</small><b id="admin-count">0</b></div></div>
     <button class="btn btn-ghost" id="admin-copy" type="button">Copy all emails</button>
     <p class="fine" id="admin-copied" hidden>Copied.</p>
-    <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Date</th><th>Email</th><th>Name</th><th>State</th></tr></thead><tbody id="admin-rows"></tbody></table></div>
+    <div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Date</th><th>Email</th><th>Name</th><th>Company</th><th>State</th></tr></thead><tbody id="admin-rows"></tbody></table></div>
   </div>
 </main>
 <script>
 (function () {{
   const $ = (s) => document.querySelector(s);
   const keyInput = $('#admin-key');
+  let current = 'carrier'; let rows = [];
   try {{ keyInput.value = localStorage.getItem('fc-admin-key') || ''; }} catch (e) {{}}
-  async function load() {{
+  function render() {{
+    $('#admin-count').textContent = rows.length;
+    $('#admin-rows').innerHTML = rows.map(r => `<tr><td>${{r.ts ? new Date(r.ts * 1000).toLocaleDateString('en-US') : ''}}</td><td>${{r.email}}</td><td>${{r.name || '—'}}</td><td>${{r.company || '—'}}</td><td>${{r.state || '—'}}</td></tr>`).join('');
+  }}
+  async function load(which) {{
+    current = which || current;
     const key = keyInput.value.trim(); const err = $('#admin-error'); err.hidden = true;
     if (!key) {{ err.textContent = 'Enter the admin key.'; err.hidden = false; return; }}
     try {{
-      const res = await fetch('/api/admin_waitlist?key=' + encodeURIComponent(key));
+      const res = await fetch('/api/admin_waitlist?key=' + encodeURIComponent(key) + '&list=' + current);
       const data = await res.json();
-      if (!res.ok || data.ok === false) throw new Error(data.error || 'Wrong key, or the waitlist store isn\\'t connected yet.');
+      if (!res.ok || data.ok === false) throw new Error(data.error || "Wrong key, or the waitlist store isn't connected yet.");
       try {{ localStorage.setItem('fc-admin-key', key); }} catch (e) {{}}
-      const rows = (data.rows || []).slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
-      $('#admin-count').textContent = rows.length;
-      $('#admin-rows').innerHTML = rows.map(r => `<tr><td>${{r.ts ? new Date(r.ts * 1000).toLocaleDateString('en-US') : ''}}</td><td>${{r.email}}</td><td>${{r.name || '—'}}</td><td>${{r.state || '—'}}</td></tr>`).join('');
-      $('#admin-copy').onclick = async () => {{
-        const emails = rows.map(r => r.email).join(', ');
-        try {{ await navigator.clipboard.writeText(emails); }} catch (e) {{ const t = document.createElement('textarea'); t.value = emails; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); }}
-        $('#admin-copied').hidden = false;
-      }};
+      rows = (data.rows || []).slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
+      render();
+      document.querySelectorAll('[data-list]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.list === current)));
       $('#admin-results').hidden = false;
     }} catch (e2) {{ err.textContent = e2.message; err.hidden = false; }}
   }}
-  $('#admin-load').addEventListener('click', load);
+  document.querySelectorAll('[data-list]').forEach(b => b.addEventListener('click', () => load(b.dataset.list)));
+  $('#admin-copy').addEventListener('click', async () => {{
+    const emails = rows.map(r => r.email).join(', ');
+    try {{ await navigator.clipboard.writeText(emails); }} catch (e) {{ const t = document.createElement('textarea'); t.value = emails; document.body.append(t); t.select(); document.execCommand('copy'); t.remove(); }}
+    $('#admin-copied').hidden = false;
+  }});
+  $('#admin-load').addEventListener('click', () => load());
   keyInput.addEventListener('keydown', (e) => {{ if (e.key === 'Enter') load(); }});
   if (keyInput.value) load();
 }})();

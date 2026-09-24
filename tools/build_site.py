@@ -11,7 +11,7 @@ LAUNCH = os.environ.get("FC_LAUNCH") == "1"
 # before the company details are filled in. Remove it from vercel.json to go fully live.
 HOLD_INDEX = os.environ.get("FC_HOLD_INDEX") == "1"
 OUT = ROOT / "dist" if LAUNCH else ROOT
-LAUNCH_PAGES = {"index.html", "guides.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
+LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
 UPDATED = "September 22, 2026"
 
 ICON = {
@@ -149,6 +149,7 @@ if LAUNCH:
     </div>
     <ul class="footer-links">
       <li><a href="guides.html">Guides &amp; free tools</a></li>
+      <li><a href="for-consultants.html">For consultants</a></li>
       <li><a href="privacy.html">Privacy policy</a></li>
       <li><a href="mcs-150-due-date.html">MCS-150 due date</a></li>
       <li><a href="terms.html">Terms of use</a></li>
@@ -689,10 +690,10 @@ if LAUNCH:
 # ---------- SEO / platform files ----------
 if LAUNCH and HOLD_INDEX:
     write("robots.txt", "# Interim live site: hidden from search engines until the company details are filled in.\nUser-agent: *\nDisallow: /\n")
-    pages = ["", "guides.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
 elif LAUNCH:
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    pages = ["", "guides.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
 else:
     write("robots.txt", "# PREVIEW MODE: blocks all crawlers. The public build (FC_LAUNCH=1) writes its own.\nUser-agent: *\nDisallow: /\n")
     pages = ["", "browse.html", "for-consultants.html", "privacy.html", "terms.html"] + GUIDE_PAGES
@@ -723,7 +724,7 @@ if LAUNCH:
     for f in sorted(OUT.rglob("*.html")):
         t = f.read_text()
         for needle, why in [('class="fill"', "unfilled placeholder"), *([] if HOLD_INDEX else [("noindex", "noindex tag")]), ("draft-flag", "draft note"),
-                            ('href="browse.html', "link to the directory"), ('href="for-consultants.html', "link to consultant signup"),
+                            ('href="browse.html', "link to the directory"),
                             ("review-pending", "review-pending label"), ('id="remind-form"', "reminder form")]:
             if needle in t: problems.append(f"{f.relative_to(OUT)}: {why}")
     # FC_PREVIEW_BLANKS=1 lets a private preview show blank company details; nothing else is allowed through.

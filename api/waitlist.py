@@ -1,9 +1,13 @@
-# Stores directory-waitlist signups in Vercel KV (Upstash Redis), called from the home page form.
-# No email is sent from here. See api/admin_waitlist.py to read the list back.
+# Stores waitlist signups in Vercel KV (Upstash Redis): carriers and consultants in separate lists,
+# so they can be reviewed and mass-emailed separately later. Called from the home page form (kind=carrier)
+# and the consultant page form (kind=consultant). No email is sent from here.
+# See api/admin_waitlist.py to read a list back.
 import json, os, re, time, urllib.request
+from http.server import BaseHTTPRequestHandler
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MAX_LEN = 200
+LISTS = {"carrier": "waitlist:carrier", "consultant": "waitlist:consultant"}
 
 def _kv_url():
     return os.environ.get("KV_REST_API_URL") or os.environ.get("UPSTASH_REDIS_REST_URL")
@@ -23,8 +27,6 @@ def _kv(*command):
 def _clean(s):
     return re.sub(r"\s+", " ", str(s or "")).strip()[:MAX_LEN]
 
-from http.server import BaseHTTPRequestHandler
-
 class handler(BaseHTTPRequestHandler):
     def _send(self, code, body):
         self.send_response(code)
@@ -42,13 +44,16 @@ class handler(BaseHTTPRequestHandler):
         if _clean(data.get("botcheck")):  # honeypot: real visitors never fill this hidden field
             return self._send(200, {"ok": True})  # pretend success, drop it silently
 
+        key = LISTS.get(_clean(data.get("kind")).lower(), LISTS["carrier"])
+
         email = _clean(data.get("email")).lower()
         if not EMAIL_RE.match(email):
             return self._send(400, {"ok": False, "error": "Enter a full email address."})
 
-        record = {"email": email, "name": _clean(data.get("name")), "state": _clean(data.get("state")).upper()[:2], "ts": int(time.time())}
+        record = {"email": email, "name": _clean(data.get("name")), "state": _clean(data.get("state")).upper()[:2],
+                   "company": _clean(data.get("company")), "ts": int(time.time())}
         try:
-            _kv("RPUSH", "waitlist", json.dumps(record))
-        except Exception as e:
+            _kv("RPUSH", key, json.dumps(record))
+        except Exception:
             return self._send(500, {"ok": False, "error": "Couldn't save that right now. Try again in a bit."})
         self._send(200, {"ok": True})

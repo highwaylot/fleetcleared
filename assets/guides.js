@@ -70,30 +70,40 @@
     });
   }
 
-  // ---------- Directory waitlist (email + optional name, saved in our own Vercel KV store via /api/waitlist) ----------
-  const wait = $('#waitlist-form');
-  if (wait) {
-    const err = $('#wait-error');
-    const stateInput = $('#wl-state');
-    if (stateInput) { try { const m = document.cookie.match(/(?:^|; )fc_state=([^;]+)/); if (m) stateInput.value = decodeURIComponent(m[1]); } catch (e) {} }
-    wait.addEventListener('submit', async (e) => {
+  // ---------- Waitlists (email + optional fields, saved in our own Vercel KV store via /api/waitlist) ----------
+  // Reused for the carrier form on the home page and the consultant form on for-consultants.html;
+  // each form carries a data-kind of 'carrier' or 'consultant' so they land in separate lists.
+  function wireWaitlist(form) {
+    const kind = form.dataset.kind || 'carrier';
+    const emailField = form.querySelector('[data-field=email]');
+    const nameField = form.querySelector('[data-field=name]');
+    const companyField = form.querySelector('[data-field=company]');
+    const stateField = form.querySelector('[data-field=state]');
+    const hp = form.querySelector('[name=botcheck]');
+    const err = form.querySelector('.field-error');
+    const done = document.getElementById(form.dataset.doneId);
+    if (stateField && stateField.type === 'hidden') {
+      try { const m = document.cookie.match(/(?:^|; )fc_state=([^;]+)/); if (m) stateField.value = decodeURIComponent(m[1]); } catch (e) {}
+    }
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = $('#wl-email').value.trim();
+      const email = emailField.value.trim();
       err.hidden = true;
-      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Enter a full email address.'; err.hidden = false; $('#wl-email').focus(); return; }
-      const btn = wait.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Sending...';
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Enter a full email address.'; err.hidden = false; emailField.focus(); return; }
+      const btn = form.querySelector('button[type=submit]'); const label = btn.textContent; btn.disabled = true; btn.textContent = 'Sending...';
       try {
-        const body = { email, name: $('#wl-name').value.trim(), state: stateInput ? stateInput.value : '', botcheck: wait.querySelector('[name=botcheck]').checked ? '1' : '' };
+        const body = { kind, email, name: nameField ? nameField.value.trim() : '', company: companyField ? companyField.value.trim() : '', state: stateField ? stateField.value : '', botcheck: hp && hp.checked ? '1' : '' };
         const res = await fetch('/api/waitlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const data = await res.json().catch(() => ({}));
         if (!res.ok || data.ok === false) throw new Error(data.error || 'bad response');
-        wait.hidden = true; $('#wait-done').hidden = false;
+        form.hidden = true; if (done) done.hidden = false;
       } catch (e2) {
         err.textContent = (e2 && e2.message) || 'That didn\'t send. Check your connection and try again.'; err.hidden = false;
-        btn.disabled = false; btn.textContent = 'Notify me';
+        btn.disabled = false; btn.textContent = label;
       }
     });
   }
+  document.querySelectorAll('.waitlist-form').forEach(wireWaitlist);
 
   // ---------- Reminder signup (preview: not connected) ----------
   const rem = $('#remind-form');

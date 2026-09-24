@@ -491,3 +491,4 @@ tr:last-child td{ border-bottom:none; }
 .launch-guides > p.section-label{ margin:0 auto; justify-self:center; }
 .hp-field{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .wait-card{ max-width:520px; margin-inline:auto; }
+[data-list][aria-selected="true"]{ background:var(--brand); color:var(--on-brand); border-color:var(--brand); }

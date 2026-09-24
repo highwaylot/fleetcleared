@@ -1,8 +1,10 @@
-# Private: returns the raw waitlist so it can be reviewed and copied for a mass email later.
-# Requires ?key=<ADMIN_SECRET>, an env var you set in Vercel (Settings -> Environment Variables).
-# Never put that secret in the repo; it isn't read from tools/launch.json.
+# Private: returns a raw waitlist (carrier or consultant) so it can be reviewed and copied for a mass
+# email later. Requires ?key=<ADMIN_SECRET>, an env var you set in Vercel (Settings -> Environment
+# Variables). Never put that secret in the repo; it isn't read from tools/launch.json.
 import json, os, urllib.parse, urllib.request
 from http.server import BaseHTTPRequestHandler
+
+LISTS = {"carrier": "waitlist:carrier", "consultant": "waitlist:consultant"}
 
 def _kv_url():
     return os.environ.get("KV_REST_API_URL") or os.environ.get("UPSTASH_REDIS_REST_URL")
@@ -28,8 +30,10 @@ class handler(BaseHTTPRequestHandler):
             self.send_response(403); self.send_header("Content-Type", "application/json"); self.end_headers()
             self.wfile.write(json.dumps({"ok": False, "error": "Wrong or missing key"}).encode())
             return
+        which = (qs.get("list") or ["carrier"])[0]
+        key = LISTS.get(which, LISTS["carrier"])
         try:
-            raw = _kv("LRANGE", "waitlist", 0, -1).get("result", [])
+            raw = _kv("LRANGE", key, 0, -1).get("result", [])
             rows = [json.loads(r) for r in raw]
         except Exception as e:
             self.send_response(500); self.send_header("Content-Type", "application/json"); self.end_headers()
