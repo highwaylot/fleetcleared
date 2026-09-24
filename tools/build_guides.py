@@ -66,7 +66,8 @@ def guide(slug, title, desc, h1, answer, sections, sources, related, group, card
     extra = f'\n<script type="application/ld+json">{json.dumps(ld)}</script>'
     rel = "".join(f'<a class="tour-card" href="{s}"><span class="variation">{g}</span><b>{c}</b><span>{b}</span></a>'
                   for s, c, b, g in RELATED_INDEX if s in related)
-    write(slug, head(title, desc, slug, extra) + header("guides") + f'''<main class="wrap">
+    nav_key = "mcs" if slug == "mcs-150-due-date.html" else "check" if slug == "audit-readiness-check.html" else "guides"
+    write(slug, head(title, desc, slug, extra) + header(nav_key) + f'''<main class="wrap">
   <nav class="crumbs" aria-label="Breadcrumb"><a href="guides.html">Guides</a> <span aria-hidden="true">/</span> <span>{card}</span></nav>
   <div class="page-head guide-head">
     <h1>{h1}</h1>

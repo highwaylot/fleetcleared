@@ -80,9 +80,33 @@ launch_legal("privacy.html", "Privacy Policy | FleetCleared",
    ("share", "Like any website, our host and Google Fonts receive <strong>basic connection data</strong> such as your IP address.")],
   [
    ("collect", "What we collect", "<p>Nothing you type. The site has no sign-up, no contact form and no account. The MCS-150 due-date tool and the audit readiness check work entirely in your browser; your USDOT number and answers are never sent to us.</p>"),
-   ("automatic", "What's shared automatically", "<p>When you load a page, your browser sends standard connection information, such as your IP address, browser type and the page requested. Our hosting provider receives it to deliver the site and protect it from attacks, and may keep it in short-term logs. Our pages also load fonts from Google Fonts, which receives your IP address when the font files load.</p><p>We don't use advertising cookies or trackers. If we add privacy-friendly visitor statistics or any form later, we'll update this policy first.</p>"),
+   ("automatic", "What's shared automatically", "<p>When you load a page, your browser sends standard connection information, such as your IP address, browser type and the page requested. Our hosting provider receives it to deliver the site and protect it from attacks, and may keep it in short-term logs. Our pages also load fonts from Google Fonts, which receives your IP address when the font files load.</p><p>We use Vercel Web Analytics to count page views. It doesn't use cookies, doesn't track you across other websites, and doesn't build a profile of you. We only see aggregate numbers, like how many people read a page. We don't use advertising cookies or trackers.</p>"),
    ("email", "If you email us", "<p>If you email us, for example to report an error, we use your message and address only to reply and fix the problem, and we don't add you to any list.</p>"),
    ("rights", "Your rights", "<p>Depending on where you live, you may have the right to ask what personal information we hold about you and to have it deleted. Since we don't collect it through the site, there's usually nothing to find, but email <strong>privacy@fleetcleared.com</strong> and we'll check within 45 days.</p>"),
    ("kids", "Children", "<p>FleetCleared is for businesses and isn't directed to anyone under 18.</p>"),
    ("contact", "Contact", f"<p><strong>privacy@fleetcleared.com</strong><br>{NAME}, {ADDRESS}</p>"),
   ])
+
+
+# ---------- PRIVATE STATUS PAGE (founder only: unguessable URL, never linked, noindex) ----------
+# Change STATUS_SLUG any time you want a new private URL; the old one just stops working.
+STATUS_SLUG = "status-3b3500e3.html"
+status_cards = "".join(f'<a class="tour-card" href="{s}"><span class="variation">{g}</span><b>{c}</b><span>{b}</span></a>' for s, c, b, g in RELATED_INDEX)
+status_page = head("FleetCleared Launch Status", "Private status page.", STATUS_SLUG).replace(
+    '<link rel="canonical" href="https://fleetcleared.com/' + STATUS_SLUG + '">\n', "") + f"""<div class="preview-banner">Private page. Not linked anywhere on the site and blocked from search engines. Bookmark this URL; it isn't listed anywhere else.</div>
+<header class="site-header"><div class="wrap">{LOGO}<span class="hint">Launch status</span></div></header>
+<main class="wrap">
+  <div class="page-head"><h1>Guides soft launch</h1><p class="lede">Every public page, plus where to check traffic. The guides collect nothing themselves, so real numbers live in Vercel.</p></div>
+  <div class="tour">
+    <section class="tour-section"><h2>Traffic and search</h2>
+      <div class="tour-grid">
+        <a class="tour-card" href="https://vercel.com/highwaylot/fleetcleared/analytics" rel="noopener"><span class="variation">Vercel</span><b>Page views by page</b><span>Needs Web Analytics turned on once in Vercel's dashboard (Analytics tab -&gt; Enable). Free tier, no cookies.</span></a>
+        <a class="tour-card" href="https://search.google.com/search-console" rel="noopener"><span class="variation">Google</span><b>Search Console</b><span>Which guides show up in search and for what, once indexing is on and Google has crawled the site.</span></a>
+      </div>
+    </section>
+    <section class="tour-section"><h2>Live pages</h2><div class="tour-grid"><a class="tour-card" href="index.html"><span class="variation">Home</span><b>fleetcleared.com</b><span>The guides landing page.</span></a>{status_cards}</div></section>
+  </div>
+</main>
+"""
+LAUNCH_PAGES.add(STATUS_SLUG)
+write(STATUS_SLUG, status_page)

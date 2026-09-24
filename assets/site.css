@@ -363,7 +363,7 @@ tr:last-child td{ border-bottom:none; }
 .tour{ display:grid; gap:40px; padding-bottom:72px; }
 .tour-section h2{ font-size:28px; margin-bottom:6px; }
 .tour-section > p{ color:var(--ink-soft); margin-bottom:18px; max-width:60ch; }
-.tour-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.tour-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; align-items:stretch; }
 .tour-card{ display:flex; flex-direction:column; gap:8px; padding:18px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); text-decoration:none; color:var(--ink); }
 .tour-card:hover{ border-color:var(--brand); }
 .tour-card .variation{ font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--brand); }

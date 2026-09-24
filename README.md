@@ -40,6 +40,8 @@ Builds a separate, public version with just the home page, guides, free tools, t
 4. **Hosting is Vercel**, connected to this repo. `vercel.json` tells it to run the launch build and serve `dist/`. Production updates when `main` changes. Right now `vercel.json` includes `FC_HOLD_INDEX=1`, which publishes the guides but keeps search engines out while the company details are blank. Delete `FC_HOLD_INDEX=1` from `vercel.json` once `tools/launch.json` is filled, and the next deploy is fully public and indexable.
 5. Create the inboxes `legal@`, `privacy@` and `corrections@fleetcleared.com`.
 6. In Google Search Console, verify the domain and submit `https://fleetcleared.com/sitemap.xml`.
+7. In Vercel: Project -> Analytics -> Enable (free, cookieless page-view counts; already disclosed in the launch privacy policy).
+8. Bookmark the private status page: `https://fleetcleared.com/status-3b3500e3.html`. It's not linked anywhere and is blocked from search, so this URL is the only way to reach it. Links to every public page plus Vercel Analytics and Search Console. To retire it, change `STATUS_SLUG` in `tools/build_launch.py` and rebuild; the old URL stops working.
 
 The preview (plain `python3 tools/build_site.py`) is unchanged and stays noindex.
 

@@ -137,6 +137,9 @@ FOOTER = f'''<footer class="site-footer">
 </body>
 </html>
 '''
+# Vercel Web Analytics: cookieless, aggregate page-view counts. No-ops until you enable it once
+# in Vercel's dashboard (Project -> Analytics -> Enable). Disclosed in the launch privacy policy.
+ANALYTICS = '<script defer src="/_vercel/insights/script.js"></script>' if LAUNCH else ''
 if LAUNCH:
     FOOTER = f'''<footer class="site-footer">
   <div class="wrap">
@@ -153,6 +156,7 @@ if LAUNCH:
     <p class="footer-legal">© 2026 FleetCleared. Not affiliated with the FMCSA or the U.S. Department of Transportation.</p>
   </div>
 </footer>
+{ANALYTICS}
 </body>
 </html>
 '''
