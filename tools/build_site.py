@@ -716,7 +716,10 @@ if LAUNCH:
                             ('href="browse.html', "link to the directory"), ('href="for-consultants.html', "link to consultant signup"),
                             ("review-pending", "review-pending label"), ('id="remind-form"', "reminder form")]:
             if needle in t: problems.append(f"{f.relative_to(OUT)}: {why}")
-    if problems:
+    # FC_PREVIEW_BLANKS=1 lets a private preview show blank company details; nothing else is allowed through.
+    if problems and os.environ.get("FC_PREVIEW_BLANKS") == "1" and all(p.endswith("unfilled placeholder") for p in problems):
+        print("PRIVATE PREVIEW ONLY, not publishable:\n  " + "\n  ".join(problems))
+    elif problems:
         print("NOT READY TO PUBLISH:\n  " + "\n  ".join(problems)); raise SystemExit(1)
     print(f"ok: public build in {OUT.relative_to(ROOT)}/ ({len(list(OUT.rglob('*.html')))} pages)")
 else:
