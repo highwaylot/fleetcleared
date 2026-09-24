@@ -1,6 +1,8 @@
 # FleetCleared — design preview
 
-Static site, no build step. Open `index.html` in a browser, or serve the folder with any static host.
+Static site. Open `index.html` in a browser, or serve the folder with any static host.
+
+**Pages are generated.** Edit `tools/build_site.py` (site pages) or `tools/build_guides.py` (guides and free tools), then run `python3 tools/build_site.py`. Don't hand-edit the generated `.html` files; the next build overwrites them.
 
 **Preview mode is on.** Every page has `<meta name="robots" content="noindex, nofollow">` and `robots.txt` blocks all crawlers, so nothing gets indexed by search engines.
 
@@ -20,7 +22,10 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
 | `application-status.html` | What a flagged applicant sees, with the "Ask for a second look" form. Reached from the review email, not the menu |
 | `demo/` | **Taste of FleetCleared**: a copy of the site with fictional example consultants (top rated, low rated, brand new, monthly limit reached, flagged application) to show prospective consultants. Data lives in `assets/demo-data.js`, which only the demo loads. The live pages start with no listings |
 | `review.html` | **Founder review hub**: links to every live page, every demo example, and a log of each saved version. Not linked anywhere, never indexed. Remove or put behind sign-in before launch |
-| `tests/` | Automated checks for the business rules. Run `npm test` |
+| `guides.html`, `guide-*.html` | **Guides**: plain-language answers for carriers (safety audit, drug and alcohol, CSA letters, deadlines). Each shows "Waiting for review by a listed consultant" until one reviews it |
+| `mcs-150-due-date.html`, `audit-readiness-check.html` | **Free tools.** Math lives in `assets/deadlines.js` (tested); page behavior in `assets/guides.js`. Nothing entered is saved or sent |
+| `tools/` | The page generator (`build_site.py`, `build_guides.py`) |
+| `tests/` | Automated checks for the business rules, opening hours and deadline math. Run `npm test` |
 | `favicon.ico`, `favicon.svg`, `assets/icons/`, `site.webmanifest` | Browser, iOS and Android icons |
 | `assets/og-image.png` | Link preview image for Facebook, texts, etc. |
 | `sitemap.xml`, `robots.txt` | Search engine files |
@@ -38,7 +43,8 @@ Static site, no build step. Open `index.html` in a browser, or serve the folder 
    Sitemap: https://fleetcleared.com/sitemap.xml
    ```
 5. **Google Search Console:** verify `fleetcleared.com` with a DNS TXT record (no code change needed), then submit `sitemap.xml`.
-6. **Forms:** the contact and signup forms only show a confirmation right now. Wire them to the backend so each contact request is stored as a lead.
+6. **Forms:** the contact, signup and deadline-reminder forms only show a confirmation right now. Wire them to the backend so each contact request is stored as a lead and each reminder signup is stored with its consent.
+7. **Guides:** have a listed consultant review each guide, then replace "Waiting for review" with their name. Re-check every date and figure against the linked sources.
 
 ## Pricing and screening rules
 
@@ -56,6 +62,8 @@ Both live in `assets/rules.js`, so the site, the admin page and the tests use th
 - **Clear** (0–24): quick look, then approve.
 - **Check** (25–59): read the reasons first.
 - **Hold** (60+): contact the applicant before deciding.
+
+The government check looks for government words in the business name, but in the description only flags claims to be or act for the government ("official FMCSA", "on behalf of the DOT"), so "former FMCSA investigator" isn't penalized.
 
 It never rejects anyone automatically. A lookup that hasn't run (for example the state registry) adds no points, so missing data never counts against an applicant. Accounts that share a phone, address, card or company email domain count as one business and share one free lead.
 

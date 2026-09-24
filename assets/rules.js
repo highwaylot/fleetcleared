@@ -38,6 +38,8 @@
     newDomainDays: 90,
     // Wording that can make a private business look like a government agency. 'DOT' alone is normal in this industry, so it isn't listed.
     governmentWords: /\b(department of transportation|fmcsa|federal motor carrier|usdot|u\.s\. dot|government|official|dot authority)\b/i,
+    // In a description, naming an agency is normal ("former FMCSA investigator"). Only claims to BE or act FOR the government count.
+    governmentClaims: /\b(official (fmcsa|usdot|dot|government|federal)|(a|an|the) (government|federal|state) agency|on behalf of (the )?(fmcsa|usdot|dot|department of transportation|government)|(affiliated|partnered) with (the )?(fmcsa|usdot|dot|department of transportation)|government[- ](approved|authorized|official)|(fmcsa|dot|usdot)[- ](approved|authorized|certified|official))\b/i,
     freeEmailDomains: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com', 'live.com', 'msn.com', 'proton.me', 'protonmail.com'],
   };
 
@@ -146,7 +148,7 @@
     if (typeof applicant.emailDomainAgeDays === 'number' && applicant.emailDomainAgeDays < SCREENING.newDomainDays) hit('newDomain');
     if (isFreeEmail(applicant.email)) hit('freeEmail');
     if (applicant.webPresenceFound === false) hit('noWebPresence');
-    if (SCREENING.governmentWords.test(`${applicant.name || ''} ${applicant.description || ''}`)) hit('governmentStyle');
+    if (SCREENING.governmentWords.test(applicant.name || '') || SCREENING.governmentClaims.test(applicant.description || '')) hit('governmentStyle');
     if (applicant.website && !isFreeEmail(applicant.email) && emailDomain(applicant.email) === siteDomain(applicant.website)) hit('domainMatchesSite');
     if (applicant.associationMember === true) hit('associationMember');
 

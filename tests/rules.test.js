@@ -122,5 +122,20 @@ test('names that sound like a government agency are flagged, ordinary "DOT" name
   assert.ok(R.screen({ name: 'USDOT Registration Center' }, []).reasons.some((h) => h.key === 'governmentStyle'));
   assert.ok(R.screen({ name: 'Acme', description: 'Official FMCSA filing service' }, []).reasons.some((h) => h.key === 'governmentStyle'));
   assert.ok(!R.screen({ name: 'Buckeye DOT Advisors' }, []).reasons.some((h) => h.key === 'governmentStyle'));
+});
+
+test('description: naming an agency is fine, claiming to be or act for one is flagged', () => {
+  const gov = (description, name = 'Acme Safety') => R.screen({ name, description }, []).reasons.some((h) => h.key === 'governmentStyle');
+  // Honest experience, common among real consultants: not flagged
+  assert.equal(gov('Run by a former FMCSA investigator with 17 years of experience'), false);
+  assert.equal(gov('We help carriers with Department of Transportation audits and USDOT filings'), false);
+  assert.equal(gov('Registered FMCSA process agent'), false);
+  // Claims to be, or speak for, the government: flagged
+  assert.equal(gov('Official FMCSA filing service'), true);
+  assert.equal(gov('We are a government agency processing your update'), true);
+  assert.equal(gov('Filing on behalf of the DOT'), true);
+  assert.equal(gov('FMCSA-approved compliance program'), true);
+  // Business name still flagged on any government word
+  assert.equal(gov('', 'FMCSA Compliance Services LLC'), true);
   assert.equal(R.screen({ name: 'DOT Authority Filings' }, []).band, 'check');
 });

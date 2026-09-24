@@ -331,7 +331,7 @@ tr:last-child td{ border-bottom:none; }
   .profile-body{ grid-template-columns:1fr; }
   .facts{ grid-template-columns:repeat(2,1fr); }
   .trust-strip li{ white-space:normal; }
-  .legal{ grid-template-columns:1fr; gap:24px; }
+  .legal{ grid-template-columns:minmax(0,1fr); gap:24px; }
   .legal-toc{ position:static; }
   .stats{ grid-template-columns:repeat(2,1fr); }
 }
@@ -421,3 +421,60 @@ tr:last-child td{ border-bottom:none; }
   #profile-page{ padding-bottom:84px; }
 }
 .mobile-bar span:empty{ display:none; }
+
+/* Guides */
+.crumbs{ padding-top:24px; font-size:14px; color:var(--ink-soft); display:flex; gap:6px; }
+.crumbs a{ color:var(--brand); }
+.guide-head{ padding-top:12px; display:grid; gap:12px; }
+.guide-head h1{ margin:0; max-width:24ch; text-wrap:balance; }
+.short-answer{ background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--brand); border-radius:8px; padding:14px 16px; max-width:72ch; display:grid; gap:4px; }
+.short-answer p{ margin:0; font-size:17px; }
+.short-answer .eyebrow{ justify-self:start; }
+.guide-meta{ font-size:14px; color:var(--ink-soft); margin:0; }
+.review-pending{ color:var(--trial); font-weight:600; }
+.guide .legal-body ol{ padding-left:22px; display:grid; gap:6px; }
+.guide .table-wrap{ margin:12px 0; }
+.guide .table-wrap td, .guide .table-wrap th{ font-size:15px; vertical-align:top; }
+.guide-cta{ margin:36px 0 8px; background:var(--brand); color:var(--on-brand); border-radius:var(--radius); padding:20px; display:grid; gap:10px; justify-items:start; }
+.guide-cta h2{ margin:0 !important; color:var(--on-brand); font-size:24px; }
+.guide-cta p{ margin:0; font-size:16px !important; }
+.guide-cta .btn-primary{ background:var(--on-brand); color:var(--brand); }
+.sources{ font-size:15px; }
+.sources li{ font-size:15px !important; }
+.guide-disclaimer{ margin-top:20px; }
+.related{ padding-bottom:64px; }
+.related h2{ font-size:26px; margin-bottom:14px; }
+.cal-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin:12px 0; }
+.cal-month{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; }
+.cal-month h3{ margin:0 0 6px !important; font-size:18px !important; }
+.cal-month ul{ margin:0 !important; padding-left:18px !important; gap:4px !important; }
+.cal-month li{ font-size:14px !important; }
+
+/* Free tools */
+.tool-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-bottom:32px; max-width:760px; display:grid; gap:12px; }
+.tool-card h2{ margin:0; font-size:24px; }
+.tool-form{ display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+.tool-form .field{ margin:0; flex:1 1 220px; }
+.tool-result{ background:var(--brand-soft); border-radius:8px; padding:14px 16px; display:grid; gap:6px; justify-items:start; }
+.tool-result p{ margin:0; }
+.tool-big{ font:700 24px/1.2 var(--font-display); color:var(--ink); }
+.check-form{ display:grid; gap:10px; }
+.check-form .q{ border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:0; display:grid; gap:8px; }
+.check-form .q legend{ font-weight:600; padding:0 4px; float:left; width:100%; }
+.check-form .q-gate{ background:var(--brand-soft); }
+.q-n{ display:inline-grid; place-items:center; width:22px; height:22px; border-radius:999px; background:var(--brand); color:var(--on-brand); font-size:12px; margin-right:8px; vertical-align:1px; }
+.check-form .segmented{ display:flex; gap:6px; flex-wrap:wrap; clear:both; }
+.check-form .segmented label{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:999px; padding:6px 12px; cursor:pointer; font-size:15px; background:var(--panel); }
+.check-form .segmented label:has(input:checked){ border-color:var(--brand); background:var(--brand-soft); color:var(--brand); font-weight:600; }
+.check-form .segmented input{ accent-color:var(--brand); }
+.check-form > .btn{ justify-self:start; }
+.check-group{ width:100%; border-radius:8px; padding:10px 12px; background:var(--panel); }
+.check-group h3{ margin:0 0 4px; font-size:17px; }
+.check-group ul{ margin:0; padding-left:18px; }
+.check-group.bad h3{ color:var(--warn); }
+.check-group.warn h3{ color:var(--trial); }
+.check-next{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.remind{ margin-top:8px; }
+.remind .check-list{ border:0; padding:0; margin:0 0 8px; display:flex; flex-wrap:wrap; gap:8px 16px; }
+.remind .check-list legend{ font-weight:600; margin-bottom:6px; }
+.remind .consent{ align-items:flex-start; font-weight:400; font-size:14px; margin-bottom:12px; }
