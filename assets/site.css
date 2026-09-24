@@ -90,6 +90,14 @@ a{ color:var(--brand); }
 .hero .lede{ margin:0 auto 32px; }
 .hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
+/* Launch home: shorter, calmer hero. Fewer, larger visual chunks; the eye gets a clear first move instead of scanning
+   a wall of equal-weight elements. See the trust line and featured-guides note below for the same idea applied further down. */
+.hero-launch{ padding-block:64px 8px; }
+.hero-launch h1{ font-size:44px; max-width:23ch; line-height:1.15; }
+.hero-launch .lede{ max-width:52ch; font-size:17px; }
+.trust-line{ margin:28px auto 0; max-width:640px; text-align:center; font-size:14px; color:var(--ink-soft); display:flex; justify-content:center; flex-wrap:wrap; gap:0 8px; }
+.trust-line span:not(:last-child)::after{ content:"·"; margin-left:8px; color:var(--line); }
+
 .icon-badge{ width:40px; height:40px; border-radius:10px; background:var(--brand); display:grid; place-items:center; flex:none; }
 .icon-badge svg{ width:21px; height:21px; fill:none; stroke:var(--on-brand); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
@@ -479,6 +487,7 @@ tr:last-child td{ border-bottom:none; }
 .remind .check-list legend{ font-weight:600; margin-bottom:6px; }
 .remind .consent{ align-items:flex-start; font-weight:400; font-size:14px; margin-bottom:12px; }
 .guide-notice{ margin:0; font-size:14px; color:var(--ink-soft); max-width:72ch; }
-.launch-guides{ display:grid; gap:12px; padding-bottom:64px; }
+.launch-guides{ display:grid; gap:20px; padding-block:56px 8px; max-width:920px; margin-inline:auto; }
+.launch-guides > p.section-label{ margin:0 auto; justify-self:center; }
 .hp-field{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .wait-card{ max-width:520px; margin-inline:auto; }

@@ -70,7 +70,7 @@
     });
   }
 
-  // ---------- Directory waitlist (email + optional name, posts to Web3Forms) ----------
+  // ---------- Directory waitlist (email + optional name, saved in our own Vercel KV store via /api/waitlist) ----------
   const wait = $('#waitlist-form');
   if (wait) {
     const err = $('#wait-error');
@@ -83,12 +83,13 @@
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Enter a full email address.'; err.hidden = false; $('#wl-email').focus(); return; }
       const btn = wait.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Sending...';
       try {
-        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(wait))) });
-        const ok = res.ok && (await res.json().catch(() => ({}))).success !== false;
-        if (!ok) throw new Error('bad response');
+        const body = { email, name: $('#wl-name').value.trim(), state: stateInput ? stateInput.value : '', botcheck: wait.querySelector('[name=botcheck]').checked ? '1' : '' };
+        const res = await fetch('/api/waitlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'bad response');
         wait.hidden = true; $('#wait-done').hidden = false;
       } catch (e2) {
-        err.textContent = 'That didn\'t send. Check your connection and try again.'; err.hidden = false;
+        err.textContent = (e2 && e2.message) || 'That didn\'t send. Check your connection and try again.'; err.hidden = false;
         btn.disabled = false; btn.textContent = 'Notify me';
       }
     });
