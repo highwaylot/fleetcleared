@@ -70,6 +70,30 @@
     });
   }
 
+  // ---------- Directory waitlist (email + optional name, posts to Web3Forms) ----------
+  const wait = $('#waitlist-form');
+  if (wait) {
+    const err = $('#wait-error');
+    const stateInput = $('#wl-state');
+    if (stateInput) { try { const m = document.cookie.match(/(?:^|; )fc_state=([^;]+)/); if (m) stateInput.value = decodeURIComponent(m[1]); } catch (e) {} }
+    wait.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('#wl-email').value.trim();
+      err.hidden = true;
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'Enter a full email address.'; err.hidden = false; $('#wl-email').focus(); return; }
+      const btn = wait.querySelector('button[type=submit]'); btn.disabled = true; btn.textContent = 'Sending...';
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(wait))) });
+        const ok = res.ok && (await res.json().catch(() => ({}))).success !== false;
+        if (!ok) throw new Error('bad response');
+        wait.hidden = true; $('#wait-done').hidden = false;
+      } catch (e2) {
+        err.textContent = 'That didn\'t send. Check your connection and try again.'; err.hidden = false;
+        btn.disabled = false; btn.textContent = 'Notify me';
+      }
+    });
+  }
+
   // ---------- Reminder signup (preview: not connected) ----------
   const rem = $('#remind-form');
   if (rem) {

@@ -480,3 +480,5 @@ tr:last-child td{ border-bottom:none; }
 .remind .consent{ align-items:flex-start; font-weight:400; font-size:14px; margin-bottom:12px; }
 .guide-notice{ margin:0; font-size:14px; color:var(--ink-soft); max-width:72ch; }
 .launch-guides{ display:grid; gap:12px; padding-bottom:64px; }
+.hp-field{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.wait-card{ max-width:520px; margin-inline:auto; }

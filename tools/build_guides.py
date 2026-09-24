@@ -30,6 +30,7 @@ IFTA = src("IFTA, Inc.", "https://www.iftach.org/")
 CTA_LAUNCH = '''<aside class="guide-cta">
   <h2>Want someone to handle this?</h2>
   <p>An independent DOT compliance consultant can check your records and do this work for you. Our consultant directory opens in 2027. Until then, look for someone with safety audit experience and ask for references.</p>
+  <a class="btn btn-primary" href="index.html#waitlist">Get first pick when we open</a>
 </aside>'''
 CTA = '''<aside class="guide-cta">
   <h2>Want someone to handle this?</h2>
