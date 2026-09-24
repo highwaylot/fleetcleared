@@ -33,7 +33,7 @@ CTA = '''<aside class="guide-cta">
   <a class="btn btn-primary" href="browse.html">Find a consultant</a>
 </aside>'''
 
-DISCLAIMER = '<p class="fine guide-disclaimer">General information, not legal or compliance advice. Rules change and every carrier is different. Check the sources linked below or talk to a qualified consultant about your situation. FleetCleared is a directory and is not affiliated with FMCSA or the U.S. Department of Transportation.</p>'
+DISCLAIMER = '<p class="fine guide-disclaimer">General information, not legal or compliance advice, and no substitute for the regulations or a qualified professional. Rules change and every carrier is different. Reading this page doesn\'t create a relationship with FleetCleared or any consultant, and using it is subject to our <a href="terms.html#guides">terms</a>. Found an error? Email <strong>corrections@fleetcleared.com</strong>. FleetCleared is a directory and is not affiliated with FMCSA or the U.S. Department of Transportation.</p>'
 
 GUIDES = []   # (slug, card title, card blurb, group)
 GUIDE_PAGES = ["guides.html"]
@@ -67,6 +67,7 @@ def guide(slug, title, desc, h1, answer, sections, sources, related, group, card
     <h1>{h1}</h1>
     <div class="short-answer"><span class="eyebrow">Short answer</span><p>{answer}</p></div>
     <p class="guide-meta">Updated {GUIDES_UPDATED} · <span class="review-pending">Waiting for review by a listed consultant</span></p>
+    <p class="guide-notice">General information, not legal advice. Rules change: check the linked sources or a qualified consultant before acting. <a href="terms.html#guides">How to use our guides</a></p>
   </div>
   {tool_html}
   <div class="legal guide">
@@ -153,7 +154,7 @@ guide("guide-new-entrant-safety-audit.html",
 <li>Answer the audit notice by its deadline. Ignoring it can be treated as a failure.</li>
 </ul>'''),
     ("fail", "If you fail", '''<p>You get a written notice. Send a corrective action plan within 15 days so FMCSA has time to review it. Property carriers have 60 days from the notice to show acceptable corrective action; passenger and placarded hazmat carriers have 45. Miss it and your registration is revoked. <a href="guide-failed-safety-audit.html">Read what to do after a failed audit</a>.</p>'''),
-    ("help", "When to get help", '''<p>Many carriers prepare on their own. A consultant is worth it if you have several drivers, you're behind on driver files, you've never set up drug and alcohol testing, or your audit is weeks away. Many offer a mock audit that walks through your records the way the auditor will.</p>'''),
+    ("help", "When to get help", '''<p>No checklist guarantees a pass: auditors review your actual records and can find problems beyond the 16 automatic-fail rules. Many carriers prepare on their own. A consultant is worth it if you have several drivers, you're behind on driver files, you've never set up drug and alcohol testing, or your audit is weeks away. Many offer a mock audit that walks through your records the way the auditor will.</p>'''),
   ],
   [FMCSA_FAQ, ECFR_NE, ECFR_321, NE_HELP],
   ["guide-automatic-fail-violations.html", "guide-failed-safety-audit.html", "audit-readiness-check.html", "guide-drug-alcohol-consortium.html"],
@@ -324,7 +325,7 @@ MCS_TOOL = '''<section class="tool-card" aria-labelledby="mcs-tool-h">
   </form>
   <p class="field-error" id="mcs-error" hidden></p>
   <div class="tool-result" id="mcs-result" hidden aria-live="polite"></div>
-  <p class="fine">Worked out on your device from the schedule in 49 CFR 390.19. Nothing is saved or sent.</p>
+  <p class="fine">An estimate worked out on your device from the schedule in 49 CFR 390.19. Confirm your due date in your FMCSA registration before relying on it. Nothing is saved or sent.</p>
 </section>'''
 guide("mcs-150-due-date.html",
   "When Is My MCS-150 Due? Free USDOT Number Lookup | FleetCleared",
@@ -375,7 +376,7 @@ CHECK_TOOL = f'''<section class="tool-card" aria-labelledby="chk-h">
     <button class="btn btn-primary" type="submit">See my results</button>
   </form>
   <div class="tool-result" id="check-result" hidden aria-live="polite"></div>
-  <p class="fine">Nothing you answer is saved or sent. This is a self-check, not an audit result.</p>
+  <p class="fine">A self-check, not an audit result. It covers only the 16 automatic-fail rules, and answering yes to everything doesn't mean you'll pass. Nothing you answer is saved or sent.</p>
 </section>'''
 guide("audit-readiness-check.html",
   "New Entrant Safety Audit Readiness Check (Free) | FleetCleared",
@@ -415,7 +416,7 @@ REMIND = '''<section class="tool-card remind" aria-labelledby="remind-h" id="rem
     <button class="btn btn-primary" type="submit">Send me reminders</button>
   </form>
   <p class="notice" id="r-done" hidden>You're on the list. <span class="preview-label">Preview: reminders aren't connected yet, so nothing was saved.</span></p>
-  <p class="fine">We never share or sell your number or email, and we never pass it to consultants. See our <a href="privacy.html">privacy policy</a>.</p>
+  <p class="fine">Reminders are a free courtesy. We can't guarantee every reminder arrives on time, so you stay responsible for your deadlines (see our <a href="terms.html#guides">terms</a>). We never share or sell your number or email, and we never pass it to consultants. See our <a href="privacy.html">privacy policy</a>.</p>
 </section>'''
 hub_ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Guides and free tools", "url": f"{SITE}/guides.html", "publisher": {"@id": f"{SITE}/#org"}}
 write("guides.html", head("DOT Compliance Guides and Free Tools for Small Trucking Companies | FleetCleared",

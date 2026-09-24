@@ -478,3 +478,4 @@ tr:last-child td{ border-bottom:none; }
 .remind .check-list{ border:0; padding:0; margin:0 0 8px; display:flex; flex-wrap:wrap; gap:8px 16px; }
 .remind .check-list legend{ font-weight:600; margin-bottom:6px; }
 .remind .consent{ align-items:flex-start; font-weight:400; font-size:14px; margin-bottom:12px; }
+.guide-notice{ margin:0; font-size:14px; color:var(--ink-soft); max-width:72ch; }

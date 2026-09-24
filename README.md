@@ -34,7 +34,7 @@ Static site. Open `index.html` in a browser, or serve the folder with any static
 
 1. **Admin needs real sign-in.** Hiding the page is not security. Put `admin.html` behind authentication (for example Supabase Auth or Vercel password protection) or move it into the real app.
 2. **Legal pages:** fill every highlighted placeholder, have a lawyer review them, then delete the "Draft for review" note.
-3. **Create inboxes** for `privacy@fleetcleared.com` and `legal@fleetcleared.com`.
+3. **Create inboxes** for `privacy@fleetcleared.com`, `legal@fleetcleared.com`, `copyright@fleetcleared.com` and `corrections@fleetcleared.com`.
 4. **Turn on indexing:** in every public page change `noindex, nofollow` to `index, follow` (leave `admin.html` as noindex), and replace `robots.txt` with:
    ```
    User-agent: *
@@ -44,7 +44,7 @@ Static site. Open `index.html` in a browser, or serve the folder with any static
    ```
 5. **Google Search Console:** verify `fleetcleared.com` with a DNS TXT record (no code change needed), then submit `sitemap.xml`.
 6. **Forms:** the contact, signup and deadline-reminder forms only show a confirmation right now. Wire them to the backend so each contact request is stored as a lead and each reminder signup is stored with its consent.
-7. **Guides:** have a listed consultant review each guide, then replace "Waiting for review" with their name. Re-check every date and figure against the linked sources.
+7. **Guides:** have a listed consultant review each guide, then replace "Waiting for review" with their name. Get a short written reviewer agreement first (they checked it for accuracy, it isn't their advice to readers, no pay or ranking boost for reviewing). Re-check every date and figure against the linked sources, and ask the lawyer to review the "Guides, free tools and reminders" section of the terms.
 
 ## Pricing and screening rules
 
