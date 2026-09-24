@@ -30,6 +30,19 @@ Static site. Open `index.html` in a browser, or serve the folder with any static
 | `assets/og-image.png` | Link preview image for Facebook, texts, etc. |
 | `sitemap.xml`, `robots.txt` | Search engine files |
 
+## Public soft launch (guides only)
+
+Builds a separate, public version with just the home page, guides, free tools, terms and privacy. No directory, forms, admin, demo or review hub, and no fake confirmations:
+
+1. Fill every field in `tools/launch.json` (company legal name, state, mailing address, courts, liability cap, effective date).
+2. Work through `FACT-CHECK.md`.
+3. Run `FC_LAUNCH=1 python3 tools/build_site.py`. It writes the site to `dist/` (not saved in git) and **refuses to finish** while any placeholder, noindex tag, draft note, directory link or reminder form remains.
+4. Deploy `dist/` to a static host (Cloudflare Pages, Netlify). On Cloudflare Pages: build command `FC_LAUNCH=1 python3 tools/build_site.py`, output folder `dist`.
+5. Create the inboxes `legal@`, `privacy@` and `corrections@fleetcleared.com`.
+6. In Google Search Console, verify the domain and submit `https://fleetcleared.com/sitemap.xml`.
+
+The preview (plain `python3 tools/build_site.py`) is unchanged and stays noindex.
+
 ## Before going live
 
 1. **Admin needs real sign-in.** Hiding the page is not security. Put `admin.html` behind authentication (for example Supabase Auth or Vercel password protection) or move it into the real app.

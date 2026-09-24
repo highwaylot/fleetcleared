@@ -3,6 +3,8 @@
 (function () {
   const $ = (s) => document.querySelector(s);
   const el = (tag, text, cls) => { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; };
+  // On the public soft launch the directory and reminders aren't open yet, so the tools don't link to them.
+  const directoryOpen = document.documentElement.dataset.directory !== 'off';
   const fmt = (d) => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   // ---------- MCS-150 due date ----------
@@ -21,8 +23,7 @@
         el('p', `Due by ${fmt(r.dueBy)}`, 'tool-big'),
         el('p', `USDOT ${r.usdot} updates every ${r.month} of ${r.oddYears ? 'odd' : 'even'}-numbered years.`),
       );
-      const a = el('a', 'Get a reminder before it’s due', 'btn btn-ghost'); a.href = 'guides.html#reminders';
-      out.append(a);
+      if (directoryOpen) { const a = el('a', 'Get a reminder before it’s due', 'btn btn-ghost'); a.href = 'guides.html#reminders'; out.append(a); }
       out.hidden = false;
     });
   }
@@ -61,8 +62,8 @@
         : el('p', 'No automatic-fail answers. Keep the records that prove it.', 'tool-big');
       const next = el('p', null, 'check-next');
       const g = el('a', 'What to have ready for the audit'); g.href = 'guide-new-entrant-safety-audit.html';
-      const b = el('a', 'Find a consultant', 'btn btn-primary'); b.href = 'browse.html';
-      next.append(g, ' ', b);
+      next.append(g);
+      if (directoryOpen) { const b = el('a', 'Find a consultant', 'btn btn-primary'); b.href = 'browse.html'; next.append(' ', b); }
       out.replaceChildren(...[head, list('Could fail you automatically', fix, 'bad'), list('Not sure: check your records', confirm, 'warn'), list('Not answered', skipped, 'skip'), next].filter(Boolean));
       out.hidden = false;
       out.scrollIntoView({ behavior: 'smooth', block: 'start' });

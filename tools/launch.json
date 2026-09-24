@@ -1,0 +1,9 @@
+{
+  "_help": "Fill these before the public build. The build refuses to finish while any is empty. Nothing here is secret: it appears on the public terms and privacy pages.",
+  "legal_name": "",
+  "state_of_formation": "",
+  "mailing_address": "",
+  "court_county_and_state": "",
+  "liability_cap_dollars": "",
+  "effective_date": ""
+}

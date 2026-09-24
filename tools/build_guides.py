@@ -27,6 +27,10 @@ UCR = src("Unified Carrier Registration plan", "https://plan.ucr.gov/")
 IRS_2290 = src("IRS: About Form 2290", "https://www.irs.gov/forms-pubs/about-form-2290")
 IFTA = src("IFTA, Inc.", "https://www.iftach.org/")
 
+CTA_LAUNCH = '''<aside class="guide-cta">
+  <h2>Want someone to handle this?</h2>
+  <p>An independent DOT compliance consultant can check your records and do this work for you. Our consultant directory opens in 2027. Until then, look for someone with safety audit experience and ask for references.</p>
+</aside>'''
 CTA = '''<aside class="guide-cta">
   <h2>Want someone to handle this?</h2>
   <p>Independent DOT compliance consultants on FleetCleared do this work for small carriers every day. Free to search, and nobody contacts you unless you ask.</p>
@@ -39,12 +43,13 @@ GUIDES = []   # (slug, card title, card blurb, group)
 GUIDE_PAGES = ["guides.html"]
 
 def guide_scripts(extra):
-    return FOOTER.replace('<script src="assets/site.js" defer></script>', '<script src="assets/site.js" defer></script>' + extra)
+    return FOOTER.replace('</body>', extra.lstrip('\n') + '\n</body>', 1)
 
 def guide(slug, title, desc, h1, answer, sections, sources, related, group, card, blurb, tool_html="", scripts=""):
     """sections: list of (id, heading, html)."""
     GUIDES.append((slug, card, blurb, group))
     GUIDE_PAGES.append(slug)
+    LAUNCH_PAGES.add(slug)
     toc = "".join(f'<li><a href="#{i}">{h}</a></li>' for i, h, _ in sections)
     body = "".join(f'<h2 id="{i}">{h}</h2>\n{c}\n' for i, h, c in sections)
     srcs = "".join(f'<li><a href="{u}" rel="noopener">{l}</a></li>' for l, u in sources)
@@ -66,7 +71,7 @@ def guide(slug, title, desc, h1, answer, sections, sources, related, group, card
   <div class="page-head guide-head">
     <h1>{h1}</h1>
     <div class="short-answer"><span class="eyebrow">Short answer</span><p>{answer}</p></div>
-    <p class="guide-meta">Updated {GUIDES_UPDATED} · <span class="review-pending">Waiting for review by a listed consultant</span></p>
+    <p class="guide-meta">Updated {GUIDES_UPDATED}{"" if LAUNCH else ' · <span class="review-pending">Waiting for review by a listed consultant</span>'}</p>
     <p class="guide-notice">General information, not legal advice. Rules change: check the linked sources or a qualified consultant before acting. <a href="terms.html#guides">How to use our guides</a></p>
   </div>
   {tool_html}
@@ -74,7 +79,7 @@ def guide(slug, title, desc, h1, answer, sections, sources, related, group, card
     <aside class="legal-toc"><p>On this page</p><ol>{toc}<li><a href="#sources">Sources</a></li></ol></aside>
     <article class="legal-body">
 {body}
-      {CTA}
+      {CTA_LAUNCH if LAUNCH else CTA}
       <h2 id="sources">Sources</h2>
       <ul class="sources">{srcs}</ul>
       {DISCLAIMER}
@@ -425,7 +430,7 @@ write("guides.html", head("DOT Compliance Guides and Free Tools for Small Trucki
   <div class="page-head">
     <span class="eyebrow">Guides &amp; free tools</span>
     <h1>Plain answers to the compliance questions that keep carriers up at night</h1>
-    <p class="lede">Written for small trucking companies, with the official source linked on every page. When you'd rather hand it off, independent consultants are one click away.</p>
+    <p class="lede">Written for small trucking companies, with the official source linked on every page. {"A directory of independent compliance consultants is coming in 2027." if LAUNCH else "When you'd rather hand it off, independent consultants are one click away."}</p>
   </div>
   <div class="tour">
     <section class="tour-section"><h2>New carriers and the safety audit</h2><div class="tour-grid">{cards(["New carriers"])}</div></section>
@@ -433,7 +438,7 @@ write("guides.html", head("DOT Compliance Guides and Free Tools for Small Trucki
     <section class="tour-section"><h2>Drug and alcohol testing</h2><div class="tour-grid">{cards(["Drug and alcohol"])}</div></section>
     <section class="tour-section"><h2>Trouble and deadlines</h2><div class="tour-grid">{cards(["Trouble", "Deadlines"])}</div></section>
   </div>
-  {REMIND}
+  {"" if LAUNCH else REMIND}
   {DISCLAIMER}
 </main>
 ''' + guide_scripts('\n<script src="assets/guides.js" defer></script>'))

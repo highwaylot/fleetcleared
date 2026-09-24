@@ -1,8 +1,14 @@
-import json, pathlib
+import json, os, pathlib, shutil
 
 # Builds every HTML page of the site. Run from anywhere: python3 tools/build_site.py
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://fleetcleared.com"
+# Two builds from one source:
+#   python3 tools/build_site.py                 -> preview: every page, noindex, written into the repo
+#   FC_LAUNCH=1 python3 tools/build_site.py     -> public soft launch: guides and tools only, indexable, written to dist/
+LAUNCH = os.environ.get("FC_LAUNCH") == "1"
+OUT = ROOT / "dist" if LAUNCH else ROOT
+LAUNCH_PAGES = {"index.html", "guides.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
 UPDATED = "September 22, 2026"
 
 ICON = {
@@ -41,11 +47,11 @@ SPRITE = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 LOGO = '<a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a>'
 
 def head(title, desc, path, extra=""):
-    # PREVIEW MODE: every page is noindex until launch. See README "Going live".
-    robots = "noindex, nofollow"
+    # Preview pages are never indexed. Launch pages are.
+    robots = "index, follow" if LAUNCH else "noindex, nofollow"
     url = f"{SITE}/{path}" if path else f"{SITE}/"
     return f'''<!DOCTYPE html>
-<html lang="en">
+<html lang="en"{' data-directory="off"' if LAUNCH else ''}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -81,6 +87,19 @@ def header(current):
         cur = ' aria-current="page"' if key == current else ""
         c = f' class="{cls}"' if cls else ""
         return f'<a href="{href}"{c}{cur}>{label}</a>'
+    if LAUNCH:
+        nav = f'''{a("guides.html", "Guides", "guides")}
+      {a("mcs-150-due-date.html", "MCS-150 due date", "mcs")}
+      {a("audit-readiness-check.html", "Audit check", "check", "btn btn-ghost")}'''
+        return f'''<header class="site-header">
+  <div class="wrap">
+    {LOGO}
+    <nav class="site-nav" aria-label="Main">
+      {nav}
+    </nav>
+  </div>
+</header>
+'''
     return f'''<header class="site-header">
   <div class="wrap">
     {LOGO}
@@ -115,11 +134,33 @@ FOOTER = f'''<footer class="site-footer">
 </body>
 </html>
 '''
+if LAUNCH:
+    FOOTER = f'''<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      {LOGO}
+      <p class="footer-note">Plain-language DOT compliance guides and free tools for small trucking companies. General information, not legal advice. A directory of independent compliance consultants is coming in 2027.</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="guides.html">Guides &amp; free tools</a></li>
+      <li><a href="privacy.html">Privacy policy</a></li>
+      <li><a href="mcs-150-due-date.html">MCS-150 due date</a></li>
+      <li><a href="terms.html">Terms of use</a></li>
+    </ul>
+    <p class="footer-legal">© 2026 FleetCleared. Not affiliated with the FMCSA or the U.S. Department of Transportation.</p>
+  </div>
+</footer>
+</body>
+</html>
+'''
 
 PAGES = {}
 def write(name, html):
     PAGES[name] = html
-    (ROOT / name).write_text(html)
+    if LAUNCH and name not in LAUNCH_PAGES:
+        return
+    (OUT / name).parent.mkdir(parents=True, exist_ok=True)
+    (OUT / name).write_text(html)
 
 # ---------- HOME ----------
 ld = {
@@ -556,7 +597,9 @@ exec(open(pathlib.Path(__file__).with_name("build_guides.py")).read())
 
 # ---------- TASTE OF FLEETCLEARED (demo copy in /demo, fictional data) ----------
 DEMO = ROOT / "demo"
-DEMO.mkdir(exist_ok=True)
+if not LAUNCH: DEMO.mkdir(exist_ok=True)
+def demo_write(name, html):
+    if not LAUNCH: (DEMO / name).write_text(html)
 BANNER = '<div class="demo-banner">Taste of FleetCleared: every business and review here is fictional. <a href="index.html">Back to the tour</a></div>\n'
 def demo_copy(html):
     for a, b in [('"assets/', '"../assets/'), ('"favicon', '"../favicon'), ('"site.webmanifest"', '"../site.webmanifest"'),
@@ -567,8 +610,8 @@ def demo_copy(html):
     body = html.index('</svg>', html.index('<body>')) + len('</svg>\n')
     return html[:body] + BANNER + html[body:]
 for name in ["browse.html", "consultant.html", "for-consultants.html"]:
-    (DEMO / name).write_text(demo_copy(PAGES[name]))
-(DEMO / "application-status.html").write_text(demo_copy(PAGES["application-status.html"].replace(
+    demo_write(name, demo_copy(PAGES[name]))
+demo_write("application-status.html", demo_copy(PAGES["application-status.html"].replace(
     "Thanks for applying. Before we approve", "Thanks for applying, Summit Lane Safety. Before we approve")))
 
 tour_consultants = [
@@ -603,7 +646,7 @@ tour = head("Taste of FleetCleared", "A walkthrough of FleetCleared with fiction
   </div>
 </main>
 """ + FOOTER
-(DEMO / "index.html").write_text(demo_copy(tour).replace(BANNER, '<div class="demo-banner">Taste of FleetCleared: every business and review here is fictional.</div>\n'))
+demo_write("index.html", demo_copy(tour).replace(BANNER, '<div class="demo-banner">Taste of FleetCleared: every business and review here is fictional.</div>\n'))
 
 
 # ---------- REVIEW HUB (founder only: never linked, never indexed) ----------
@@ -632,11 +675,19 @@ review_page = head("FleetCleared Review", "Founder review hub.", "review.html").
 """
 write("review.html", review_page)
 
+# ---------- PUBLIC SOFT LAUNCH (home, terms, privacy for a site that collects nothing) ----------
+if LAUNCH:
+    exec(open(pathlib.Path(__file__).with_name("build_launch.py")).read())
+
 # ---------- SEO / platform files ----------
-write("robots.txt", "# PREVIEW MODE: blocks all crawlers. At launch, replace with the block in README.md.\nUser-agent: *\nDisallow: /\n")
-pages = ["", "browse.html", "for-consultants.html", "privacy.html", "terms.html"] + GUIDE_PAGES
+if LAUNCH:
+    write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+    pages = ["", "guides.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+else:
+    write("robots.txt", "# PREVIEW MODE: blocks all crawlers. The public build (FC_LAUNCH=1) writes its own.\nUser-agent: *\nDisallow: /\n")
+    pages = ["", "browse.html", "for-consultants.html", "privacy.html", "terms.html"] + GUIDE_PAGES
 write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-      "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>2026-09-22</lastmod></url>\n" for p in pages) + "</urlset>\n")
+      "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{GUIDES_ISO}</lastmod></url>\n" for p in pages) + "</urlset>\n")
 write("site.webmanifest", json.dumps({
   "name": "FleetCleared", "short_name": "FleetCleared", "start_url": "/", "display": "browser",
   "background_color": "#f4f6f4", "theme_color": "#0f4c3a",
@@ -652,4 +703,21 @@ write("favicon.svg", '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
   </g>
 </svg>
 ''')
-print("ok")
+if LAUNCH:
+    # Static files the public pages use. Nothing private (admin, demo data, rules) is copied.
+    for f in ["assets/site.css", "assets/deadlines.js", "assets/guides.js", "assets/og-image.png", "favicon.ico"]:
+        (OUT / f).parent.mkdir(parents=True, exist_ok=True); shutil.copy(ROOT / f, OUT / f)
+    shutil.copytree(ROOT / "assets/icons", OUT / "assets/icons", dirs_exist_ok=True)
+    # Refuse to call the build ready while any placeholder or preview-only link remains.
+    problems = []
+    for f in sorted(OUT.rglob("*.html")):
+        t = f.read_text()
+        for needle, why in [('class="fill"', "unfilled placeholder"), ("noindex", "noindex tag"), ("draft-flag", "draft note"),
+                            ('href="browse.html', "link to the directory"), ('href="for-consultants.html', "link to consultant signup"),
+                            ("review-pending", "review-pending label"), ('id="remind-form"', "reminder form")]:
+            if needle in t: problems.append(f"{f.relative_to(OUT)}: {why}")
+    if problems:
+        print("NOT READY TO PUBLISH:\n  " + "\n  ".join(problems)); raise SystemExit(1)
+    print(f"ok: public build in {OUT.relative_to(ROOT)}/ ({len(list(OUT.rglob('*.html')))} pages)")
+else:
+    print("ok")
