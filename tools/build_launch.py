@@ -65,6 +65,7 @@ write("index.html", head("FleetCleared: Plain-Language DOT Compliance Guides for
     <p class="section-label eyebrow">Start here</p>
     <div class="tour-grid">{featured_cards}</div>
     <p class="fine" style="text-align:center">A directory of independent DOT compliance consultants is coming in 2027. <a href="guides.html">See every guide &amp; tool &rarr;</a></p>
+    <p class="fine" style="text-align:center">DOT compliance consultant? <a href="for-consultants.html">Reserve a spot in the first wave &rarr;</a></p>
   </section>
   <section class="wrap">{WAITLIST}</section>
 </main>
@@ -119,7 +120,7 @@ consultant_page_ld = {"@context": "https://schema.org", "@type": "WebPage", "nam
 write("for-consultants.html", head(
   "Be First in Texas | FleetCleared for DOT Compliance Consultants",
   "FleetCleared opens to a small first wave of Texas DOT compliance consultants. Reserve your spot before the directory fills in.",
-  "for-consultants.html", f'\n<script type="application/ld+json">{json.dumps(consultant_page_ld)}</script>') + header("guides") + f'''<main class="wrap">
+  "for-consultants.html", f'\n<script type="application/ld+json">{json.dumps(consultant_page_ld)}</script>') + header("consultants") + f'''<main class="wrap">
   <section class="hero wrap hero-launch">
     <span class="eyebrow">For DOT compliance consultants</span>
     <h1>Texas carriers are already reading. You're not listed yet.</h1>

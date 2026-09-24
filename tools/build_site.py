@@ -93,6 +93,7 @@ def header(current):
     if LAUNCH:
         nav = f'''{a("guides.html", "Guides", "guides")}
       {a("mcs-150-due-date.html", "MCS-150 due date", "mcs")}
+      {a("for-consultants.html", "For consultants", "consultants")}
       {a("audit-readiness-check.html", "Audit check", "check", "btn btn-ghost")}'''
         return f'''<header class="site-header">
   <div class="wrap">
