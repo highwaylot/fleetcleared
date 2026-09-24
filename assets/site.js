@@ -334,12 +334,42 @@
       $('#pv-logo').classList.remove('placeholder');
       $('#pv-logo').replaceChildren(copy);
     });
-    listForm.addEventListener('submit', e => {
+    listForm.addEventListener('submit', async e => {
       e.preventDefault();
-      store.del('fc-listing-draft');
-      listForm.hidden = true;
-      $('#lf-draft-note').hidden = true;
-      $('#list-done').hidden = false;
+      const err = $('#lf-error');
+      err.hidden = true;
+      // The Taste of FleetCleared demo loads demo-data.js, which sets this. Never let a demo
+      // visitor's submission reach the real application store.
+      if (window.FC_DEMO_CONSULTANTS) {
+        store.del('fc-listing-draft');
+        listForm.hidden = true;
+        $('#lf-draft-note').hidden = true;
+        $('#list-done').hidden = false;
+        return;
+      }
+      const btn = listForm.querySelector('button[type=submit]');
+      const label = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      try {
+        const body = {
+          name: $('#lf-name').value.trim(), email: $('#lf-email').value.trim(), phone: $('#lf-phone').value.trim(),
+          states: $('#lf-states').value.trim(), contactPref: $('#lf-pref').value, timezone: $('#lf-tz').value,
+          cap: $('#lf-cap').value, hours: $('#lf-hours').value.trim(), specialties: $('#lf-spec').value.trim(),
+          description: $('#lf-desc').value.trim(), agree: $('#lf-agree').checked,
+          botcheck: listForm.querySelector('[name=botcheck]').checked ? '1' : '',
+        };
+        const res = await fetch('/api/consultant_apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data.ok === false) throw new Error(data.error || "That didn't send. Check your connection and try again.");
+        store.del('fc-listing-draft');
+        listForm.hidden = true;
+        $('#lf-draft-note').hidden = true;
+        $('#list-done').hidden = false;
+      } catch (e2) {
+        err.textContent = (e2 && e2.message) || "That didn't send. Check your connection and try again.";
+        err.hidden = false;
+        btn.disabled = false; btn.textContent = label;
+      }
     });
   }
 

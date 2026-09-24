@@ -404,6 +404,7 @@ write("for-consultants.html", head(
     <h2>Submit your listing</h2>
     <p>We'll email you once it's approved. <span class="hint" id="lf-draft-note" hidden>Draft saved on this device.</span></p>
     <form id="list-form">
+      <input type="checkbox" name="botcheck" class="hp-field" tabindex="-1" autocomplete="off">
       <div class="form-grid">
         <div class="field"><label for="lf-name">Company name</label><input id="lf-name" required autocomplete="organization"></div>
         <div class="field"><label for="lf-email">Work email</label><input id="lf-email" type="email" required autocomplete="email"><span class="hint">A company email address speeds up approval.</span></div>
@@ -424,6 +425,7 @@ write("for-consultants.html", head(
         </div>
       </div>
       <label class="agree" for="lf-agree"><input id="lf-agree" type="checkbox" required><span>I agree to the <a href="terms.html">terms of service</a>, including per-lead billing after my first free lead, and I've read the <a href="privacy.html">privacy policy</a>.</span></label>
+      <p class="field-error" id="lf-error" hidden></p>
       <button class="btn btn-primary btn-lg btn-block" type="submit">Submit for review</button>
     </form>
     <p class="notice" id="list-done" hidden>Your listing is in the review queue. We'll email you once it's approved.</p>

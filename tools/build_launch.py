@@ -162,6 +162,7 @@ write("for-consultants.html", head(
 # Change STATUS_SLUG any time you want a new private URL; the old one just stops working.
 STATUS_SLUG = "status-3b3500e3.html"
 ADMIN_SLUG = "waitlist-7f2c9a1d.html"  # defined here so the status page below can link to it
+CONSULTANTS_ADMIN_SLUG = "consultants-9d4e1f2a.html"  # same idea: private, unguessable, noindex
 status_cards = "".join(f'<a class="tour-card" href="{s}"><span class="variation">{g}</span><b>{c}</b><span>{b}</span></a>' for s, c, b, g in RELATED_INDEX)
 status_page = head("FleetCleared Launch Status", "Private status page.", STATUS_SLUG).replace(
     '<link rel="canonical" href="https://fleetcleared.com/' + STATUS_SLUG + '">\n', "") + f"""<div class="preview-banner">Private page. Not linked anywhere on the site and blocked from search engines. Bookmark this URL; it isn't listed anywhere else.</div>
@@ -177,6 +178,7 @@ status_page = head("FleetCleared Launch Status", "Private status page.", STATUS_
     </section>
     <section class="tour-section"><h2>Live pages</h2><div class="tour-grid"><a class="tour-card" href="index.html"><span class="variation">Home</span><b>fleetcleared.com</b><span>The guides landing page.</span></a>{status_cards}</div></section>
     <section class="tour-section"><h2>Waitlist</h2><div class="tour-grid"><a class="tour-card" href="{ADMIN_SLUG}"><span class="variation">Private</span><b>See who signed up</b><span>Every email and name, with a button to copy them all for a mass email once the directory opens.</span></a></div></section>
+    <section class="tour-section"><h2>Consultant applications</h2><div class="tour-grid"><a class="tour-card" href="{CONSULTANTS_ADMIN_SLUG}"><span class="variation">Private</span><b>Review applications</b><span>Approve, reject, or ask for a second look. Screening score and reasons shown on each one.</span></a></div></section>
   </div>
 </main>
 """
@@ -253,3 +255,103 @@ admin_page = head("FleetCleared Waitlist", "Private waitlist admin.", ADMIN_SLUG
 """
 LAUNCH_PAGES.add(ADMIN_SLUG)
 write(ADMIN_SLUG, admin_page)
+
+
+# ---------- PRIVATE CONSULTANT APPLICATIONS ADMIN (founder only: reads/writes api/admin_consultants.py) ----------
+consultants_admin_page = head("FleetCleared Consultant Applications", "Private consultant applications admin.", CONSULTANTS_ADMIN_SLUG).replace(
+    '<link rel="canonical" href="https://fleetcleared.com/' + CONSULTANTS_ADMIN_SLUG + '">\n', "") + f"""<div class="preview-banner">Private page. Not linked anywhere on the site and blocked from search engines.</div>
+<header class="site-header"><div class="wrap">{LOGO}<span class="hint">Consultant applications</span></div></header>
+<main class="wrap">
+  <div class="page-head"><h1>Consultant applications</h1><p class="lede">Every submitted listing, screened automatically against the others already on file. Approving one makes it a live listing in <code>consultants:listings</code>; nothing here emails the applicant, since no email sender is wired up yet.</p></div>
+  <div class="panel" id="cadmin-gate">
+    <p class="hint">Enter the admin key you set as <code>ADMIN_SECRET</code> in Vercel (Settings -&gt; Environment Variables). Saved in this browser only.</p>
+    <div class="fields" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;max-width:520px">
+      <div class="field" style="flex:1;margin:0"><label for="cadmin-key">Admin key</label><input id="cadmin-key" type="password" autocomplete="off"></div>
+      <button class="btn btn-primary" id="cadmin-load" type="button">Load</button>
+    </div>
+    <p class="field-error" id="cadmin-error" hidden></p>
+  </div>
+  <div id="cadmin-results" hidden>
+    <div class="tabs" role="tablist" style="display:flex;gap:6px;margin:14px 0">
+      <button class="btn btn-ghost btn-sm" type="button" data-status="pending" aria-selected="true">Pending</button>
+      <button class="btn btn-ghost btn-sm" type="button" data-status="second_look" aria-selected="false">Second look</button>
+      <button class="btn btn-ghost btn-sm" type="button" data-status="approved" aria-selected="false">Approved</button>
+      <button class="btn btn-ghost btn-sm" type="button" data-status="rejected" aria-selected="false">Rejected</button>
+    </div>
+    <div class="stats" style="margin:0 0 14px"><div><small>Showing</small><b id="cadmin-count">0</b></div></div>
+    <div id="cadmin-rows" style="display:grid;gap:12px"></div>
+  </div>
+</main>
+<script>
+(function () {{
+  const $ = (s) => document.querySelector(s);
+  const keyInput = $('#cadmin-key');
+  let current = 'pending';
+  try {{ keyInput.value = localStorage.getItem('fc-admin-key') || ''; }} catch (e) {{}}
+
+  function bandClass(band) {{ return band === 'hold' ? 'band High' : band === 'check' ? 'band Medium' : 'band Low'; }}
+
+  function card(a) {{
+    const div = document.createElement('div');
+    div.className = 'panel';
+    div.style.display = 'grid'; div.style.gap = '8px';
+    const reasons = (a.screenReasons || []).map(r => `<li>${{r.reason}} (+${{r.points}})</li>`).join('') || '<li>No warning signs</li>';
+    const actions = a.status === 'pending' || a.status === 'second_look'
+      ? `<button class="btn btn-primary btn-sm" data-act="approve" data-id="${{a.id}}">Approve</button>
+         <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${{a.id}}">Reject</button>
+         ${{a.status === 'pending' ? `<button class="btn btn-ghost btn-sm" data-act="second_look" data-id="${{a.id}}">Ask for a second look</button>` : ''}}`
+      : '';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div><b style="font-size:18px">${{a.name}}</b><div class="hint">${{a.email}} &middot; ${{a.phone}} &middot; ${{a.states}}</div></div>
+        <span class="${{bandClass(a.screenBand)}}">${{a.screenBandLabel}} (${{a.screenScore}})</span>
+      </div>
+      <div class="hint">${{a.description || 'No description given'}}</div>
+      <div class="hint">Specialties: ${{a.specialties || '—'}} &middot; Hours: ${{a.hours || '—'}} &middot; Prefers ${{a.contactPref}} &middot; ${{a.timezone}}</div>
+      <ul class="hint" style="margin:0;padding-left:18px">${{reasons}}</ul>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${{actions}}</div>
+    `;
+    div.querySelectorAll('button[data-act]').forEach(b => b.addEventListener('click', () => act(a.id, b.dataset.act)));
+    return div;
+  }}
+
+  async function load(status) {{
+    current = status || current;
+    const key = keyInput.value.trim(); const err = $('#cadmin-error'); err.hidden = true;
+    if (!key) {{ err.textContent = 'Enter the admin key.'; err.hidden = false; return; }}
+    try {{
+      const res = await fetch('/api/admin_consultants?key=' + encodeURIComponent(key) + '&status=' + current);
+      const data = await res.json();
+      if (!res.ok || data.ok === false) throw new Error(data.error || "Wrong key, or the application store isn't connected yet.");
+      try {{ localStorage.setItem('fc-admin-key', key); }} catch (e) {{}}
+      const rows = (data.rows || []).slice().sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+      $('#cadmin-count').textContent = rows.length;
+      $('#cadmin-rows').replaceChildren(...rows.map(card));
+      document.querySelectorAll('[data-status]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.status === current)));
+      $('#cadmin-results').hidden = false;
+    }} catch (e2) {{ err.textContent = e2.message; err.hidden = false; }}
+  }}
+
+  async function act(id, action) {{
+    const key = keyInput.value.trim();
+    try {{
+      const res = await fetch('/api/admin_consultants?key=' + encodeURIComponent(key), {{
+        method: 'POST', headers: {{ 'Content-Type': 'application/json' }}, body: JSON.stringify({{ id, action }}),
+      }});
+      const data = await res.json();
+      if (!res.ok || data.ok === false) throw new Error(data.error || 'That action failed.');
+      load();
+    }} catch (e2) {{ $('#cadmin-error').textContent = e2.message; $('#cadmin-error').hidden = false; }}
+  }}
+
+  document.querySelectorAll('[data-status]').forEach(b => b.addEventListener('click', () => load(b.dataset.status)));
+  $('#cadmin-load').addEventListener('click', () => load());
+  keyInput.addEventListener('keydown', (e) => {{ if (e.key === 'Enter') load(); }});
+  if (keyInput.value) load();
+}})();
+</script>
+</body>
+</html>
+"""
+LAUNCH_PAGES.add(CONSULTANTS_ADMIN_SLUG)
+write(CONSULTANTS_ADMIN_SLUG, consultants_admin_page)

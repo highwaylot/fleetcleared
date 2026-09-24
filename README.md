@@ -48,6 +48,34 @@ Builds a separate, public version with just the home page, guides, free tools, t
 7. In Vercel: Project -> Analytics -> Enable (free, cookieless page-view counts; already disclosed in the launch privacy policy).
 8. Bookmark the private status page: `https://fleetcleared.com/status-3b3500e3.html`. It's not linked anywhere and is blocked from search, so this URL is the only way to reach it. Links to every public page plus Vercel Analytics and Search Console. To retire it, change `STATUS_SLUG` in `tools/build_launch.py` and rebuild; the old URL stops working.
 
+## Consultant applications (real backend)
+
+The signup form on `for-consultants.html` (the full preview build, not the guides-only launch site)
+now submits for real:
+
+- `api/consultant_apply.py` -- public, no auth. Validates the form, screens the applicant against
+  every other application on file (same signals as `assets/rules.js` SCREENING: same phone, similar
+  name, free email, government-style wording -- the ones that don't need a paid external lookup),
+  and stores it in Vercel KV as `pending`.
+- `api/admin_consultants.py` -- private, `?key=<ADMIN_SECRET>`. Lists applications by status and
+  approves/rejects/second-looks them. Approving copies a trimmed record into a public-listings
+  store.
+- `api/consultants_public.py` -- public, no auth. Every approved listing. Not wired into
+  `browse.html`/`consultant.html` yet -- those still read `window.FC_DEMO_CONSULTANTS` in the
+  preview and aren't part of the public launch build at all. Wiring them up is a frontend-only
+  follow-up now that the data exists.
+- Admin panel: `/consultants-9d4e1f2a.html` (private, unguessable, noindex, linked from the status
+  page). Enter your `ADMIN_SECRET` once; shows each application's screening score and reasons with
+  Approve / Reject / Ask for a second look buttons.
+- The Taste of FleetCleared demo (`demo/for-consultants.html`) never calls the real endpoint --
+  `assets/site.js` checks for `window.FC_DEMO_CONSULTANTS` (set by `assets/demo-data.js`) and shows
+  the same success message locally instead, so playing with the demo can't pollute real applications.
+
+**Not built yet, on purpose:** no email is sent to an applicant when you decide (no email-sending
+service is wired up), carrier-side lead requests and billing don't exist, and consultants can't log
+in to manage their own listing. Those are separate, larger builds -- this pass only covers
+application intake through admin approval, which is what turns outreach into something real.
+
 The preview (plain `python3 tools/build_site.py`) is unchanged and stays noindex.
 
 ## Before going live
