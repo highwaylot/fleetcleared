@@ -7,6 +7,9 @@ SITE = "https://fleetcleared.com"
 #   python3 tools/build_site.py                 -> preview: every page, noindex, written into the repo
 #   FC_LAUNCH=1 python3 tools/build_site.py     -> public soft launch: guides and tools only, indexable, written to dist/
 LAUNCH = os.environ.get("FC_LAUNCH") == "1"
+# FC_HOLD_INDEX=1 publishes the launch pages but keeps search engines out, for an interim live site
+# before the company details are filled in. Remove it from vercel.json to go fully live.
+HOLD_INDEX = os.environ.get("FC_HOLD_INDEX") == "1"
 OUT = ROOT / "dist" if LAUNCH else ROOT
 LAUNCH_PAGES = {"index.html", "guides.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
 UPDATED = "September 22, 2026"
@@ -48,7 +51,7 @@ LOGO = '<a class="logo" href="index.html" aria-label="FleetCleared home"><svg ar
 
 def head(title, desc, path, extra=""):
     # Preview pages are never indexed. Launch pages are.
-    robots = "index, follow" if LAUNCH else "noindex, nofollow"
+    robots = "index, follow" if LAUNCH and not HOLD_INDEX else "noindex, nofollow"
     url = f"{SITE}/{path}" if path else f"{SITE}/"
     return f'''<!DOCTYPE html>
 <html lang="en"{' data-directory="off"' if LAUNCH else ''}>
@@ -680,7 +683,10 @@ if LAUNCH:
     exec(open(pathlib.Path(__file__).with_name("build_launch.py")).read())
 
 # ---------- SEO / platform files ----------
-if LAUNCH:
+if LAUNCH and HOLD_INDEX:
+    write("robots.txt", "# Interim live site: hidden from search engines until the company details are filled in.\nUser-agent: *\nDisallow: /\n")
+    pages = ["", "guides.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+elif LAUNCH:
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     pages = ["", "guides.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
 else:
@@ -712,12 +718,12 @@ if LAUNCH:
     problems = []
     for f in sorted(OUT.rglob("*.html")):
         t = f.read_text()
-        for needle, why in [('class="fill"', "unfilled placeholder"), ("noindex", "noindex tag"), ("draft-flag", "draft note"),
+        for needle, why in [('class="fill"', "unfilled placeholder"), *([] if HOLD_INDEX else [("noindex", "noindex tag")]), ("draft-flag", "draft note"),
                             ('href="browse.html', "link to the directory"), ('href="for-consultants.html', "link to consultant signup"),
                             ("review-pending", "review-pending label"), ('id="remind-form"', "reminder form")]:
             if needle in t: problems.append(f"{f.relative_to(OUT)}: {why}")
     # FC_PREVIEW_BLANKS=1 lets a private preview show blank company details; nothing else is allowed through.
-    if problems and os.environ.get("FC_PREVIEW_BLANKS") == "1" and all(p.endswith("unfilled placeholder") for p in problems):
+    if problems and (os.environ.get("FC_PREVIEW_BLANKS") == "1" or HOLD_INDEX) and all(p.endswith("unfilled placeholder") for p in problems):
         print("PRIVATE PREVIEW ONLY, not publishable:\n  " + "\n  ".join(problems))
     elif problems:
         print("NOT READY TO PUBLISH:\n  " + "\n  ".join(problems)); raise SystemExit(1)
