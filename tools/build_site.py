@@ -49,6 +49,9 @@ SPRITE = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 
 LOGO = '<a class="logo" href="index.html" aria-label="FleetCleared home"><svg aria-hidden="true"><use href="#fc-shield"/></svg><span>Fleet</span><span class="cleared">Cleared</span></a>'
 
+# Runs before first paint so a returning visitor's theme choice never flashes the other theme first.
+THEME_INIT = '<script>(function(){try{var t=localStorage.getItem("fc-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>'
+
 def head(title, desc, path, extra=""):
     # Preview pages are never indexed. Launch pages are.
     robots = "index, follow" if LAUNCH and not HOLD_INDEX else "noindex, nofollow"
@@ -57,6 +60,7 @@ def head(title, desc, path, extra=""):
 <html lang="en"{' data-directory="off"' if LAUNCH else ''}>
 <head>
 <meta charset="UTF-8">
+{THEME_INIT}
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
@@ -85,6 +89,30 @@ def head(title, desc, path, extra=""):
 {SPRITE}
 '''
 
+THEME_TOGGLE = '''<button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4.2"/><line x1="12" y1="19.8" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4.2" y2="12"/><line x1="19.8" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.3" y2="6.3"/><line x1="17.7" y1="17.7" x2="19.6" y2="19.6"/><line x1="4.4" y1="19.6" x2="6.3" y2="17.7"/><line x1="17.7" y1="6.3" x2="19.6" y2="4.4"/></g></svg>
+    </button>'''
+THEME_SCRIPT = '''<script>
+(function(){
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  function effective(){
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t === 'light' || t === 'dark') return t;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function sync(){ btn.setAttribute('aria-label', effective() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'); }
+  btn.addEventListener('click', function(){
+    var next = effective() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('fc-theme', next); } catch (e) {}
+    sync();
+  });
+  sync();
+})();
+</script>'''
+
 def header(current):
     def a(href, label, key, cls=""):
         cur = ' aria-current="page"' if key == current else ""
@@ -100,9 +128,11 @@ def header(current):
     {LOGO}
     <nav class="site-nav" aria-label="Main">
       {nav}
+      {THEME_TOGGLE}
     </nav>
   </div>
 </header>
+{THEME_SCRIPT}
 '''
     return f'''<header class="site-header">
   <div class="wrap">
@@ -111,9 +141,11 @@ def header(current):
       {a("browse.html", "Find a consultant", "browse")}
       {a("guides.html", "Guides", "guides")}
       {a("for-consultants.html", "For consultants", "list", "btn btn-ghost")}
+      {THEME_TOGGLE}
     </nav>
   </div>
 </header>
+{THEME_SCRIPT}
 '''
 
 FOOTER = f'''<footer class="site-footer">

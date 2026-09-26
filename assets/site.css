@@ -33,6 +33,22 @@
   --warn:#f08a80; --warn-soft:#3a1d1a; --trial:#e2b54a; --trial-soft:#33290f;
 }
 
+.theme-toggle{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:44px; height:44px; margin-left:8px; flex-shrink:0;
+  background:var(--panel); border:1px solid var(--line); border-radius:999px; cursor:pointer;
+}
+.theme-toggle svg{ width:22px; height:22px; fill:none; stroke:var(--ink); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.theme-toggle .i-sun circle{ fill:var(--ink); stroke:none; }
+.theme-toggle .i-sun{ display:none; }
+.theme-toggle .i-moon{ display:block; fill:var(--ink); stroke:none; }
+:root[data-theme="dark"] .theme-toggle .i-sun{ display:block; }
+:root[data-theme="dark"] .theme-toggle .i-moon{ display:none; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .theme-toggle .i-sun{ display:block; }
+  :root:not([data-theme="light"]) .theme-toggle .i-moon{ display:none; }
+}
+
 *{ box-sizing:border-box; }
 html{ font-size:18px; -webkit-text-size-adjust:100%; }
 body{
