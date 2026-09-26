@@ -140,7 +140,11 @@ FOOTER = f'''<footer class="site-footer">
 '''
 # Vercel Web Analytics: cookieless, aggregate page-view counts. No-ops until you enable it once
 # in Vercel's dashboard (Project -> Analytics -> Enable). Disclosed in the launch privacy policy.
-ANALYTICS = '<script defer src="/_vercel/insights/script.js"></script>' if LAUNCH else ''
+# Uses @vercel/analytics package for Web Analytics tracking
+ANALYTICS = '''<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>''' if LAUNCH else ''
 if LAUNCH:
     FOOTER = f'''<footer class="site-footer">
   <div class="wrap">
