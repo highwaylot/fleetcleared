@@ -448,22 +448,42 @@ write("for-consultants.html", head(
 
 
 # ---------- PARTNER WITH US (standalone page for outreach emails; not in nav) ----------
+PARTNER_REVEAL_CSS = '''<style>
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>'''
+PARTNER_REVEAL_JS = '''<script>
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) { entry.target.classList.add('in'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(function(el, i){ el.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(el); });
+})();
+</script>'''
 write("partner-with-us.html", head(
   "Partner With Us | FleetCleared",
   "A directory connecting small trucking companies with DOT and FMCSA compliance consultants. Free to list, pay only per delivered lead.",
-  "partner-with-us.html") + header(None) + f'''<main class="wrap">
-  <div class="page-head">
+  "partner-with-us.html", extra=PARTNER_REVEAL_CSS) + header(None) + f'''<main class="wrap">
+  <div class="page-head reveal">
     <span class="eyebrow">For DOT / FMCSA compliance consultants</span>
     <h1>Small carriers are looking for compliance help. Let's put you in front of them.</h1>
     <p class="lede">FleetCleared is a directory connecting small trucking companies (1&ndash;20 trucks) with independent compliance consultants. Free to list. You only pay when a real lead comes through.</p>
   </div>
   <ul class="facts">
-    <li>{icon("tag")}<strong>Free to list</strong>No listing fee and no subscription.</li>
-    <li>{icon("target")}<strong>First lead free</strong>See the quality of carrier leads before you ever pay for one.</li>
-    <li>{icon("card")}<strong>Pay only per lead after</strong>A small fee based on the carrier's fleet size. No ranking boost to buy.</li>
+    <li class="reveal">{icon("tag")}<strong>Free to list</strong>No listing fee and no subscription.</li>
+    <li class="reveal">{icon("target")}<strong>First lead free</strong>See the quality of carrier leads before you ever pay for one.</li>
+    <li class="reveal">{icon("card")}<strong>Pay only per lead after</strong>A small fee based on the carrier's fleet size. No ranking boost to buy.</li>
   </ul>
 
-  <section class="panel" style="margin-block:32px">
+  <section class="panel reveal" style="margin-block:32px">
     <h2>What your listing looks like</h2>
     <article class="card">
       <div class="card-id">
@@ -475,7 +495,7 @@ write("partner-with-us.html", head(
     </article>
   </section>
 
-  <section class="pricing" aria-labelledby="partner-pricing-title">
+  <section class="pricing reveal" aria-labelledby="partner-pricing-title">
     <h2 id="partner-pricing-title">Lead pricing</h2>
     <div class="table-wrap"><table><thead><tr><th>Carrier's fleet</th><th>Price per lead</th></tr></thead><tbody>
       <tr><td>1&ndash;2 trucks</td><td>$30</td></tr>
@@ -485,17 +505,18 @@ write("partner-with-us.html", head(
     <p class="hint">No card on file yet? Leads hold for 48 hours before we move on &mdash; you're never charged without knowing.</p>
   </section>
 
-  <section class="panel">
+  <section class="panel reveal">
     <h2>FleetCleared is a directory, not a middleman</h2>
     <p>We never certify or vouch for consultants, and we never touch your client relationships or pricing conversations. We just get carriers in your door. FleetCleared LLC &mdash; Texas, formation awaiting state filing.</p>
   </section>
 
-  <div class="page-head" style="padding-block:32px">
+  <div class="page-head reveal" style="padding-block:32px">
     <h2>Ready to see it for yourself?</h2>
     <p class="lede">The application takes about 5 minutes. No cost, no obligation &mdash; you can pull your listing anytime.</p>
     <p><a class="btn btn-primary btn-lg" href="for-consultants.html">Apply for a free listing</a></p>
   </div>
 </main>
+{PARTNER_REVEAL_JS}
 ''' + FOOTER)
 
 # ---------- APPLICATION STATUS (linked from the review email only) ----------
