@@ -164,12 +164,35 @@ STATUS_SLUG = "status-3b3500e3.html"
 ADMIN_SLUG = "waitlist-7f2c9a1d.html"  # defined here so the status page below can link to it
 CONSULTANTS_ADMIN_SLUG = "consultants-9d4e1f2a.html"  # same idea: private, unguessable, noindex
 status_cards = "".join(f'<a class="tour-card" href="{s}"><span class="variation">{g}</span><b>{c}</b><span>{b}</span></a>' for s, c, b, g in RELATED_INDEX)
-status_page = head("FleetCleared Launch Status", "Private status page.", STATUS_SLUG).replace(
+status_page = head("FleetCleared Admin Hub", "Private admin hub.", STATUS_SLUG).replace(
     '<link rel="canonical" href="https://fleetcleared.com/' + STATUS_SLUG + '">\n', "") + f"""<div class="preview-banner">Private page. Not linked anywhere on the site and blocked from search engines. Bookmark this URL; it isn't listed anywhere else.</div>
-<header class="site-header"><div class="wrap">{LOGO}<span class="hint">Launch status</span></div></header>
+<header class="site-header"><div class="wrap">{LOGO}<span class="hint">Admin hub</span></div></header>
 <main class="wrap">
-  <div class="page-head"><h1>Guides soft launch</h1><p class="lede">Every public page, plus where to check traffic. The guides collect nothing themselves, so real numbers live in Vercel.</p></div>
+  <div class="page-head"><h1>Admin hub</h1><p class="lede">Everything in one place: live counts, every admin tool, and where to check traffic.</p></div>
+
+  <div class="panel" id="hub-gate">
+    <p class="hint">Enter the admin key you set as <code>ADMIN_SECRET</code> in Vercel (Settings -&gt; Environment Variables) to load live counts below. Saved in this browser only.</p>
+    <div class="fields" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;max-width:520px">
+      <div class="field" style="flex:1;margin:0"><label for="hub-key">Admin key</label><input id="hub-key" type="password" autocomplete="off"></div>
+      <button class="btn btn-primary" id="hub-load" type="button">Load</button>
+    </div>
+    <p class="field-error" id="hub-error" hidden></p>
+  </div>
+
+  <div class="stats" id="hub-stats" hidden>
+    <div class="stat"><b id="hub-stat-carrier">–</b><span>Carrier waitlist</span></div>
+    <div class="stat"><b id="hub-stat-consultant">–</b><span>Consultant waitlist</span></div>
+    <div class="stat"><b id="hub-stat-pending">–</b><span>Applications pending</span></div>
+    <div class="stat"><b id="hub-stat-approved">–</b><span>Live listings</span></div>
+  </div>
+
   <div class="tour">
+    <section class="tour-section"><h2>Admin tools</h2>
+      <div class="tour-grid">
+        <a class="tour-card" href="{ADMIN_SLUG}"><span class="variation">Private</span><b>Waitlist</b><span>Every email and name, with a button to copy them all for a mass email once the directory opens.</span></a>
+        <a class="tour-card" href="{CONSULTANTS_ADMIN_SLUG}"><span class="variation">Private</span><b>Consultant applications</b><span>Approve, reject, or ask for a second look. Screening score and reasons shown on each one.</span></a>
+      </div>
+    </section>
     <section class="tour-section"><h2>Traffic and search</h2>
       <div class="tour-grid">
         <a class="tour-card" href="https://vercel.com/highwaylot/fleetcleared/analytics" rel="noopener"><span class="variation">Vercel</span><b>Page views by page</b><span>Needs Web Analytics turned on once in Vercel's dashboard (Analytics tab -&gt; Enable). Free tier, no cookies.</span></a>
@@ -177,10 +200,39 @@ status_page = head("FleetCleared Launch Status", "Private status page.", STATUS_
       </div>
     </section>
     <section class="tour-section"><h2>Live pages</h2><div class="tour-grid"><a class="tour-card" href="index.html"><span class="variation">Home</span><b>fleetcleared.com</b><span>The guides landing page.</span></a>{status_cards}</div></section>
-    <section class="tour-section"><h2>Waitlist</h2><div class="tour-grid"><a class="tour-card" href="{ADMIN_SLUG}"><span class="variation">Private</span><b>See who signed up</b><span>Every email and name, with a button to copy them all for a mass email once the directory opens.</span></a></div></section>
-    <section class="tour-section"><h2>Consultant applications</h2><div class="tour-grid"><a class="tour-card" href="{CONSULTANTS_ADMIN_SLUG}"><span class="variation">Private</span><b>Review applications</b><span>Approve, reject, or ask for a second look. Screening score and reasons shown on each one.</span></a></div></section>
   </div>
 </main>
+<script>
+(function () {{
+  const $ = (s) => document.querySelector(s);
+  const keyInput = $('#hub-key');
+  try {{ keyInput.value = localStorage.getItem('fc-admin-key') || ''; }} catch (e) {{}}
+
+  async function loadStats() {{
+    const key = keyInput.value.trim(); const err = $('#hub-error'); err.hidden = true;
+    if (!key) {{ err.textContent = 'Enter the admin key.'; err.hidden = false; return; }}
+    try {{
+      const [carrierRes, consultantRes, pendingRes, approvedRes] = await Promise.all([
+        fetch('/api/admin_waitlist?key=' + encodeURIComponent(key) + '&list=carrier'),
+        fetch('/api/admin_waitlist?key=' + encodeURIComponent(key) + '&list=consultant'),
+        fetch('/api/admin_consultants?key=' + encodeURIComponent(key) + '&status=pending'),
+        fetch('/api/admin_consultants?key=' + encodeURIComponent(key) + '&status=approved'),
+      ]);
+      const [carrier, consultant, pending, approved] = await Promise.all([carrierRes, consultantRes, pendingRes, approvedRes].map(r => r.json()));
+      if (carrier.ok === false) throw new Error(carrier.error || 'Wrong key.');
+      try {{ localStorage.setItem('fc-admin-key', key); }} catch (e) {{}}
+      $('#hub-stat-carrier').textContent = (carrier.rows || []).length;
+      $('#hub-stat-consultant').textContent = (consultant.rows || []).length;
+      $('#hub-stat-pending').textContent = (pending.rows || []).length;
+      $('#hub-stat-approved').textContent = (approved.rows || []).length;
+      $('#hub-stats').hidden = false;
+    }} catch (e2) {{ err.textContent = e2.message; err.hidden = false; }}
+  }}
+  $('#hub-load').addEventListener('click', loadStats);
+  keyInput.addEventListener('keydown', (e) => {{ if (e.key === 'Enter') loadStats(); }});
+  if (keyInput.value) loadStats();
+}})();
+</script>
 """
 LAUNCH_PAGES.add(STATUS_SLUG)
 write(STATUS_SLUG, status_page)
