@@ -11,7 +11,7 @@ LAUNCH = os.environ.get("FC_LAUNCH") == "1"
 # before the company details are filled in. Remove it from vercel.json to go fully live.
 HOLD_INDEX = os.environ.get("FC_HOLD_INDEX") == "1"
 OUT = ROOT / "dist" if LAUNCH else ROOT
-LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
+LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
 UPDATED = "September 22, 2026"
 
 ICON = {
@@ -447,6 +447,57 @@ write("for-consultants.html", head(
 ''' + FOOTER)
 
 
+# ---------- PARTNER WITH US (standalone page for outreach emails; not in nav) ----------
+write("partner-with-us.html", head(
+  "Partner With Us | FleetCleared",
+  "A directory connecting small trucking companies with DOT and FMCSA compliance consultants. Free to list, pay only per delivered lead.",
+  "partner-with-us.html") + header(None) + f'''<main class="wrap">
+  <div class="page-head">
+    <span class="eyebrow">For DOT / FMCSA compliance consultants</span>
+    <h1>Small carriers are looking for compliance help. Let's put you in front of them.</h1>
+    <p class="lede">FleetCleared is a directory connecting small trucking companies (1&ndash;20 trucks) with independent compliance consultants. Free to list. You only pay when a real lead comes through.</p>
+  </div>
+  <ul class="facts">
+    <li>{icon("tag")}<strong>Free to list</strong>No listing fee and no subscription.</li>
+    <li>{icon("target")}<strong>First lead free</strong>See the quality of carrier leads before you ever pay for one.</li>
+    <li>{icon("card")}<strong>Pay only per lead after</strong>A small fee based on the carrier's fleet size. No ranking boost to buy.</li>
+  </ul>
+
+  <section class="panel" style="margin-block:32px">
+    <h2>What your listing looks like</h2>
+    <article class="card">
+      <div class="card-id">
+        <div class="org-logo placeholder" aria-hidden="true">DC</div>
+        <div><h2>DOT Compliance Partners</h2><p class="region">Texas, statewide &middot; &#9733; 4.9 &middot; 21 reviews</p></div>
+      </div>
+      <p class="desc">Safety audits &middot; DQ file setup &middot; Drug &amp; alcohol program review</p>
+      <div class="tags"><span class="tag">Serves 1&ndash;10 truck fleets</span><span class="tag">Responds within a day</span></div>
+    </article>
+  </section>
+
+  <section class="pricing" aria-labelledby="partner-pricing-title">
+    <h2 id="partner-pricing-title">Lead pricing</h2>
+    <div class="table-wrap"><table><thead><tr><th>Carrier's fleet</th><th>Price per lead</th></tr></thead><tbody>
+      <tr><td>1&ndash;2 trucks</td><td>$30</td></tr>
+      <tr><td>3&ndash;10 trucks</td><td>$45</td></tr>
+      <tr><td>11+ trucks</td><td>$65</td></tr>
+    </tbody></table></div>
+    <p class="hint">No card on file yet? Leads hold for 48 hours before we move on &mdash; you're never charged without knowing.</p>
+  </section>
+
+  <section class="panel">
+    <h2>FleetCleared is a directory, not a middleman</h2>
+    <p>We never certify or vouch for consultants, and we never touch your client relationships or pricing conversations. We just get carriers in your door. FleetCleared LLC &mdash; Texas, formation awaiting state filing.</p>
+  </section>
+
+  <div class="page-head" style="padding-block:32px">
+    <h2>Ready to see it for yourself?</h2>
+    <p class="lede">The application takes about 5 minutes. No cost, no obligation &mdash; you can pull your listing anytime.</p>
+    <p><a class="btn btn-primary btn-lg" href="for-consultants.html">Apply for a free listing</a></p>
+  </div>
+</main>
+''' + FOOTER)
+
 # ---------- APPLICATION STATUS (linked from the review email only) ----------
 write("application-status.html", head(
   "Application Status | FleetCleared", "Check the status of your FleetCleared listing application.", "application-status.html") + header(None) + f"""<main class="wrap">
@@ -693,13 +744,13 @@ if LAUNCH:
 # ---------- SEO / platform files ----------
 if LAUNCH and HOLD_INDEX:
     write("robots.txt", "# Interim live site: hidden from search engines until the company details are filled in.\nUser-agent: *\nDisallow: /\n")
-    pages = ["", "guides.html", "for-consultants.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
 elif LAUNCH:
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    pages = ["", "guides.html", "for-consultants.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
 else:
     write("robots.txt", "# PREVIEW MODE: blocks all crawlers. The public build (FC_LAUNCH=1) writes its own.\nUser-agent: *\nDisallow: /\n")
-    pages = ["", "browse.html", "for-consultants.html", "privacy.html", "terms.html"] + GUIDE_PAGES
+    pages = ["", "browse.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html"] + GUIDE_PAGES
 write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{GUIDES_ISO}</lastmod></url>\n" for p in pages) + "</urlset>\n")
 write("site.webmanifest", json.dumps({
