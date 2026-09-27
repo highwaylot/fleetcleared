@@ -360,6 +360,11 @@ tr:last-child td{ border-bottom:none; }
   .stats{ grid-template-columns:repeat(2,1fr); }
 }
 @media (max-width: 600px){
+  /* The toggle is a header sibling of .site-nav, not one of its wrapping items, so it always
+     stays on the logo's row; the nav is forced onto its own full-width row underneath instead
+     of leaving the toggle stranded wherever the last link happened to wrap to. */
+  .site-nav{ flex-basis:100%; order:3; }
+  .theme-toggle{ order:2; }
   .cover{ height:120px; border-radius:0; }
   .profile-head{ margin-top:-44px; }
   .profile-logo{ width:96px; height:96px; font-size:34px; border-radius:20px; }

@@ -128,8 +128,8 @@ def header(current):
     {LOGO}
     <nav class="site-nav" aria-label="Main">
       {nav}
-      {THEME_TOGGLE}
     </nav>
+    {THEME_TOGGLE}
   </div>
 </header>
 {THEME_SCRIPT}
@@ -141,8 +141,8 @@ def header(current):
       {a("browse.html", "Find a consultant", "browse")}
       {a("guides.html", "Guides", "guides")}
       {a("for-consultants.html", "For consultants", "list", "btn btn-ghost")}
-      {THEME_TOGGLE}
     </nav>
+    {THEME_TOGGLE}
   </div>
 </header>
 {THEME_SCRIPT}

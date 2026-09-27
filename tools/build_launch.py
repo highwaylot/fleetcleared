@@ -128,9 +128,9 @@ write("for-consultants.html", head(
   </section>
   <section class="wrap" style="max-width:760px;margin-inline:auto">
     <div class="grid3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:8px">
-      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">Free to list</h3><p class="hint" style="margin:0">Your first lead is free. After that, you pay only per lead, by fleet size.</p></div>
-      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">First wave, first seen</h3><p class="hint" style="margin:0">Fewer listings means every one of them gets more attention. That window closes as we grow.</p></div>
-      <div class="panel"><h3 style="margin:0 0 6px;font-size:18px">No robocalls, ever</h3><p class="hint" style="margin:0">Carriers only reach you when they ask to. We screen every signup by hand.</p></div>
+      <div class="panel">{icon("tag")}<h3 style="margin:10px 0 6px;font-size:18px">Free to list</h3><p class="hint" style="margin:0">Your first lead is free. After that, you pay only per lead, by fleet size.</p></div>
+      <div class="panel">{icon("target")}<h3 style="margin:10px 0 6px;font-size:18px">First wave, first seen</h3><p class="hint" style="margin:0">Fewer listings means every one of them gets more attention. That window closes as we grow.</p></div>
+      <div class="panel">{icon("ban")}<h3 style="margin:10px 0 6px;font-size:18px">No robocalls, ever</h3><p class="hint" style="margin:0">Carriers only reach you when they ask to. We screen every signup by hand.</p></div>
     </div>
   </section>
   <section class="wrap">
