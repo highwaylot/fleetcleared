@@ -598,6 +598,30 @@ write("application-status.html", head(
 </main>
 """ + FOOTER)
 
+# ---------- ADD CARD (consultant payment method) ----------
+LAUNCH_PAGES.add("add-card.html")
+write("add-card.html", head(
+  "Add a Payment Method | FleetCleared", "Add a card so FleetCleared can deliver your paid leads.", "add-card.html") + header(None) + f'''<main class="wrap narrow">
+  <div class="page-head">
+    <span class="eyebrow">Consultant billing</span>
+    <h1 id="ac-name">Add a payment method</h1>
+    <p class="lede">Your first lead is free. After that, we charge this card automatically for each lead delivered to you, at the price shown on <a href="for-consultants.html">our pricing page</a>. {icon("lock")}<strong>We never see or store your card number</strong> &mdash; Stripe handles it directly.</p>
+  </div>
+  <div class="panel" id="ac-card" hidden>
+    <p class="notice">You already have a card on file. Adding a new one replaces it.</p>
+  </div>
+  <form id="ac-form" class="panel">
+    <div class="field"><label for="ac-element">Card details</label><div id="ac-element"></div></div>
+    <p class="field-error" id="ac-error" hidden></p>
+    <button class="btn btn-primary btn-block" type="submit" id="ac-submit">Save card</button>
+  </form>
+  <p class="notice" id="ac-done" hidden>Card saved. You're all set to receive paid leads.</p>
+  <p class="fine">Payments are processed by Stripe under <a href="https://stripe.com/legal/consumer" rel="noopener">Stripe's terms</a>. See our <a href="terms.html#leads">leads, pricing and payment terms</a>.</p>
+</main>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="assets/stripe-card.js" defer></script>
+''' + FOOTER)
+
 # ---------- LEGAL ----------
 DRAFT = '<p class="draft-flag"><strong>Draft for review.</strong> Highlighted items are placeholders to fill in, and this page should be reviewed by a lawyer before launch.</p>'
 def fill(t): return f'<span class="fill">{t}</span>'
@@ -842,7 +866,7 @@ write("favicon.svg", '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
 ''')
 if LAUNCH:
     # Static files the public pages use. Nothing private (admin, demo data, rules) is copied.
-    for f in ["assets/site.css", "assets/deadlines.js", "assets/guides.js", "assets/og-image.png", "favicon.ico"]:
+    for f in ["assets/site.css", "assets/deadlines.js", "assets/guides.js", "assets/stripe-card.js", "assets/og-image.png", "favicon.ico"]:
         (OUT / f).parent.mkdir(parents=True, exist_ok=True); shutil.copy(ROOT / f, OUT / f)
     shutil.copytree(ROOT / "assets/icons", OUT / "assets/icons", dirs_exist_ok=True)
     # Refuse to call the build ready while any placeholder or preview-only link remains.

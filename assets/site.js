@@ -62,7 +62,7 @@
       response: r.hours || 'Contact for hours',
       langs: 'English',
       since: approvedYear ? String(approvedYear) : '',
-      atLimit: false, resumes: '',
+      atLimit: Boolean(r.atLimit), resumes: 'next month',
       reviews: [],
     };
   }
@@ -251,6 +251,7 @@
   // Request-contact modal
   const modal = $('#contact-modal');
   let lastFocus = null;
+  let currentContact = null;
   function setVia(via) {
     const v = VIA[via], input = $('#cf-contact');
     $('#cf-contact-label').textContent = v.field;
@@ -283,6 +284,7 @@
     if (saved.fleet) $('#cf-fleet').value = saved.fleet;
   }
   function openContact(c) {
+    currentContact = c;
     lastFocus = document.activeElement;
     $('#contact-to').textContent = c.name;
     $$('.cf-to-name').forEach(n => { n.textContent = c.name; });
@@ -318,14 +320,42 @@
       $('#cf-remembered').hidden = true;
       $('#cf-name').focus();
     });
-    $('#contact-form').addEventListener('submit', e => {
+    $('#contact-form').addEventListener('submit', async e => {
       e.preventDefault();
       const msg = contactError();
       showContactError(msg);
       if (msg) { $('#cf-contact').focus(); return; }
+      if (!currentContact) return;
       store.set('fc-carrier', { name: $('#cf-name').value.trim(), company: $('#cf-co').value.trim(), fleet: $('#cf-fleet').value });
-      $('#contact-form').hidden = true;
-      $('#contact-done').hidden = false;
+      const submitBtn = $('#contact-form button[type=submit]');
+      if (submitBtn) submitBtn.disabled = true;
+      let result;
+      try {
+        const res = await fetch('/api/lead_request', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            consultantId: currentContact.slug,
+            name: $('#cf-name').value.trim(),
+            company: $('#cf-co').value.trim(),
+            fleet: Number($('#cf-fleet').value),
+            via: (document.querySelector('input[name="cf-via"]:checked') || {}).value || 'call',
+            contact: $('#cf-contact').value.trim(),
+            need: $('#cf-need') ? $('#cf-need').value.trim() : '',
+          }),
+        });
+        result = await res.json();
+      } catch (err) {
+        result = { ok: false, error: 'network' };
+      }
+      if (submitBtn) submitBtn.disabled = false;
+      if (result && result.ok) {
+        $('#contact-form').hidden = true;
+        $('#contact-done').hidden = false;
+      } else if (result && result.error === 'not_accepting') {
+        showContactError("This consultant isn't taking new requests right now. Try another consultant.");
+      } else {
+        showContactError("Something went wrong sending your request. Try again in a moment.");
+      }
     });
   }
 

@@ -4,10 +4,14 @@
 #   GET  ?key=...&status=pending|approved|rejected|second_look   -> list applications in that status
 #   POST ?key=...  body {id, action: "approve"|"reject"|"second_look"}
 # Approving copies a trimmed record into consultants:listings (drops screening internals and IP),
-# which is what api/consultants_public.py serves. This does not send any email -- there is no
-# email-sending service wired up yet, so tell an applicant their result yourself for now.
+# which is what api/consultants_public.py serves. Also best-effort emails the applicant their
+# result via api/_email.py; a failed send never blocks the approve/reject action itself.
 import json, os, time, urllib.parse, urllib.request
 from http.server import BaseHTTPRequestHandler
+
+from _email import send_email
+
+SITE = "https://fleetcleared.com"
 
 STATUSES = {"pending", "approved", "rejected", "second_look"}
 
@@ -95,5 +99,17 @@ class handler(BaseHTTPRequestHandler):
                 _kv("HDEL", "consultants:listings", app_id)  # in case a previously approved one gets reverted
         except Exception as e:
             return self._send(500, {"ok": False, "error": str(e)})
+
+        if action == "approve":
+            send_email(record.get("email"), "Your FleetCleared listing is live",
+                       f"{record.get('name', 'Your listing')} is now live on FleetCleared.\n\n"
+                       f"Your first lead is free. After that, we need a card on file to deliver paid leads "
+                       f"automatically -- add one here:\n{SITE}/add-card.html#{app_id}\n\n"
+                       f"No rush: we'll hold your first paid lead for 48 hours if you haven't added one yet.")
+        elif action == "reject":
+            send_email(record.get("email"), "Your FleetCleared application",
+                       f"We couldn't approve {record.get('name', 'your application')} for a FleetCleared listing at this time.\n\n"
+                       f"If you think this is a mistake, reply to this email or visit "
+                       f"{SITE}/application-status.html and ask for a second look.")
 
         self._send(200, {"ok": True})

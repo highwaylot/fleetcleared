@@ -11,5 +11,8 @@
       { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
       { "key": "X-Frame-Options", "value": "DENY" }
     ] }
+  ],
+  "crons": [
+    { "path": "/api/cron_expire_holds", "schedule": "0 * * * *" }
   ]
 }

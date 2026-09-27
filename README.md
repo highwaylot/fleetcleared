@@ -71,12 +71,68 @@ now submits for real:
   `assets/site.js` checks for `window.FC_DEMO_CONSULTANTS` (set by `assets/demo-data.js`) and shows
   the same success message locally instead, so playing with the demo can't pollute real applications.
 
-**Not built yet, on purpose:** no email is sent to an applicant when you decide (no email-sending
-service is wired up), carrier-side lead requests and billing don't exist, and consultants can't log
-in to manage their own listing. Those are separate, larger builds -- this pass only covers
-application intake through admin approval, which is what turns outreach into something real.
+**Still not built, on purpose:** consultants can't log in to manage their own listing (editing or
+pausing it requires asking you, for now). That's a separate, larger build. Email sending and
+carrier-side lead requests/billing are covered in the next section.
 
 The preview (plain `python3 tools/build_site.py`) is unchanged and stays noindex.
+
+## Lead billing (real backend)
+
+The "Request contact" button on `consultant.html` submits for real now, and it can actually charge
+a consultant's card. Three moving pieces, in the order data flows through them:
+
+1. **`api/lead_request.py`** -- public, no auth. A carrier's request lands here. Runs the pricing
+   spec in `api/_rules.py` (a hand-kept port of `assets/rules.js`'s `decideLead` -- same numbers,
+   same order of checks) to decide: deliver free, deliver and charge, hold (no card on file yet), or
+   decline (consultant's monthly limit is reached). On a paid deliver it charges the consultant's
+   saved card through Stripe; on hold or a declined charge it emails the consultant instead of
+   handing over the carrier's contact details, so a lead is never given away before it's paid for
+   (or confirmed free).
+2. **`api/consultant_card_setup.py` + `add-card.html`** -- how a consultant adds a card. Stripe
+   Elements collects the card directly in the browser; our server only ever sees a Stripe customer
+   id and payment method id, never the card number. Linked from the approval email
+   `api/admin_consultants.py` now sends.
+3. **`api/stripe_webhook.py`** -- Stripe's confirmation that a card was actually saved
+   (`setup_intent.succeeded`) is what gets written to the consultant's record, not the browser's
+   side of the form. This is Stripe's own recommended pattern, not a shortcut.
+
+A hold that never gets a card added expires after 48 hours (`api/cron_expire_holds.py`, wired up in
+`vercel.json`'s `crons`), matching what `terms.html` already promises. It emails the carrier (when
+they asked to be reached by email) that the consultant wasn't able to take the request.
+
+**Setup, in order:**
+
+1. **Stripe.** Create an account at [stripe.com](https://stripe.com) if you don't have one. Start
+   in **test mode** (the toggle in the dashboard) -- everything above works identically in test mode
+   with Stripe's [test card numbers](https://stripe.com/docs/testing), so you can run a whole fake
+   lead through the system before any real card is charged.
+   - **Developers -> API keys**: copy the **Secret key** (`sk_test_...`) and **Publishable key**
+     (`pk_test_...`).
+   - **Developers -> Webhooks -> Add endpoint**: URL `https://fleetcleared.com/api/stripe_webhook`,
+     events `setup_intent.succeeded` and `payment_intent.payment_failed`. Copy the **Signing
+     secret** (`whsec_...`) it gives you.
+   - In Vercel, **Settings -> Environment Variables**, add `STRIPE_SECRET_KEY`,
+     `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` with those three values.
+   - When you're ready to actually charge real cards: flip to **live mode** in Stripe, get the
+     `sk_live_...`/`pk_live_...`/`whsec_...` equivalents (a live webhook endpoint is separate from
+     the test one), and swap the env vars.
+2. **Resend** (email sending -- lead notifications, approval emails, hold/decline notices). Create
+   a free account at [resend.com](https://resend.com), verify `fleetcleared.com` as a sending domain
+   (a few DNS records, same place you manage the domain's other DNS), then **API Keys -> Create**.
+   Add `RESEND_API_KEY` and `RESEND_FROM` (e.g. `FleetCleared <leads@fleetcleared.com>`) in Vercel.
+   Any email send silently no-ops until these are set -- nothing breaks, leads just stop notifying
+   anyone, so don't skip this once real consultants are live.
+3. **`CRON_SECRET`.** Any random string, added the same way. Vercel signs its own cron requests with
+   it automatically once it's set; without it the cron endpoint runs unauthenticated (fine to leave
+   unset while testing, not once this is live).
+4. Redeploy after adding env vars -- Vercel doesn't pick up new ones on existing deployments.
+
+**Testing it end to end**, once Stripe/Resend are in test mode: approve a test consultant
+application, open the add-card link from the email it sends, add a Stripe test card
+(`4242 4242 4242 4242`, any future expiry/CVC), then send that consultant a request from
+`consultant.html` with a fleet size of 11+ so it's a paid lead, not the free one. You should get an
+email with the lead's contact details and see the charge in Stripe's dashboard (test mode).
 
 ## Before going live
 
