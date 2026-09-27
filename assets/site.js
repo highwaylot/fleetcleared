@@ -41,9 +41,32 @@
       icon: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>' },
   };
 
-  // Listings: the demo pages load assets/demo-data.js; the live site starts empty until real listings come from the database.
-  const consultants = window.FC_DEMO_CONSULTANTS || [];
-  const bySlug = Object.fromEntries(consultants.map(c => [c.slug, c]));
+  // Listings: the demo pages load assets/demo-data.js and hand us the full rich shape directly.
+  // The live site has no demo flag, so we fetch real approved listings from the API instead and
+  // adapt their thinner intake-form shape (free-text states/specialties/hours, no reviews or logo
+  // yet) into the same shape the rendering code below already expects.
+  function mapListing(r) {
+    const states = String(r.states || '').split(/[,\s]+/).filter(Boolean).map(s => s.toUpperCase());
+    const tags = String(r.specialties || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 4);
+    const approvedYear = r.approvedAt ? new Date(Number(r.approvedAt) * 1000).getFullYear() : '';
+    return {
+      slug: r.id, name: r.name || 'Unnamed listing', states, tags,
+      desc: r.description || '', about: r.description || '',
+      region: states.join(', ') || 'Service area not listed',
+      hasLogo: false,
+      prefer: r.contactPref || 'call',
+      tz: r.timezone ? `${r.timezone} Time` : 'Central Time',
+      // No structured per-day hours from the intake form yet, so open/closed can't be computed;
+      // the free-text hours the consultant gave shows as their "response" note instead.
+      hours: [null, null, null, null, null, null, null],
+      response: r.hours || 'Contact for hours',
+      langs: 'English',
+      since: approvedYear ? String(approvedYear) : '',
+      atLimit: false, resumes: '',
+      reviews: [],
+    };
+  }
+
   const avg = (c) => c.reviews.length ? c.reviews.reduce((s, r) => s + r.stars, 0) / c.reviews.length : 0;
   const STAR = '<svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.9z"/></svg>';
   function stars(n) {
@@ -67,6 +90,13 @@
     }
     return btn;
   }
+
+  // Browse page and consultant profile page both need the consultant list before they can render
+  // anything, and that list now arrives asynchronously on the live site (a fetch), synchronously
+  // on the demo (window.FC_DEMO_CONSULTANTS). Everything that reads `consultants` lives in this
+  // one function so either path can call it once the data is actually in hand.
+  function initListings(consultants) {
+  const bySlug = Object.fromEntries(consultants.map(c => [c.slug, c]));
 
   // Browse page
   const grid = $('#grid');
@@ -202,6 +232,18 @@
       showTab('reviews');
       $('.profile-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  }
+  }
+
+  // Demo pages hand us the full rich shape straight away. Live pages have no demo flag, so they
+  // fetch real approved listings and adapt them with mapListing() before rendering the same way.
+  if (window.FC_DEMO_CONSULTANTS) {
+    initListings(window.FC_DEMO_CONSULTANTS);
+  } else if ($('#grid') || $('#p-name')) {
+    fetch('/api/consultants_public')
+      .then(res => res.json())
+      .then(data => initListings(((data && data.rows) || []).map(mapListing)))
+      .catch(() => initListings([]));
   }
 
   // Request-contact modal
