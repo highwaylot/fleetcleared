@@ -11,8 +11,22 @@ LAUNCH = os.environ.get("FC_LAUNCH") == "1"
 # before the company details are filled in. Remove it from vercel.json to go fully live.
 HOLD_INDEX = os.environ.get("FC_HOLD_INDEX") == "1"
 OUT = ROOT / "dist" if LAUNCH else ROOT
-LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides are added by build_guides.py
+LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides and state pages are added by build_guides.py / build_states.py
 UPDATED = "September 22, 2026"
+
+# All 50 states, used by the browse filter and by the per-state SEO pages (build_states.py).
+US_STATES = [
+  ("AL", "Alabama"), ("AK", "Alaska"), ("AZ", "Arizona"), ("AR", "Arkansas"), ("CA", "California"),
+  ("CO", "Colorado"), ("CT", "Connecticut"), ("DE", "Delaware"), ("FL", "Florida"), ("GA", "Georgia"),
+  ("HI", "Hawaii"), ("ID", "Idaho"), ("IL", "Illinois"), ("IN", "Indiana"), ("IA", "Iowa"),
+  ("KS", "Kansas"), ("KY", "Kentucky"), ("LA", "Louisiana"), ("ME", "Maine"), ("MD", "Maryland"),
+  ("MA", "Massachusetts"), ("MI", "Michigan"), ("MN", "Minnesota"), ("MS", "Mississippi"), ("MO", "Missouri"),
+  ("MT", "Montana"), ("NE", "Nebraska"), ("NV", "Nevada"), ("NH", "New Hampshire"), ("NJ", "New Jersey"),
+  ("NM", "New Mexico"), ("NY", "New York"), ("NC", "North Carolina"), ("ND", "North Dakota"), ("OH", "Ohio"),
+  ("OK", "Oklahoma"), ("OR", "Oregon"), ("PA", "Pennsylvania"), ("RI", "Rhode Island"), ("SC", "South Carolina"),
+  ("SD", "South Dakota"), ("TN", "Tennessee"), ("TX", "Texas"), ("UT", "Utah"), ("VT", "Vermont"),
+  ("VA", "Virginia"), ("WA", "Washington"), ("WV", "West Virginia"), ("WI", "Wisconsin"), ("WY", "Wyoming"),
+]
 
 ICON = {
   "folder": '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>',
@@ -160,6 +174,7 @@ FOOTER = f'''<footer class="site-footer">
       <li><a href="for-consultants.html">For consultants</a></li>
       <li><a href="terms.html">Terms of service</a></li>
       <li><a href="guides.html">Guides &amp; free tools</a></li>
+      <li><a href="states.html">By state</a></li>
     </ul>
     <p class="footer-legal">© 2026 FleetCleared. Not affiliated with the FMCSA or the U.S. Department of Transportation.</p>
   </div>
@@ -182,6 +197,7 @@ if LAUNCH:
     </div>
     <ul class="footer-links">
       <li><a href="guides.html">Guides &amp; free tools</a></li>
+      <li><a href="states.html">By state</a></li>
       <li><a href="for-consultants.html">For consultants</a></li>
       <li><a href="privacy.html">Privacy policy</a></li>
       <li><a href="mcs-150-due-date.html">MCS-150 due date</a></li>
@@ -271,7 +287,7 @@ MODAL = """<div class="modal-backdrop" id="contact-modal" hidden>
 </div>"""
 
 # ---------- BROWSE ----------
-states = ["AL","AR","FL","GA","IN","KS","KY","MO","NE","NJ","NM","NY","OH","OK","PA","TX"]
+states = [a for a, _ in US_STATES]
 specs = ["Audits","CSA Scores","DQ Files","Drug & Alcohol","New Entrant Audits","Owner-Operators","Bilingual"]
 write("browse.html", head(
   "Find a DOT Compliance Consultant | FleetCleared",
@@ -709,6 +725,9 @@ write("admin.html", admin_head + f"""<div class="preview-banner">Design preview.
 # ---------- GUIDES AND FREE TOOLS ----------
 exec(open(pathlib.Path(__file__).with_name("build_guides.py")).read())
 
+# ---------- STATE PAGES (SEO) ----------
+exec(open(pathlib.Path(__file__).with_name("build_states.py")).read())
+
 
 # ---------- TASTE OF FLEETCLEARED (demo copy in /demo, fictional data) ----------
 DEMO = ROOT / "demo"
@@ -797,13 +816,13 @@ if LAUNCH:
 # ---------- SEO / platform files ----------
 if LAUNCH and HOLD_INDEX:
     write("robots.txt", "# Interim live site: hidden from search engines until the company details are filled in.\nUser-agent: *\nDisallow: /\n")
-    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html", "states.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + [p for p in STATE_PAGES if p != "states.html"] + ["privacy.html", "terms.html"]
 elif LAUNCH:
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + ["privacy.html", "terms.html"]
+    pages = ["", "guides.html", "for-consultants.html", "partner-with-us.html", "states.html"] + [p for p in GUIDE_PAGES if p != "guides.html"] + [p for p in STATE_PAGES if p != "states.html"] + ["privacy.html", "terms.html"]
 else:
     write("robots.txt", "# PREVIEW MODE: blocks all crawlers. The public build (FC_LAUNCH=1) writes its own.\nUser-agent: *\nDisallow: /\n")
-    pages = ["", "browse.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html"] + GUIDE_PAGES
+    pages = ["", "browse.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html"] + GUIDE_PAGES + STATE_PAGES
 write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{GUIDES_ISO}</lastmod></url>\n" for p in pages) + "</urlset>\n")
 write("site.webmanifest", json.dumps({

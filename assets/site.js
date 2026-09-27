@@ -102,6 +102,8 @@
   const grid = $('#grid');
   if (grid) {
     const state = $('#f-state'), spec = $('#f-spec'), q = $('#f-q'), sort = $('#f-sort'), onlyOpen = $('#f-open'), clear = $('#f-clear');
+    const qsState = new URLSearchParams(location.search).get('state');
+    if (qsState && [...state.options].some(o => o.value === qsState.toUpperCase())) state.value = qsState.toUpperCase();
     const SORTS = {
       rating: (a, b) => avg(b) - avg(a) || b.reviews.length - a.reviews.length,
       reviews: (a, b) => b.reviews.length - a.reviews.length || avg(b) - avg(a),
