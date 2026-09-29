@@ -536,8 +536,8 @@ write("partner-with-us.html", head(
     <p class="hint">Example listing</p>
     <article class="card">
       <div class="card-id">
-        <div class="org-logo placeholder" aria-hidden="true">DC</div>
-        <div><h2>DOT Compliance Partners</h2><p class="region">Texas, statewide</p></div>
+        <div class="org-logo placeholder" aria-hidden="true">EC</div>
+        <div><h2>Example Compliance Co.</h2><p class="region">Texas, statewide</p></div>
       </div>
       <p class="desc">Safety audits &middot; DQ file setup &middot; Drug &amp; alcohol program review</p>
       <div class="tags"><span class="tag">Serves 1&ndash;10 truck fleets</span><span class="tag">Responds within a day</span></div>
