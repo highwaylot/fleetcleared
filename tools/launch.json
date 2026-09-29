@@ -3,7 +3,8 @@
   "legal_name": "FleetCleared (Texas LLC, formation pending)",
   "state_of_formation": "Texas",
   "mailing_address": "Florida",
-  "court_county_and_state": "",
+  "court_county_and_state": "the State of Florida",
+  "governing_law_state": "Florida",
   "liability_cap_dollars": "100",
   "effective_date": "September 27, 2026"
 }

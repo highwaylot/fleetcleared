@@ -6,7 +6,7 @@ CFG = json.loads((pathlib.Path(__file__).with_name("launch.json")).read_text())
 def cfg(key):
     v = str(CFG.get(key, "")).strip()
     return v if v else fill(f"[{key.replace('_', ' ')}]")
-NAME, FORMED, ADDRESS, COURTS, CAP, EFFECTIVE = (cfg(k) for k in ["legal_name", "state_of_formation", "mailing_address", "court_county_and_state", "liability_cap_dollars", "effective_date"])
+NAME, FORMED, ADDRESS, COURTS, CAP, EFFECTIVE, LAW = (cfg(k) for k in ["legal_name", "state_of_formation", "mailing_address", "court_county_and_state", "liability_cap_dollars", "effective_date", "governing_law_state"])
 # Blank web3forms_key just hides the waitlist section; it never blocks the build (unlike the fields above).
 
 def launch_legal(fname, title, desc, h1, lede, summary_items, sections):
@@ -87,7 +87,7 @@ launch_legal("terms.html", "Terms of Use | FleetCleared",
    ("links", "Links to other sites", "<p>We link to government and industry sources so you can check what we say. We don't control those sites and aren't responsible for their content.</p>"),
    ("disclaimers", "Disclaimers", "<p>FleetCleared is provided \"as is\" and \"as available.\" To the fullest extent the law allows, we disclaim all warranties, express or implied, including warranties that our guides are accurate, complete or current, or that any tool result is correct.</p>"),
    ("liability", "Limitation of liability", f"<p>To the fullest extent the law allows, FleetCleared is not liable for indirect, incidental, special, consequential or punitive damages, or for lost profits, fines, penalties, failed audits or loss of operating authority, arising from your use of the site, our guides or our tools. Our total liability for any claim is limited to ${CAP}.</p>"),
-   ("law", "Governing law", f"<p>These terms are governed by the laws of {FORMED}, without regard to conflict-of-law rules. Disputes will be resolved in the state or federal courts located in {COURTS}.</p>"),
+   ("law", "Governing law", f"<p>These terms are governed by the laws of {LAW}, without regard to conflict-of-law rules. Disputes will be resolved in the state or federal courts located in {COURTS}.</p>"),
    ("changes", "Changes", "<p>We may update these terms. We'll change the effective date at the top when we do. Continuing to use the site means you accept the updated terms.</p>"),
    ("contact", "Contact", f"<p><strong>legal@fleetcleared.com</strong><br>{NAME}, {ADDRESS}</p>"),
   ])
