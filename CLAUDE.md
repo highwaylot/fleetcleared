@@ -16,6 +16,13 @@ Owner is a solo, non-technical founder (veteran, pursuing a TX veteran-owned
 LLC fee waiver via TVC). Treat this as a real small business, not a coding
 exercise — grounded, no hype, no cheerleading.
 
+## Before asking the owner for information
+
+Check what's already available (their site, terms/privacy pages, prior
+replies, the business book) before asking them to supply something or before
+drafting a question to a third party asking for it. Don't ask for something
+that's one lookup away.
+
 ## Drafting outreach emails/messages for the owner to send
 
 - Write them **short**. Default to 4-6 sentences. Cut anything that isn't a
