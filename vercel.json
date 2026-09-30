@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "",
-  "buildCommand": "FC_LAUNCH=1 FC_HOLD_INDEX=1 python3 tools/build_site.py",
+  "buildCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then FC_LAUNCH=1 FC_HOLD_INDEX=1 python3 tools/build_site.py; else python3 tools/build_site.py; fi",
   "outputDirectory": "dist",
   "cleanUrls": false,
   "headers": [

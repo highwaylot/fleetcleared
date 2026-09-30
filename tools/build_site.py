@@ -10,7 +10,10 @@ LAUNCH = os.environ.get("FC_LAUNCH") == "1"
 # FC_HOLD_INDEX=1 publishes the launch pages but keeps search engines out, for an interim live site
 # before the company details are filled in. Remove it from vercel.json to go fully live.
 HOLD_INDEX = os.environ.get("FC_HOLD_INDEX") == "1"
-OUT = ROOT / "dist" if LAUNCH else ROOT
+# Vercel sets VERCEL=1 during every deployment build (Preview and Production); outputDirectory in
+# vercel.json is fixed to "dist", so any Vercel-triggered build must write there regardless of
+# FC_LAUNCH -- only a plain local run (no Vercel, no FC_LAUNCH) writes straight into the repo.
+OUT = ROOT / "dist" if (LAUNCH or os.environ.get("VERCEL")) else ROOT
 LAUNCH_PAGES = {"index.html", "guides.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html", "robots.txt", "sitemap.xml", "site.webmanifest", "favicon.svg"}  # guides and state pages are added by build_guides.py / build_states.py
 UPDATED = "September 22, 2026"
 
