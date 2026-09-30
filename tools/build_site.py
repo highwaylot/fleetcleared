@@ -235,13 +235,17 @@ write("index.html", head(
   "Find an independent DOT compliance consultant for your trucking company. Free to search and connect.",
   "", extra=f'\n<script type="application/ld+json">{json.dumps(ld)}</script>') + header("home") + f'''<main>
   <section class="hero wrap">
-    <span class="eyebrow">Free to search &amp; connect</span>
-    <h1>Find a DOT compliance consultant before a bad inspection finds you.</h1>
-    <p class="lede">Hours of service, driver files, drug and alcohol testing, maintenance records. One missed requirement can cost you your operating authority. FleetCleared connects you with independent compliance consultants near you, at no cost to you. Consultants set their own rates.</p>
-    <p class="no-robocalls"><strong>No robocalls. No surprise emails.</strong> Nobody contacts you unless you ask them to.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="browse.html">Find a consultant</a>
-      <a class="btn btn-ghost btn-lg" href="for-consultants.html">List your practice</a>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Free to search &amp; connect</span>
+        <h1>Find a DOT compliance consultant before a bad inspection finds you.</h1>
+        <p class="lede">Hours of service, driver files, drug and alcohol testing, maintenance records. One missed requirement can cost you your operating authority. FleetCleared connects you with independent compliance consultants near you, at no cost to you. Consultants set their own rates.</p>
+        <p class="no-robocalls"><strong>No robocalls. No surprise emails.</strong> Nobody contacts you unless you ask them to.</p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-xl" href="browse.html">Find a consultant</a>
+        <a class="btn btn-ghost btn-xl" href="for-consultants.html">List your practice</a>
+      </div>
     </div>
   </section>
   <ul class="trust-strip">
@@ -302,10 +306,16 @@ write("browse.html", head(
   </div>
   <div class="filters">
     <select id="f-state" aria-label="State"><option value="">All states</option>{"".join(f"<option>{s}</option>" for s in states)}</select>
-    <select id="f-spec" aria-label="Specialty"><option value="">All specialties</option>{"".join(f"<option>{s.replace('&','&amp;')}</option>" for s in specs)}</select>
+    <div class="ms" id="f-spec">
+      <button type="button" class="ms-toggle" id="f-spec-toggle" aria-haspopup="true" aria-expanded="false">All specialties</button>
+      <div class="ms-panel" id="f-spec-panel" hidden>
+        <label><input type="checkbox" data-all checked> All specialties</label>
+        {"".join(f'<label><input type="checkbox" value="{s.replace(chr(34),"&quot;")}"> {s.replace("&","&amp;")}</label>' for s in specs)}
+      </div>
+    </div>
     <input id="f-q" type="search" placeholder="Search by company name" aria-label="Search by company name">
     <select id="f-sort" aria-label="Sort"><option value="rating">Top rated</option><option value="reviews">Most reviews</option><option value="name">Name A–Z</option></select>
-    <label class="check-inline" for="f-open"><input id="f-open" type="checkbox"> Taking requests now</label>
+    <label class="check-inline" for="f-open"><input id="f-open" type="checkbox"><span>Taking requests now</span></label>
     <button class="btn btn-ghost btn-sm" type="button" id="f-clear" hidden>Clear filters</button>
   </div>
   <p class="result-count" id="result-count" aria-live="polite"></p>

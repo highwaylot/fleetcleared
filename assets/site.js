@@ -101,7 +101,9 @@
   // Browse page
   const grid = $('#grid');
   if (grid) {
-    const state = $('#f-state'), spec = $('#f-spec'), q = $('#f-q'), sort = $('#f-sort'), onlyOpen = $('#f-open'), clear = $('#f-clear');
+    const state = $('#f-state'), specToggle = $('#f-spec-toggle'), specPanel = $('#f-spec-panel'), q = $('#f-q'), sort = $('#f-sort'), onlyOpen = $('#f-open'), clear = $('#f-clear');
+    const specAll = specPanel.querySelector('[data-all]');
+    const specBoxes = [...specPanel.querySelectorAll('input:not([data-all])')];
     const qsState = new URLSearchParams(location.search).get('state');
     if (qsState && [...state.options].some(o => o.value === qsState.toUpperCase())) state.value = qsState.toUpperCase();
     const SORTS = {
@@ -109,14 +111,43 @@
       reviews: (a, b) => b.reviews.length - a.reviews.length || avg(b) - avg(a),
       name: (a, b) => a.name.localeCompare(b.name),
     };
+    // Consultants type their own specialty tags free-text, so they rarely match this fixed list
+    // exactly ("DQ files" vs "DQ Files"). Match case-insensitively in either direction instead.
+    const specMatch = (tag, selected) => {
+      const t = tag.toLowerCase(), s = selected.toLowerCase();
+      return t.includes(s) || s.includes(t);
+    };
+    const selectedSpecs = () => specBoxes.filter(b => b.checked).map(b => b.value);
+    const updateSpecToggle = () => {
+      const chosen = selectedSpecs();
+      specToggle.textContent = chosen.length === 0 ? 'All specialties' : chosen.length === 1 ? chosen[0] : `${chosen.length} specialties`;
+    };
+    specAll.addEventListener('change', () => {
+      if (specAll.checked) specBoxes.forEach(b => b.checked = false);
+      updateSpecToggle(); render();
+    });
+    specBoxes.forEach(b => b.addEventListener('change', () => {
+      if (b.checked) specAll.checked = false;
+      if (specBoxes.every(x => !x.checked)) specAll.checked = true;
+      updateSpecToggle(); render();
+    }));
+    specToggle.addEventListener('click', () => {
+      const open = specPanel.hidden;
+      specPanel.hidden = !open;
+      specToggle.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', (e) => {
+      if (!specPanel.hidden && !e.target.closest('#f-spec')) { specPanel.hidden = true; specToggle.setAttribute('aria-expanded', 'false'); }
+    });
     const render = () => {
       const needle = q.value.trim().toLowerCase();
+      const chosenSpecs = selectedSpecs();
       const matches = consultants.filter(c =>
         (!state.value || c.states.includes(state.value)) &&
-        (!spec.value || c.tags.includes(spec.value)) &&
+        (chosenSpecs.length === 0 || chosenSpecs.some(sel => c.tags.some(t => specMatch(t, sel)))) &&
         (!onlyOpen.checked || !c.atLimit) &&
         (!needle || c.name.toLowerCase().includes(needle))).sort(SORTS[sort.value]);
-      clear.hidden = !(state.value || spec.value || needle || onlyOpen.checked);
+      clear.hidden = !(state.value || chosenSpecs.length || needle || onlyOpen.checked);
       grid.replaceChildren(...matches.map(c => {
         const btn = contactButton(c);
         const href = `consultant.html#${c.slug}`;
@@ -139,13 +170,15 @@
       $('#empty').hidden = matches.length > 0 || consultants.length === 0;
       $('#empty-launch').hidden = consultants.length > 0;
     };
-    [state, spec, sort, onlyOpen].forEach(s => s.addEventListener('change', render));
+    [state, sort, onlyOpen].forEach(s => s.addEventListener('change', render));
     q.addEventListener('input', render);
     clear.addEventListener('click', () => {
-      state.value = ''; spec.value = ''; q.value = ''; onlyOpen.checked = false;
+      state.value = ''; q.value = ''; onlyOpen.checked = false;
+      specBoxes.forEach(b => b.checked = false); specAll.checked = true; updateSpecToggle();
       render();
       q.focus();
     });
+    updateSpecToggle();
     render();
   }
 

@@ -83,10 +83,16 @@
   </div>
   <div class="filters">
     <select id="f-state" aria-label="State"><option value="">All states</option><option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option><option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option><option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option><option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option><option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option><option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option><option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option><option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option><option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option><option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option></select>
-    <select id="f-spec" aria-label="Specialty"><option value="">All specialties</option><option>Audits</option><option>CSA Scores</option><option>DQ Files</option><option>Drug &amp; Alcohol</option><option>New Entrant Audits</option><option>Owner-Operators</option><option>Bilingual</option></select>
+    <div class="ms" id="f-spec">
+      <button type="button" class="ms-toggle" id="f-spec-toggle" aria-haspopup="true" aria-expanded="false">All specialties</button>
+      <div class="ms-panel" id="f-spec-panel" hidden>
+        <label><input type="checkbox" data-all checked> All specialties</label>
+        <label><input type="checkbox" value="Audits"> Audits</label><label><input type="checkbox" value="CSA Scores"> CSA Scores</label><label><input type="checkbox" value="DQ Files"> DQ Files</label><label><input type="checkbox" value="Drug & Alcohol"> Drug &amp; Alcohol</label><label><input type="checkbox" value="New Entrant Audits"> New Entrant Audits</label><label><input type="checkbox" value="Owner-Operators"> Owner-Operators</label><label><input type="checkbox" value="Bilingual"> Bilingual</label>
+      </div>
+    </div>
     <input id="f-q" type="search" placeholder="Search by company name" aria-label="Search by company name">
     <select id="f-sort" aria-label="Sort"><option value="rating">Top rated</option><option value="reviews">Most reviews</option><option value="name">Name A–Z</option></select>
-    <label class="check-inline" for="f-open"><input id="f-open" type="checkbox"> Taking requests now</label>
+    <label class="check-inline" for="f-open"><input id="f-open" type="checkbox"><span>Taking requests now</span></label>
     <button class="btn btn-ghost btn-sm" type="button" id="f-clear" hidden>Clear filters</button>
   </div>
   <p class="result-count" id="result-count" aria-live="polite"></p>
