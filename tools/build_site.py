@@ -239,8 +239,8 @@ write("index.html", head(
       <div class="hero-copy">
         <span class="eyebrow">Free to search &amp; connect</span>
         <h1>Find a DOT compliance consultant before a bad inspection finds you.</h1>
-        <p class="lede">Hours of service, driver files, drug and alcohol testing, maintenance records. One missed requirement can cost you your operating authority. FleetCleared connects you with independent compliance consultants near you, at no cost to you. Consultants set their own rates.</p>
-        <p class="no-robocalls"><strong>No robocalls. No surprise emails.</strong> Nobody contacts you unless you ask them to.</p>
+        <p class="lede">One missed requirement can cost you your operating authority. FleetCleared connects you with independent DOT compliance consultants near you, free to search and contact. Consultants set their own rates.</p>
+        <p class="no-robocalls"><strong>Nobody contacts you unless you ask them to.</strong></p>
       </div>
       <div class="hero-cta">
         <a class="btn btn-primary btn-xl" href="browse.html">Find a consultant</a>
@@ -295,7 +295,8 @@ MODAL = """<div class="modal-backdrop" id="contact-modal" hidden>
 
 # ---------- BROWSE ----------
 states = [a for a, _ in US_STATES]
-specs = ["Audits","CSA Scores","DQ Files","Drug & Alcohol","New Entrant Audits","Owner-Operators","Bilingual"]
+specs = ["Audits","CSA Scores","DQ Files","Drug & Alcohol","New Entrant Audits","New Authority Setup","BOC-3",
+         "UCR","IFTA","MCS-150","HOS/ELD","Owner-Operators","Bilingual"]
 write("browse.html", head(
   "Find a DOT Compliance Consultant | FleetCleared",
   "Browse independent DOT and FMCSA compliance consultants by state and specialty. Free for carriers.",
@@ -450,15 +451,15 @@ write("for-consultants.html", head(
     <p>You pay only when a carrier sends you their contact details. The price depends on the size of their fleet, because bigger fleets are bigger clients. Leads go to you alone and are never sold to another consultant.</p>
     <div class="table-wrap"><table><thead><tr><th>Carrier's fleet</th><th>Price per lead</th></tr></thead><tbody id="price-rows"></tbody></table></div>
     <p class="hint">Your first lead is free. Set a monthly limit so you're never surprised. Fake or duplicate requests are credited back.</p>
-    <div class="estimator" id="estimator">
-      <h3>Estimate your month</h3>
+    <details class="estimator" id="estimator">
+      <summary>Does this work with your budget?</summary>
       <div class="est-grid">
         <div class="field"><label for="est-leads">Requests you might get</label><input id="est-leads" type="range" min="0" max="30" value="6"><span class="hint"><b id="est-leads-out">6</b> a month</span></div>
         <div class="field"><label for="est-fleet">Typical carrier</label><select id="est-fleet"><option value="1">1–2 trucks</option><option value="3" selected>3–10 trucks</option><option value="11">11+ trucks</option></select></div>
         <div class="field"><label for="est-cap">Your monthly limit</label><select id="est-cap"><option value="5">5 leads</option><option value="10" selected>10 leads</option><option value="20">20 leads</option><option value="">No limit</option></select></div>
       </div>
       <p class="est-result" id="est-result" aria-live="polite"></p>
-    </div>
+    </details>
   </section>
   <div class="signup-layout">
   <div class="form-card">
@@ -469,12 +470,20 @@ write("for-consultants.html", head(
       <div class="form-grid">
         <div class="field"><label for="lf-name">Company name</label><input id="lf-name" required autocomplete="organization"></div>
         <div class="field"><label for="lf-email">Work email</label><input id="lf-email" type="email" required autocomplete="email"><span class="hint">A company email address speeds up approval.</span></div>
-        <div class="field"><label for="lf-phone">Phone</label><input id="lf-phone" type="tel" required autocomplete="tel"></div>
-        <div class="field"><label for="lf-states">States you serve</label><input id="lf-states" required placeholder="OH, IN, KY"></div>
+        <div class="field"><label for="lf-phone">Phone</label><input id="lf-phone" type="tel" required autocomplete="tel" placeholder="(555) 555-5555"></div>
+        <div class="field">
+          <label for="lf-states-toggle">States you serve</label>
+          <div class="ms" id="lf-states">
+            <button type="button" class="ms-toggle" id="lf-states-toggle" aria-haspopup="true" aria-expanded="false">Choose states</button>
+            <div class="ms-panel" id="lf-states-panel" hidden>
+              {"".join(f'<label><input type="checkbox" value="{a}"> {a} — {n}</label>' for a, n in US_STATES)}
+            </div>
+          </div>
+        </div>
         <div class="field"><label for="lf-pref">Best way to reach you</label><select id="lf-pref"><option value="call">Phone call</option><option value="text">Text message</option><option value="email">Email</option></select></div>
         <div class="field"><label for="lf-tz">Time zone</label><select id="lf-tz"><option>Eastern</option><option selected>Central</option><option>Mountain</option><option>Pacific</option><option>Alaska</option><option>Hawaii</option></select></div>
         <div class="field full"><label for="lf-cap">Monthly lead limit</label><select id="lf-cap"><option value="5">Up to 5 leads a month</option><option value="10" selected>Up to 10 leads a month</option><option value="20">Up to 20 leads a month</option><option value="">No limit</option></select><span class="hint">Once you reach it, new requests are politely declined until next month. You can change it any time.</span></div>
-        <div class="field full"><label for="lf-hours">Hours carriers can contact you</label><input id="lf-hours" placeholder="Mon–Fri 7 AM – 5 PM, Sat 8 AM – noon"><span class="hint">Shown on your profile so carriers know when to expect a reply.</span></div>
+        <div class="field full"><label for="lf-hours">Hours carriers can contact you</label><input id="lf-hours" placeholder="Mon–Fri 7 AM – 5 PM, Sat 8 AM – noon"><span class="hint">Shown on your profile so carriers know when to expect a reply — they can still reach out any time, this just sets expectations.</span></div>
         <div class="field full"><label for="lf-spec">Specialties</label><input id="lf-spec" placeholder="DQ files, HOS audits, drug and alcohol programs"></div>
         <div class="field full"><label for="lf-desc">Short description</label><textarea id="lf-desc" rows="3" maxlength="300" placeholder="Which carriers do you help, and with what?"></textarea><span class="hint"><span id="lf-desc-count">0</span> / 300</span></div>
         <div class="field full">

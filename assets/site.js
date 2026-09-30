@@ -396,11 +396,29 @@
   const listForm = $('#list-form');
   if (listForm) {
     const preview = $('#logo-preview');
-    const FIELDS = ['lf-name', 'lf-email', 'lf-phone', 'lf-states', 'lf-pref', 'lf-tz', 'lf-cap', 'lf-hours', 'lf-spec', 'lf-desc'];
+    const FIELDS = ['lf-name', 'lf-email', 'lf-phone', 'lf-pref', 'lf-tz', 'lf-cap', 'lf-hours', 'lf-spec', 'lf-desc'];
     const PREF = { call: 'Prefers a phone call', text: 'Prefers text messages', email: 'Prefers email' };
+    const statesPanel = $('#lf-states-panel'), statesToggle = $('#lf-states-toggle');
+    const statesBoxes = statesPanel ? [...statesPanel.querySelectorAll('input')] : [];
+    const checkedStates = () => statesBoxes.filter(b => b.checked).map(b => b.value);
+    const updateStatesToggle = () => {
+      const chosen = checkedStates();
+      statesToggle.textContent = chosen.length === 0 ? 'Choose states' : chosen.length <= 3 ? chosen.join(', ') : `${chosen.length} states`;
+    };
+    if (statesToggle) {
+      statesToggle.addEventListener('click', () => {
+        const open = statesPanel.hidden;
+        statesPanel.hidden = !open;
+        statesToggle.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', (e) => {
+        if (!statesPanel.hidden && !e.target.closest('#lf-states')) { statesPanel.hidden = true; statesToggle.setAttribute('aria-expanded', 'false'); }
+      });
+      statesBoxes.forEach(b => b.addEventListener('change', () => { updateStatesToggle(); updatePreview(); saveDraft(); }));
+    }
     const updatePreview = () => {
       const name = $('#lf-name').value.trim();
-      const states = $('#lf-states').value.split(/[,\s]+/).filter(Boolean).map(x => x.toUpperCase());
+      const states = checkedStates();
       const tags = $('#lf-spec').value.split(',').map(x => x.trim()).filter(Boolean).slice(0, 4);
       if (!preview.querySelector('img')) preview.textContent = initials(name) || '?';
       const pvLogo = $('#pv-logo');
@@ -416,13 +434,19 @@
     const saveDraft = () => {
       clearTimeout(saveTimer);
       saveTimer = setTimeout(() => {
-        store.set('fc-listing-draft', Object.fromEntries(FIELDS.map(id => [id, $('#' + id).value])));
+        const data = Object.fromEntries(FIELDS.map(id => [id, $('#' + id).value]));
+        data['lf-states'] = checkedStates();
+        store.set('fc-listing-draft', data);
         $('#lf-draft-note').hidden = false;
       }, 400);
     };
     const draft = store.get('fc-listing-draft');
     if (draft) {
       FIELDS.forEach(id => { if (draft[id] != null) $('#' + id).value = draft[id]; });
+      if (Array.isArray(draft['lf-states'])) {
+        statesBoxes.forEach(b => { b.checked = draft['lf-states'].includes(b.value); });
+        updateStatesToggle();
+      }
       $('#lf-draft-note').textContent = 'We restored your unfinished draft.';
       $('#lf-draft-note').hidden = false;
     }
@@ -445,6 +469,22 @@
       e.preventDefault();
       const err = $('#lf-error');
       err.hidden = true;
+      // preventDefault() above skips the browser's native required-field check, so it has to be
+      // triggered explicitly -- otherwise this silently submits with blank required fields.
+      if (!listForm.reportValidity()) return;
+      const phoneDigits = digitsOnly($('#lf-phone').value);
+      if (!(phoneDigits.length === 10 || (phoneDigits.length === 11 && phoneDigits[0] === '1'))) {
+        err.textContent = 'Enter a 10-digit phone number, area code first.';
+        err.hidden = false;
+        $('#lf-phone').focus();
+        return;
+      }
+      if (checkedStates().length === 0) {
+        err.textContent = 'Choose at least one state you serve.';
+        err.hidden = false;
+        statesToggle.focus();
+        return;
+      }
       // The Taste of FleetCleared demo loads demo-data.js, which sets this. Never let a demo
       // visitor's submission reach the real application store.
       if (window.FC_DEMO_CONSULTANTS) {
@@ -460,7 +500,7 @@
       try {
         const body = {
           name: $('#lf-name').value.trim(), email: $('#lf-email').value.trim(), phone: $('#lf-phone').value.trim(),
-          states: $('#lf-states').value.trim(), contactPref: $('#lf-pref').value, timezone: $('#lf-tz').value,
+          states: checkedStates().join(', '), contactPref: $('#lf-pref').value, timezone: $('#lf-tz').value,
           cap: $('#lf-cap').value, hours: $('#lf-hours').value.trim(), specialties: $('#lf-spec').value.trim(),
           description: $('#lf-desc').value.trim(), agree: $('#lf-agree').checked,
           botcheck: listForm.querySelector('[name=botcheck]').checked ? '1' : '',
