@@ -1,6 +1,6 @@
 # Transactional email via Resend's REST API (https://resend.com). One urllib call, no SDK --
 # matches the rest of api/'s zero-dependency style. Requires RESEND_API_KEY and RESEND_FROM
-# (a verified sender, e.g. "FleetCleared <leads@fleetcleared.com>") in Vercel's env vars.
+# (a verified sender, e.g. "FleetCleared <hello@fleetcleared.com>") in Vercel's env vars.
 # Leading underscore: not its own route, importable by other api/*.py files.
 import json, os, urllib.request
 
