@@ -430,7 +430,7 @@ REMIND = '''<section class="tool-card remind" aria-labelledby="remind-h" id="rem
     <button class="btn btn-primary" type="submit">Send me reminders</button>
   </form>
   <p class="notice" id="r-done" hidden>You're on the list. <span class="preview-label">Preview: reminders aren't connected yet, so nothing was saved.</span></p>
-  <p class="fine">Reminders are a free courtesy, not guaranteed on time, so you stay responsible for your deadlines (see our <a href="terms.html#guides">terms</a>). We never share or sell your info. See our <a href="privacy.html">privacy policy</a>.</p>
+  <p class="fine">Reminders are a free service, but you're always responsible for tracking your own deadlines (see our <a href="terms.html#guides">terms</a>). We never share or sell your info. See our <a href="privacy.html">privacy policy</a>.</p>
 </section>'''
 hub_ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Guides and free tools", "url": f"{SITE}/guides.html", "publisher": {"@id": f"{SITE}/#org"}}
 write("guides.html", head("DOT Compliance Guides and Free Tools for Small Trucking Companies | FleetCleared",
