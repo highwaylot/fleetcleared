@@ -10,7 +10,14 @@ confidence, not a claim to carriers that a listee is "good" — never phrase
 copy or drafts in a way that reads as endorsement.
 
 Live at fleetcleared.com (Vercel). Repo `highwaylot/fleetcleared`. Work on
-`claude/new-session-dkn70h`, fast-forward merged into `main` to deploy.
+`claude/new-session-dkn70h` (Preview deploy). **Never merge or push to `main`
+(Production) unless the owner explicitly asks for a deploy right then** —
+`main` going green is a real, live action, not a side effect of other work.
+
+Preview and Production use separate Vercel KV databases (split 2026-09-30 so
+Preview is a real sandbox — fake listings, test cards, junk data — without
+touching Production's real data). Same env var names (`KV_REST_API_URL` etc.),
+different values scoped per-environment in Vercel.
 
 Owner is a solo, non-technical founder (veteran, pursuing a TX veteran-owned
 LLC fee waiver via TVC). Treat this as a real small business, not a coding
