@@ -8,6 +8,32 @@ from http.server import BaseHTTPRequestHandler
 
 PUBLIC_FIELDS = ("id", "name", "states", "specialties", "description", "contactPref", "timezone", "hours", "approvedAt")
 
+# Fake listings so Preview deploys look populated for demos/testing. Vercel sets VERCEL_ENV to
+# "production" only on the real site -- these never show there. Ids are prefixed "demo-" so they're
+# obviously not real KV records if anyone goes looking.
+DEMO_LISTINGS = [
+    {"id": "demo-1", "name": "Lone Star Compliance Group", "states": "TX",
+     "specialties": "DOT/MC setup, BOC-3, UCR, DQ files", "contactPref": "call", "timezone": "Central",
+     "hours": "Mon-Fri 8am-5pm", "description": "Texas-based, small-fleet focused. 8 years in trucking compliance.",
+     "approvedAt": 1759190400, "atLimit": False},
+    {"id": "demo-2", "name": "Gulf Coast Safety Consultants", "states": "TX",
+     "specialties": "Audit readiness, HOS/ELD, drug & alcohol program setup", "contactPref": "email",
+     "timezone": "Central", "hours": "Mon-Sat 7am-6pm", "description": "Houston area, 12 years in trucking compliance.",
+     "approvedAt": 1759190400, "atLimit": False},
+    {"id": "demo-3", "name": "Panhandle DOT Advisors", "states": "TX",
+     "specialties": "IFTA, UCR, MCS-150 updates", "contactPref": "call", "timezone": "Central",
+     "hours": "Mon-Fri 9am-5pm", "description": "Amarillo, serves rural fleets.",
+     "approvedAt": 1759190400, "atLimit": False},
+    {"id": "demo-4", "name": "Rio Grande Fleet Compliance", "states": "TX",
+     "specialties": "New authority setup, BOC-3, DQ files", "contactPref": "text", "timezone": "Central",
+     "hours": "Mon-Fri 8am-6pm", "description": "Border-region carriers, bilingual support.",
+     "approvedAt": 1759190400, "atLimit": False},
+    {"id": "demo-5", "name": "Metroplex Trucking Safety", "states": "TX",
+     "specialties": "Mock audits, CSA score monitoring, driver files", "contactPref": "email",
+     "timezone": "Central", "hours": "Mon-Fri 8am-5pm", "description": "DFW area, works with fleets up to 20 trucks.",
+     "approvedAt": 1759190400, "atLimit": True},
+]
+
 
 def _kv_url():
     return os.environ.get("KV_REST_API_URL") or os.environ.get("UPSTASH_REDIS_REST_URL")
@@ -42,6 +68,8 @@ class handler(BaseHTTPRequestHandler):
             self.send_response(500); self.send_header("Content-Type", "application/json"); self.end_headers()
             self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
             return
+        if os.environ.get("VERCEL_ENV") != "production":
+            rows = DEMO_LISTINGS + rows
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Cache-Control", "public, max-age=60")
