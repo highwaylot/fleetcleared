@@ -38,7 +38,7 @@ CTA = '''<aside class="guide-cta">
   <a class="btn btn-primary" href="browse.html">Find a consultant</a>
 </aside>'''
 
-DISCLAIMER = '<p class="fine guide-disclaimer">General information, not legal or compliance advice, and no substitute for the regulations or a qualified professional. Rules change and every carrier is different. Reading this page doesn\'t create a relationship with FleetCleared or any consultant, and using it is subject to our <a href="terms.html#guides">terms</a>. Found an error? Email <strong>corrections@fleetcleared.com</strong>. FleetCleared is a directory and is not affiliated with FMCSA or the U.S. Department of Transportation.</p>'
+DISCLAIMER = '<p class="fine guide-disclaimer">General information, not legal or compliance advice, and no substitute for the regulations or a qualified professional. Rules change and every carrier is different. Reading this page doesn\'t create a relationship with FleetCleared or any consultant, and using it is subject to our <a href="terms.html#guides">terms</a>. Found an error? Email <strong>legal@fleetcleared.com</strong>. FleetCleared is a directory and is not affiliated with FMCSA or the U.S. Department of Transportation.</p>'
 
 GUIDES = []   # (slug, card title, card blurb, group)
 GUIDE_PAGES = ["guides.html"]

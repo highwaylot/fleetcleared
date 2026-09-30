@@ -38,7 +38,7 @@ Builds a separate, public version with just the home page, guides, free tools, t
 2. Work through `FACT-CHECK.md`.
 3. Run `FC_LAUNCH=1 python3 tools/build_site.py`. It writes the site to `dist/` (not saved in git) and **refuses to finish** while any placeholder, noindex tag, draft note, directory link or reminder form remains.
 4. **Hosting is Vercel**, connected to this repo. `vercel.json` tells it to run the launch build and serve `dist/`. Production updates when `main` changes. Right now `vercel.json` includes `FC_HOLD_INDEX=1`, which publishes the guides but keeps search engines out while the company details are blank. Delete `FC_HOLD_INDEX=1` from `vercel.json` once `tools/launch.json` is filled, and the next deploy is fully public and indexable.
-5. Create the inboxes `legal@`, `privacy@` and `corrections@fleetcleared.com`.
+5. Create the inboxes `legal@`, `privacy@` and `partnerships@fleetcleared.com`.
 6. In Google Search Console, verify the domain and submit `https://fleetcleared.com/sitemap.xml`.
 9. **Waitlist:** self-hosted, no third party -- but Vercel retired its own KV product, so the Storage tab now routes through the Vercel Marketplace to Upstash (the same company that used to power Vercel KV underneath). Same result: free, forever, no credit card, plenty for a waitlist (500,000 commands a month).
    - Vercel project -> **Storage** tab -> **Marketplace Database Providers** (or **Browse Marketplace**, wording varies) -> search **Upstash** -> **Redis** -> pick the **Free** plan -> **Connect to Project**. That sets `KV_REST_API_URL` / `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_URL` / `_TOKEN` -- the code reads either name) automatically.
@@ -138,7 +138,7 @@ email with the lead's contact details and see the charge in Stripe's dashboard (
 
 1. **Admin needs real sign-in.** Hiding the page is not security. Put `admin.html` behind authentication (for example Supabase Auth or Vercel password protection) or move it into the real app.
 2. **Legal pages:** fill every highlighted placeholder, have a lawyer review them, then delete the "Draft for review" note.
-3. **Create inboxes** for `privacy@fleetcleared.com`, `legal@fleetcleared.com`, `copyright@fleetcleared.com` and `corrections@fleetcleared.com`.
+3. **Create inboxes** for `privacy@fleetcleared.com`, `legal@fleetcleared.com` and `partnerships@fleetcleared.com`. Copyright notices and content corrections route to `legal@` -- no separate inboxes for those.
 4. **Turn on indexing:** in every public page change `noindex, nofollow` to `index, follow` (leave `admin.html` as noindex), and replace `robots.txt` with:
    ```
    User-agent: *
