@@ -23,6 +23,23 @@ Owner is a solo, non-technical founder (veteran, pursuing a TX veteran-owned
 LLC fee waiver via TVC). Treat this as a real small business, not a coding
 exercise — grounded, no hype, no cheerleading.
 
+## Business book logging
+
+The business book (a claude.ai artifact, ArtifactData-backed — the owner has
+the link) is the only cross-session memory this project has. **Log to it
+right after any concrete outcome, in the same turn — not batched, not only
+when asked:**
+- a bug found or fixed, a deploy/infra change, a decision made
+- a lead/prospect contacted or replied
+- a fact corrected (write the correction into the entry it corrects, don't
+  just add a new contradicting entry — see log entry l020 for the pattern)
+
+Before asserting something is/isn't done (env vars, Stripe/Resend status,
+email setup, KV state), check the book or ask — don't answer from memory or
+from what the code implies should be true. Facts that stay true over time
+(current email addresses, what infra is live) belong in `decisions`, updated
+in place; `log` is for "what happened," not "what's currently true."
+
 ## Before asking the owner for information
 
 Check what's already available (their site, terms/privacy pages, prior
