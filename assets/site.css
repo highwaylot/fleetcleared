@@ -198,8 +198,13 @@ a{ color:var(--brand); }
 .form-card{ max-width:640px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:32px; margin-bottom:64px; }
 .form-card h2{ font-size:28px; margin-bottom:4px; }
 .form-card > p{ color:var(--ink-soft); margin-bottom:24px; }
-.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 16px; }
+.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 16px; min-width:0; }
+/* Grid items default to min-width:auto, so an input's intrinsic width can push a track wider
+   than its 1fr share and overflow the card -- min-width:0 lets it actually shrink to fit.
+   Needed at every nesting level: .form-grid is itself a grid item of .tool-card. */
+.form-grid > .field{ min-width:0; }
 .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.field input, .field textarea, .field select{ min-width:0; width:100%; box-sizing:border-box; }
 .field.full{ grid-column:1 / -1; }
 .field label{ font-weight:600; font-size:15px; }
 .hint{ font-size:13px; color:var(--ink-soft); }
@@ -526,7 +531,10 @@ tr:last-child td{ border-bottom:none; }
 .cal-month li{ font-size:14px !important; }
 
 /* Free tools */
-.tool-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-bottom:32px; max-width:760px; display:grid; gap:12px; }
+/* grid-template-columns:minmax(0,1fr) -- without it, an implicit single-column grid sizes to
+   its content's max-content width instead of the container's actual width, letting children
+   (like a wide two-column .form-grid) silently overflow past max-width. */
+.tool-card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px; margin-bottom:32px; max-width:760px; display:grid; grid-template-columns:minmax(0,1fr); gap:12px; }
 .tool-card h2{ margin:0; font-size:24px; }
 .tool-form{ display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
 .tool-form .field{ margin:0; flex:1 1 220px; }
