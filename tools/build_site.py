@@ -876,7 +876,11 @@ if OUT != ROOT:
               "assets/admin.js", "assets/demo-data.js", "assets/hours.js", "assets/rules.js", "assets/og-image.png", "favicon.ico"]:
         (OUT / f).parent.mkdir(parents=True, exist_ok=True); shutil.copy(ROOT / f, OUT / f)
     shutil.copytree(ROOT / "assets/icons", OUT / "assets/icons", dirs_exist_ok=True)
+
+if LAUNCH:
     # Refuse to call the build ready while any placeholder or preview-only link remains.
+    # Only meaningful for the public launch build -- the full-app Preview build legitimately
+    # has browse.html links, noindex guide pages, review-pending labels, etc.
     problems = []
     for f in sorted(OUT.rglob("*.html")):
         t = f.read_text()
