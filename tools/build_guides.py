@@ -176,7 +176,7 @@ guide("guide-automatic-fail-violations.html",
   [
     ("list", "All 16, most common first", f'''<p>FMCSA doesn't publish counts for each rule. The order below comes from consultant and industry reports, which consistently put drug and alcohol testing at the top.</p>
 <div class="table-wrap"><table><thead><tr><th>#</th><th>What fails you</th><th>What it means</th><th>How to avoid it</th><th>How common</th></tr></thead><tbody>{af_rows}</tbody></table></div>'''),
-    ("cdl", "If your drivers don't need a CDL", '''<p>Seven of the 16 only apply to carriers with CDL drivers: the five drug and alcohol rules and the CDL rules. If you run box trucks under 26,001 pounds without placarded hazmat and without CDL drivers, the drug and alcohol testing rules in Part 382 don't cover you. Driver files, medical cards, logs, inspections and insurance still do.</p>'''),
+    ("cdl", "If your drivers don't need a CDL", '''<p>Eight of the 16 only apply to carriers with CDL drivers: the five drug and alcohol rules and the three CDL rules. If you run box trucks under 26,001 pounds without placarded hazmat and without CDL drivers, the drug and alcohol testing rules in Part 382 don't cover you. Driver files, medical cards, logs, inspections and insurance still do.</p>'''),
     ("check", "Check yourself in two minutes", '''<p>The <a href="audit-readiness-check.html">audit readiness check</a> turns these 16 rules into ten yes-or-no questions and shows which ones to fix first. Nothing you enter is saved or sent.</p>'''),
   ],
   [ECFR_321, FMCSA_FAQ, ECFR_NE],
