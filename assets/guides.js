@@ -109,17 +109,33 @@
   const rem = $('#remind-form');
   if (rem) {
     const err = $('#r-error');
+    const contact = $('#r-contact'), contactLabel = $('#r-contact-label'), textConsent = $('#r-text-consent');
+    const syncVia = () => {
+      const via = rem.querySelector('input[name="r-via"]:checked').value;
+      const isText = via === 'text';
+      contactLabel.textContent = isText ? 'Mobile number' : 'Email address';
+      if (contact.type !== (isText ? 'tel' : 'email')) contact.value = '';
+      contact.type = isText ? 'tel' : 'email';
+      contact.autocomplete = isText ? 'tel' : 'email';
+      textConsent.hidden = !isText;
+    };
+    rem.querySelectorAll('input[name="r-via"]').forEach(r => r.addEventListener('change', syncVia));
+    syncVia();
     rem.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = $('#r-email').value.trim(), phone = $('#r-phone').value.replace(/\D/g, ''), usdot = $('#r-usdot').value.trim();
+      const isText = rem.querySelector('input[name="r-via"]:checked').value === 'text';
+      const raw = contact.value.trim();
+      const usdot = $('#r-usdot').value.trim();
       const picked = rem.querySelectorAll('input[name="d"]:checked').length;
       let msg = '';
-      if (!email && !phone) msg = 'Enter an email or a mobile number so we know where to send reminders.';
-      else if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) msg = 'That email doesn’t look complete. Check it and try again.';
-      else if (phone && phone.length !== 10 && !(phone.length === 11 && phone[0] === '1')) msg = 'Enter a 10-digit mobile number.';
-      else if (phone && !$('#r-text-ok').checked) msg = 'To get texts, check the box agreeing to text reminders. Or remove the number to get email only.';
-      else if (!picked) msg = 'Pick at least one deadline.';
-      else if (usdot && window.FCDeadlines) { try { window.FCDeadlines.cleanUsdot(usdot); } catch (x) { msg = x.message; } }
+      if (!raw) msg = isText ? 'Enter a mobile number so we know where to text reminders.' : 'Enter an email so we know where to send reminders.';
+      else if (!isText && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(raw)) msg = 'That email doesn’t look complete. Check it and try again.';
+      else if (isText) {
+        const digits = raw.replace(/\D/g, '');
+        if (digits.length !== 10 && !(digits.length === 11 && digits[0] === '1')) msg = 'Enter a 10-digit mobile number.';
+      }
+      if (!msg && !picked) msg = 'Pick at least one deadline.';
+      if (!msg && usdot && window.FCDeadlines) { try { window.FCDeadlines.cleanUsdot(usdot); } catch (x) { msg = x.message; } }
       err.textContent = msg; err.hidden = !msg;
       if (msg) return;
       rem.hidden = true; $('#r-done').hidden = false;

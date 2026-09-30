@@ -90,13 +90,17 @@
   </div>
   <section class="tool-card remind" aria-labelledby="remind-h" id="reminders">
   <h2 id="remind-h">Get a reminder before your deadlines</h2>
-  <p>We'll email or text you before the deadlines you pick. That's all we send, and you can stop anytime.</p>
+  <p>Pick how you want reminders, and we'll send them before each deadline you choose.</p>
   <form id="remind-form" novalidate>
-    <div class="form-grid">
-      <div class="field"><label for="r-email">Email</label><input id="r-email" type="email" autocomplete="email"></div>
-      <div class="field"><label for="r-phone">Mobile number for texts (optional)</label><input id="r-phone" type="tel" autocomplete="tel"></div>
-      <div class="field full"><label for="r-usdot">USDOT number (for your MCS-150 month, optional)</label><input id="r-usdot" inputmode="numeric" autocomplete="off"></div>
-    </div>
+    <fieldset class="field choice">
+      <legend>Remind me via</legend>
+      <div class="segmented segmented-2">
+        <label><input type="radio" name="r-via" id="r-via-email" value="email" checked><span>Email</span></label>
+        <label><input type="radio" name="r-via" id="r-via-text" value="text"><span>Text</span></label>
+      </div>
+    </fieldset>
+    <div class="field"><label for="r-contact" id="r-contact-label">Email address</label><input id="r-contact" type="email" autocomplete="email"></div>
+    <p class="fine consent" id="r-text-consent" hidden>By choosing text, you agree FleetCleared may text you up to 4 reminders a month. Message and data rates may apply. Reply STOP to cancel.</p>
     <fieldset class="check-list"><legend>Remind me about</legend>
       <label class="check-inline"><input type="checkbox" name="d" value="ifta" checked> IFTA quarterly returns</label>
       <label class="check-inline"><input type="checkbox" name="d" value="ucr" checked> UCR registration</label>
@@ -104,12 +108,15 @@
       <label class="check-inline"><input type="checkbox" name="d" value="mcs150" checked> MCS-150 update</label>
       <label class="check-inline"><input type="checkbox" name="d" value="inspections"> Inspection weeks (Roadcheck, Brake Safety Week)</label>
     </fieldset>
-    <label class="check-inline consent"><input type="checkbox" id="r-text-ok"> Text me reminders at the number above. Up to 4 automated texts a month. Message and data rates may apply. Reply STOP to cancel. Agreeing isn't required to use FleetCleared.</label>
+    <details class="field-optional">
+      <summary>Add your USDOT number (optional)</summary>
+      <input id="r-usdot" inputmode="numeric" autocomplete="off" placeholder="USDOT number, so we can time your MCS-150 reminder">
+    </details>
     <p class="field-error" id="r-error" hidden></p>
     <button class="btn btn-primary" type="submit">Send me reminders</button>
   </form>
   <p class="notice" id="r-done" hidden>You're on the list. <span class="preview-label">Preview: reminders aren't connected yet, so nothing was saved.</span></p>
-  <p class="fine">Reminders are a free courtesy. We can't guarantee every reminder arrives on time, so you stay responsible for your deadlines (see our <a href="terms.html#guides">terms</a>). We never share or sell your number or email, and we never pass it to consultants. See our <a href="privacy.html">privacy policy</a>.</p>
+  <p class="fine">Reminders are a free courtesy, not guaranteed on time, so you stay responsible for your deadlines (see our <a href="terms.html#guides">terms</a>). We never share or sell your info. See our <a href="privacy.html">privacy policy</a>.</p>
 </section>
   <p class="fine guide-disclaimer">General information, not legal or compliance advice, and no substitute for the regulations or a qualified professional. Rules change and every carrier is different. Reading this page doesn't create a relationship with FleetCleared or any consultant, and using it is subject to our <a href="terms.html#guides">terms</a>. Found an error? Email <strong>corrections@fleetcleared.com</strong>. FleetCleared is a directory and is not affiliated with FMCSA or the U.S. Department of Transportation.</p>
 </main>

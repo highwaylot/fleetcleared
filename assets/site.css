@@ -383,6 +383,7 @@ tr:last-child td{ border-bottom:none; }
 .choice{ border:0; padding:0; margin:0 0 16px; min-width:0; }
 .choice legend{ font-weight:600; font-size:15px; padding:0; margin-bottom:6px; }
 .segmented{ display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.segmented-2{ grid-template-columns:repeat(2,1fr); max-width:280px; }
 .segmented label{ position:relative; }
 .segmented input{ position:absolute; opacity:0; inset:0; margin:0; cursor:pointer; }
 .segmented span{ display:block; text-align:center; padding:10px 6px; font-weight:600; border-left:1px solid var(--line); }
@@ -558,9 +559,14 @@ tr:last-child td{ border-bottom:none; }
 .check-group.warn h3{ color:var(--trial); }
 .check-next{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 .remind{ margin-top:8px; }
-.remind .check-list{ border:0; padding:0; margin:0 0 8px; display:flex; flex-wrap:wrap; gap:8px 16px; }
+.remind form{ display:grid; gap:14px; }
+.remind .field{ margin-bottom:0; }
+.remind .field.choice legend{ font-weight:600; margin-bottom:8px; font-size:15px; }
+.remind .check-list{ border:0; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:8px 16px; }
 .remind .check-list legend{ font-weight:600; margin-bottom:6px; }
-.remind .consent{ align-items:flex-start; font-weight:400; font-size:14px; margin-bottom:12px; }
+.remind .consent{ margin:-6px 0 0; }
+.field-optional summary{ cursor:pointer; color:var(--brand); font-size:14px; font-weight:600; }
+.field-optional input{ margin-top:10px; }
 .guide-notice{ margin:0; font-size:14px; color:var(--ink-soft); max-width:72ch; }
 .launch-guides{ display:grid; gap:20px; padding-block:56px 8px; max-width:920px; margin-inline:auto; }
 .launch-guides > p.section-label{ margin:0 auto; justify-self:center; }
