@@ -868,9 +868,12 @@ write("favicon.svg", '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 
   </g>
 </svg>
 ''')
-if LAUNCH:
-    # Static files the public pages use. Nothing private (admin, demo data, rules) is copied.
-    for f in ["assets/site.css", "assets/deadlines.js", "assets/guides.js", "assets/stripe-card.js", "assets/og-image.png", "favicon.ico"]:
+if OUT != ROOT:
+    # Building into dist/ (any Vercel deploy, launch or not) -- the repo root isn't served, so
+    # static assets have to be copied in. A plain local run writes straight into the repo, where
+    # these files already live, so this is skipped there.
+    for f in ["assets/site.css", "assets/site.js", "assets/deadlines.js", "assets/guides.js", "assets/stripe-card.js",
+              "assets/admin.js", "assets/demo-data.js", "assets/hours.js", "assets/rules.js", "assets/og-image.png", "favicon.ico"]:
         (OUT / f).parent.mkdir(parents=True, exist_ok=True); shutil.copy(ROOT / f, OUT / f)
     shutil.copytree(ROOT / "assets/icons", OUT / "assets/icons", dirs_exist_ok=True)
     # Refuse to call the build ready while any placeholder or preview-only link remains.
