@@ -40,6 +40,15 @@ from what the code implies should be true. Facts that stay true over time
 (current email addresses, what infra is live) belong in `decisions`, updated
 in place; `log` is for "what happened," not "what's currently true."
 
+**A second assistant also works this project from `main`.** Two sessions
+writing bare `lNNN` log ids collided and silently overwrote each other (see
+decision d14 in the book) — that's the actual cause of the book looking
+"wrong" or "blank" more than once. To prevent repeats: prefix every new log
+doc_id with `lb-` (this is the branch/Preview session) followed by a
+date+sequence, e.g. `lb-20261001-01`. Never write a bare `lNNN` id — those
+are frozen legacy numbering. If writing new docs to `decisions`/`queue`/
+`prospects` too, use the same `lb-` prefix there.
+
 ## Before asking the owner for information
 
 Check what's already available (their site, terms/privacy pages, prior
