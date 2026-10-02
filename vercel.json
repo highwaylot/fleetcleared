@@ -4,7 +4,7 @@
   "installCommand": "",
   "buildCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then FC_LAUNCH=1 FC_HOLD_INDEX=1 python3 tools/build_site.py; else python3 tools/build_site.py; fi",
   "outputDirectory": "dist",
-  "cleanUrls": false,
+  "cleanUrls": true,
   "headers": [
     { "source": "/(.*)", "headers": [
       { "key": "X-Content-Type-Options", "value": "nosniff" },
