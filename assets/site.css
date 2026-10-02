@@ -111,6 +111,7 @@ a{ color:var(--brand); }
 .hero-copy .lede{ margin:0 0 24px; }
 .hero-cta{ display:flex; flex-direction:column; gap:16px; }
 .hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.hero-actions .btn-xl{ width:auto; }
 @media (max-width:860px){
   .hero-grid{ grid-template-columns:1fr; gap:28px; }
   .hero-copy h1{ font-size:38px; }

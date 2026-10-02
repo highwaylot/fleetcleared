@@ -56,8 +56,8 @@ write("index.html", head("FleetCleared: Plain-Language DOT Compliance Guides for
     <h1>Plain answers before a bad inspection finds you.</h1>
     <p class="lede">What the rules require, what fails a safety audit, and when things are due. Plain words, the official source linked on every page.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="guides.html">Read the guides</a>
-      <a class="btn btn-ghost btn-lg" href="audit-readiness-check.html">Take the audit check</a>
+      <a class="btn btn-primary btn-xl" href="guides.html">Read the guides</a>
+      <a class="btn btn-ghost btn-xl" href="audit-readiness-check.html">Take the audit check</a>
     </div>
     <p class="trust-line"><span>No robocalls, ever</span><span>Sources on every page</span><span>Not affiliated with FMCSA</span></p>
   </section>
