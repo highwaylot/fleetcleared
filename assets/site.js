@@ -150,7 +150,7 @@
       clear.hidden = !(state.value || chosenSpecs.length || needle || onlyOpen.checked);
       grid.replaceChildren(...matches.map(c => {
         const btn = contactButton(c);
-        const href = `consultant.html#${c.slug}`;
+        const href = `consultant#${c.slug}`;
         return el('article', { className: 'card' }, [
           el('div', { className: 'card-id' }, [
             el('div', { className: 'org-logo' + (c.hasLogo ? '' : ' placeholder'), textContent: initials(c.name), ariaHidden: 'true' }),

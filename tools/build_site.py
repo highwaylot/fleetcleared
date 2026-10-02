@@ -1,4 +1,4 @@
-import json, os, pathlib, shutil
+import json, os, pathlib, re, shutil
 
 # Builds every HTML page of the site. Run from anywhere: python3 tools/build_site.py
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -215,10 +215,24 @@ if LAUNCH:
 '''
 
 PAGES = {}
+# vercel.json sets "cleanUrls": true, so every page is actually served without its .html
+# extension (Vercel rewrites /guides.html's content to /guides and redirects the .html
+# version). This strips .html from internal links/canonical/og:url in the generated HTML
+# itself too, so pages link straight to the clean URL instead of taking a redirect hop.
+def _clean_urls(html):
+    def repl(m):
+        quote, path, suffix = m.group(1), m.group(2), m.group(3) or ""
+        if path == "index" or path.endswith("/index"):
+            path = path[: -len("index")] or "/"
+        return f"{quote}{path}{suffix}{quote}"
+    return re.sub(r'([\"\'])([a-zA-Z0-9_\-./:]*?)\.html((?:[?#][^\"\']*)?)\1', repl, html)
+
 def write(name, html):
     PAGES[name] = html
     if LAUNCH and name not in LAUNCH_PAGES:
         return
+    if name.endswith(".html"):
+        html = _clean_urls(html)
     (OUT / name).parent.mkdir(parents=True, exist_ok=True)
     (OUT / name).write_text(html)
 
@@ -870,8 +884,9 @@ elif LAUNCH:
 else:
     write("robots.txt", "# PREVIEW MODE: blocks all crawlers. The public build (FC_LAUNCH=1) writes its own.\nUser-agent: *\nDisallow: /\n")
     pages = ["", "browse.html", "for-consultants.html", "partner-with-us.html", "privacy.html", "terms.html"] + GUIDE_PAGES + STATE_PAGES
+sitemap_pages = [p[:-5] if p.endswith(".html") else p for p in pages]
 write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-      "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{GUIDES_ISO}</lastmod></url>\n" for p in pages) + "</urlset>\n")
+      "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{GUIDES_ISO}</lastmod></url>\n" for p in sitemap_pages) + "</urlset>\n")
 write("site.webmanifest", json.dumps({
   "name": "FleetCleared", "short_name": "FleetCleared", "start_url": "/", "display": "browser",
   "background_color": "#f4f6f4", "theme_color": "#0f4c3a",
