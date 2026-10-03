@@ -52,14 +52,44 @@ write("index.html", head("FleetCleared: Plain-Language DOT Compliance Guides for
     {"@type": "Organization", "@id": f"{SITE}/#org", "name": "FleetCleared", "url": f"{SITE}/", "logo": f"{SITE}/assets/icons/icon-512.png"},
     {"@type": "WebSite", "@id": f"{SITE}/#site", "name": "FleetCleared", "url": f"{SITE}/", "publisher": {"@id": f"{SITE}/#org"}}]})}</script>''') + header(None) + f'''<main>
   <section class="hero wrap hero-launch">
-    <span class="eyebrow">Free guides &amp; tools</span>
-    <h1>Plain answers before a bad inspection finds you.</h1>
-    <p class="lede">What the rules require, what fails a safety audit, and when things are due. Plain words, the official source linked on every page.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary btn-xl" href="guides.html">Read the guides</a>
-      <a class="btn btn-ghost btn-xl" href="audit-readiness-check.html">Take the audit check</a>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Free guides &amp; tools</span>
+        <h1>Plain answers before a bad inspection finds you.</h1>
+        <p class="lede">What the rules require, what fails a safety audit, and when things are due. Plain words, the official source linked on every page.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-xl" href="guides.html">Read the guides</a>
+          <a class="btn btn-ghost btn-xl" href="audit-readiness-check.html">Take the audit check</a>
+        </div>
+        <p class="trust-line"><span>No robocalls, ever</span><span>Sources on every page</span><span>Not affiliated with FMCSA</span></p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="guide-card">
+          <div class="guide-card-bar">
+            <span class="gcdot" style="background:#ff6159"></span>
+            <span class="gcdot" style="background:#ffbd2e"></span>
+            <span class="gcdot" style="background:#28c840"></span>
+            <span class="gcurl">fleetcleared.com/guide-new-entrant-safety-audit</span>
+          </div>
+          <div class="guide-card-body">
+            <div class="guide-card-kicker">Guide &middot; New Entrant Safety Audit</div>
+            <div class="guide-card-title">Before your first 18 months are up</div>
+            <div class="guide-check-item">
+              <span class="guide-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span><span class="gc-label">Driver qualification files complete</span><br><span class="gc-sub">49 CFR &sect;391 &mdash; one file per driver, on hand</span></span>
+            </div>
+            <div class="guide-check-item">
+              <span class="guide-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span><span class="gc-label">Drug &amp; alcohol testing program active</span><br><span class="gc-sub">49 CFR &sect;40 &mdash; enrolled before dispatching</span></span>
+            </div>
+            <div class="guide-check-item">
+              <span class="guide-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span><span class="gc-label">Vehicle inspection records on file</span><br><span class="gc-sub">49 CFR &sect;396 &mdash; annual, plus DVIRs</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <p class="trust-line"><span>No robocalls, ever</span><span>Sources on every page</span><span>Not affiliated with FMCSA</span></p>
   </section>
   <section class="wrap launch-guides">
     <p class="section-label eyebrow">Start here</p>
