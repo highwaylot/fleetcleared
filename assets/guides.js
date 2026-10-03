@@ -33,9 +33,17 @@
   if (chk) {
     const labels = JSON.parse(chk.dataset.labels);
     const out = $('#check-result');
+    const heading = $('#chk-h');
     const syncCdl = () => {
       const cdl = chk.querySelector('input[name="cdl"]:checked').value === 'yes';
       chk.querySelectorAll('fieldset.q[data-cdl="true"]').forEach((f) => { f.hidden = !cdl; });
+      let n = 0;
+      chk.querySelectorAll('fieldset.q[data-id]').forEach((f) => {
+        if (f.hidden) return;
+        n += 1;
+        f.querySelector('.q-n').textContent = n;
+      });
+      if (heading) heading.textContent = `Answer ${n === 10 ? 'ten' : n} question${n === 1 ? '' : 's'}`;
     };
     chk.querySelectorAll('input[name="cdl"]').forEach((r) => r.addEventListener('change', syncCdl));
     syncCdl();
